@@ -1,0 +1,12 @@
+/*
+
+Transaction class
+
+title
+amount
+genre
+YearMonth date
+isExpense
+
+
+*/

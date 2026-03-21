@@ -1,3 +1,5 @@
+// ignore_for_file: dangling_library_doc_comments
+
 /**
  * Actions:
  * 
@@ -8,6 +10,7 @@
  * 
  * 
  * UI
+
  * if SpendingViewSwapCubit.state == listview
  * 		SpendingListview
  * else
