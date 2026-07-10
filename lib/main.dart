@@ -1,3 +1,4 @@
+import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/repository.dart';
 import 'package:flutter/material.dart';
@@ -24,16 +25,16 @@ class BudgieApp extends StatelessWidget {
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        supportedLocales: const [
-          Locale('en', 'GB'),
-        ],
+        supportedLocales: const [Locale('en', 'GB')],
         title: "Budgie",
-        theme: ThemeData(
-          brightness: Brightness.dark,
-          primarySwatch: Colors.amber,
-          fontFamily: 'Raleway',
+        theme: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.amber, fontFamily: 'Raleway'),
+        home: RepositoryProvider(
+          create: (context) => BudgieDatabase(),
+          child: BlocProvider<NavbarCubit>(
+            create: (context) => NavbarCubit(PageSelected.Overview),
+            child: const LandingPageView(),
+          ),
         ),
-        home: RepositoryProvider(create: (context) => BudgieDatabase(), child: const LandingPageView()),
       ),
     );
   }
