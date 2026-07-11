@@ -33,7 +33,7 @@ class _LandingPageViewState extends State<LandingPageView> {
       child: Scaffold(
         backgroundColor: Centre.bgColor,
         bottomNavigationBar: BottomAppBar(
-          height: 9.h,
+          height: 9.2.h,
           color: Centre.dialogBgColor,
           shape: CircularNotchedRectangle(),
           notchMargin: 0.8.h,
@@ -43,11 +43,11 @@ class _LandingPageViewState extends State<LandingPageView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  navBarBtn(controller, 0, Icons.auto_graph_sharp, "Overview"),
-                  navBarBtn(controller, 1, Icons.checklist, "Trip Planning"),
+                  navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
+                  navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
                   SizedBox(width: 9.w),
-                  navBarBtn(controller, 2, Icons.attach_money, "Set Budget"),
-                  navBarBtn(controller, 3, Icons.settings, "Settings"),
+                  navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
+                  navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
                 ],
               );
             },
