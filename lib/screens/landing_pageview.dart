@@ -1,11 +1,10 @@
 import 'package:budgie/blocs/cubits.dart';
-import 'package:budgie/blocs/spending_overview_bloc.dart';
 import 'package:budgie/screens/all_trip_planning_page.dart';
 import 'package:budgie/screens/budget_planning.dart';
 import 'package:budgie/screens/settings_page.dart';
+import 'package:budgie/screens/spending_overview_page.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/bottom_nav_bar.dart';
-import 'package:budgie/widgets/page_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
