@@ -17,7 +17,11 @@ Widget navBarBtn(
       customBorder: BeveledRectangleBorder(),
       highlightColor: Centre.dialogBgColor,
       onTap: () {
-        controller.animateToPage(page.index, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        controller.animateToPage(
+          page.index,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
       },
       child: Container(
         width: 20.w,
@@ -37,9 +41,9 @@ Widget navBarBtn(
                 ? Container(
                     margin: EdgeInsets.only(top: 0.3.h),
                     height: 0.3.h,
-                    width: 15.w,
+                    width: 16.w,
                     decoration: BoxDecoration(
-                      color: Centre.colors[2],
+                      color: Centre.accentColor,
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
                     ),
                   )

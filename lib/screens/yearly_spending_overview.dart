@@ -1,6 +1,7 @@
 // ignore_for_file: dangling_library_doc_comments
 
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/spending_overview/month_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -30,7 +31,44 @@ class SpendingOverviewPage extends StatefulWidget {
   State<SpendingOverviewPage> createState() => _SpendingOverviewPageState();
 }
 
-class _SpendingOverviewPageState extends State<SpendingOverviewPage> {
+class _SpendingOverviewPageState extends State<SpendingOverviewPage>
+    with TickerProviderStateMixin {
+  List<String> months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  late final AnimationController controller = AnimationController(
+    duration: const Duration(milliseconds: 1300),
+    vsync: this,
+  );
+  late final Animation<double> animation = CurvedAnimation(
+    parent: controller,
+    curve: Curves.fastLinearToSlowEaseIn,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    controller.forward();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,13 +76,32 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> {
         backgroundColor: Centre.bgColor,
         body: Stack(
           children: [
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 6.h),
+                  for (String i in months)
+                    MonthTile(
+                      month: i,
+                      controller: controller,
+                      animation: animation,
+                    ),
+                ],
+              ),
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.h,
+                    ),
                     decoration: BoxDecoration(
+                      color: Centre.dialogBgColor,
+
                       borderRadius: BorderRadius.circular(9),
                       border: Border.all(color: Centre.colors[5], width: 0.5.w),
                     ),
@@ -54,7 +111,10 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> {
                 SizedBox(width: 5.w),
                 GestureDetector(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 5.w,
+                      vertical: 1.h,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(7),
                       border: Border.all(color: Centre.colors[7], width: 0.5.w),
@@ -64,7 +124,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> {
                 ),
               ],
             ),
-            Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: []),
+
             Align(
               alignment: AlignmentGeometry.bottomLeft,
               child: Container(

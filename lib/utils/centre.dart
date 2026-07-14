@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class Centre {
-  static Color bgColor = const Color.fromARGB(255, 37, 36, 35);
-  static Color primaryColor = const Color.fromARGB(255, 196, 164, 177);
+  static Color bgColor = const Color(0xff131524);
+  static Color primaryColor = const Color.fromARGB(255, 110, 62, 92);
+  static Color accentColor = const Color.fromARGB(255, 134, 97, 120);
   static Color shadowbgColor = const Color.fromARGB(255, 27, 26, 25);
-  static Color dialogBgColor = const Color.fromARGB(255, 57, 55, 54);
+  static Color dialogBgColor = const Color(0xff22263D);
 
   static const List<Color> colors = [
     // First row
@@ -31,11 +32,23 @@ class Centre {
     Color.fromARGB(255, 255, 155, 133),
   ];
 
-  static final titleText =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 20.sp, fontFamily: 'Raleway');
+  static final titleText = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w400,
+    fontSize: 20.sp,
+    fontFamily: 'Raleway',
+  );
 
-  static final semiTitleText =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 17.sp, fontFamily: 'Raleway');
-  static final listText =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 15.sp, fontFamily: 'Raleway');
+  static final semiTitleText = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w400,
+    fontSize: 17.sp,
+    fontFamily: 'Raleway',
+  );
+  static final listText = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    fontFamily: 'Raleway',
+  );
 }

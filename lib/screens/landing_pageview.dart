@@ -2,7 +2,7 @@ import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/all_trip_planning_page.dart';
 import 'package:budgie/screens/budget_planning.dart';
 import 'package:budgie/screens/settings_page.dart';
-import 'package:budgie/screens/spending_overview_page.dart';
+import 'package:budgie/screens/yearly_spending_overview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
@@ -42,11 +42,35 @@ class _LandingPageViewState extends State<LandingPageView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                  navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
+                  navBarBtn(
+                    controller,
+                    PageSelected.Overview,
+                    Icons.auto_graph_sharp,
+                    "Overview",
+                    pageSelected,
+                  ),
+                  navBarBtn(
+                    controller,
+                    PageSelected.TripPlanning,
+                    Icons.checklist,
+                    "Trip Planning",
+                    pageSelected,
+                  ),
                   SizedBox(width: 9.w),
-                  navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
-                  navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
+                  navBarBtn(
+                    controller,
+                    PageSelected.BudgetPlanning,
+                    Icons.attach_money,
+                    "Set Budget",
+                    pageSelected,
+                  ),
+                  navBarBtn(
+                    controller,
+                    PageSelected.UserSettings,
+                    Icons.settings,
+                    "Settings",
+                    pageSelected,
+                  ),
                 ],
               );
             },
@@ -58,7 +82,7 @@ class _LandingPageViewState extends State<LandingPageView> {
           child: FloatingActionButton(
             shape: const CircleBorder(),
             onPressed: () {},
-            backgroundColor: Centre.dialogBgColor,
+            backgroundColor: Centre.primaryColor,
             elevation: 5,
             child: Icon(Icons.add, color: Colors.white, size: 6.w),
           ),
@@ -67,10 +91,15 @@ class _LandingPageViewState extends State<LandingPageView> {
         body: Stack(
           children: [
             PageView(
-              onPageChanged: (index) => context.read<NavbarCubit>().changePage(page: PageSelected.values[index]),
+              onPageChanged: (index) => context.read<NavbarCubit>().changePage(
+                page: PageSelected.values[index],
+              ),
               controller: controller,
               children: [
-                SpendingOverviewPage(), const AllTripPlanningPage(), const BudgetPlanningPage(), const SettingsPage(),
+                SpendingOverviewPage(),
+                const AllTripPlanningPage(),
+                const BudgetPlanningPage(),
+                const SettingsPage(),
                 // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
                 // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
                 // MultiBlocProvider(providers: [], child: const BudgetPlanningPage()),
@@ -86,7 +115,11 @@ class _LandingPageViewState extends State<LandingPageView> {
 
 class MyBehavior extends ScrollBehavior {
   @override
-  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
+  Widget buildOverscrollIndicator(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     return child;
   }
 }
