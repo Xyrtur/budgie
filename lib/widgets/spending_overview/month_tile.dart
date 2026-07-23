@@ -33,8 +33,7 @@ class MonthTile extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
         padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
         decoration: BoxDecoration(
-          color: Centre
-              .dialogBgColor, // Container color must be inside BoxDecoration
+          color: Centre.dialogBgColor,
           borderRadius: BorderRadius.circular(8),
           border: DateFormat("MMMM").format(DateTime.now()) == month
               ? Border.all(color: Centre.colors[1], width: 0.5.w)
