@@ -17,3 +17,54 @@ class NavbarCubit extends Cubit<PageSelected> {
     emit(page);
   }
 }
+
+/// This cubit tracks what category name is being edited.
+///
+/// [name] is the original name of what is being edited. Unique names only.
+class SettingsEditingTextCubit extends Cubit<String> {
+  SettingsEditingTextCubit() : super("");
+
+  void editing({required String name}) {
+    emit(name);
+  }
+}
+
+/// This cubit tracks what color is selected in the color dialog on the settings page.
+///
+/// The initial state is the old color of the category.
+class SettingsAddColorCubit extends Cubit<int?> {
+  final int? color;
+  SettingsAddColorCubit(this.color) : super(color);
+
+  void selectColor({required int? color}) {
+    emit(color);
+  }
+}
+
+// TODO: Remove when implement settings bloc
+class TempEditingDateRangesCubit extends Cubit<Map<int, List<DateTime>>> {
+  TempEditingDateRangesCubit()
+    : super({
+        0: [DateTime(2023, 1, 1), DateTime(2023, 12, 31)],
+        1: [DateTime(2024, 1, 1), DateTime(2025, 12, 31)],
+        2: [DateTime(2026, 1, 1), DateTime.now()],
+      });
+
+  void update(int dateRangeID, int editingEndDate, DateTime newDate) {
+    state[dateRangeID]![editingEndDate] = newDate;
+    emit(state);
+  }
+}
+
+/// This cubit tracks what the new date ranges are before they are added
+///
+/// [state] is [startDate, endDate]
+class AddingDateRangeCubit extends Cubit<List<DateTime?>> {
+  AddingDateRangeCubit() : super([null, null]);
+  // state
+
+  void updateDates(int editingEndDate, DateTime newDate) {
+    state[editingEndDate] = newDate;
+    emit(state);
+  }
+}

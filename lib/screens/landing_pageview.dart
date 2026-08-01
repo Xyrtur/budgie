@@ -99,7 +99,18 @@ class _LandingPageViewState extends State<LandingPageView> {
                 SpendingOverviewPage(),
                 const AllTripPlanningPage(),
                 const BudgetPlanningPage(),
-                const SettingsPage(),
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<TempEditingDateRangesCubit>(
+                      create: (context) => TempEditingDateRangesCubit(),
+                    ),
+                    BlocProvider<AddingDateRangeCubit>(
+                      create: (context) => AddingDateRangeCubit(),
+                    ),
+                  ],
+                  child: SettingsPage(),
+                ),
+
                 // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
                 // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
                 // MultiBlocProvider(providers: [], child: const BudgetPlanningPage()),

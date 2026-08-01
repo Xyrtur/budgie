@@ -26,7 +26,7 @@ class AllTripPlanningPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(child: SizedBox()),
+                Spacer(),
                 Text(
                   "Trip Planning",
                   textAlign: TextAlign.center,
