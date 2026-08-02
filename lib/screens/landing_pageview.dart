@@ -30,6 +30,7 @@ class _LandingPageViewState extends State<LandingPageView> {
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Centre.bgColor,
         bottomNavigationBar: BottomAppBar(
           height: 9.2.h,
@@ -42,67 +43,55 @@ class _LandingPageViewState extends State<LandingPageView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  navBarBtn(
-                    controller,
-                    PageSelected.Overview,
-                    Icons.auto_graph_sharp,
-                    "Overview",
-                    pageSelected,
-                  ),
-                  navBarBtn(
-                    controller,
-                    PageSelected.TripPlanning,
-                    Icons.checklist,
-                    "Trip Planning",
-                    pageSelected,
-                  ),
+                  navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
+                  navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
                   SizedBox(width: 9.w),
-                  navBarBtn(
-                    controller,
-                    PageSelected.BudgetPlanning,
-                    Icons.attach_money,
-                    "Set Budget",
-                    pageSelected,
-                  ),
-                  navBarBtn(
-                    controller,
-                    PageSelected.UserSettings,
-                    Icons.settings,
-                    "Settings",
-                    pageSelected,
-                  ),
+                  navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
+                  navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
                 ],
               );
             },
           ),
         ),
-        floatingActionButton: Container(
-          height: 15.w,
-          width: 15.w,
-          child: FloatingActionButton(
-            shape: const CircleBorder(),
-            onPressed: () {},
-            backgroundColor: Centre.primaryColor,
-            elevation: 5,
-            child: Icon(Icons.add, color: Colors.white, size: 6.w),
-          ),
+        floatingActionButton: BlocBuilder<FABIconCubit, IconData>(
+          builder: (_, icon) {
+            return SizedBox(
+              height: 15.w,
+              width: 15.w,
+              child: FloatingActionButton(
+                shape: const CircleBorder(),
+                onPressed: () {},
+                backgroundColor: Centre.primaryColor,
+                elevation: 5,
+                child: Icon(icon, color: Colors.white, size: 6.w),
+              ),
+            );
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Stack(
           children: [
             PageView(
-              onPageChanged: (index) => context.read<NavbarCubit>().changePage(
-                page: PageSelected.values[index],
-              ),
+              onPageChanged: (index) {
+                WidgetsBinding.instance.focusManager.primaryFocus
+                    ?.unfocus(); // ensures keyboard dismisses between page swipes
+                context.read<NavbarCubit>().changePage(page: PageSelected.values[index]);
+                context.read<FABIconCubit>().changeIcon(page: PageSelected.values[index]);
+              },
               controller: controller,
               children: [
                 SpendingOverviewPage(),
                 const AllTripPlanningPage(),
-                const BudgetPlanningPage(),
-                const SettingsPage(),
-                // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
+                // MultiBlocProvidNavbarCubiter(providers: [], child: SpendingOverviewPage()),
                 // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
-                // MultiBlocProvider(providers: [], child: const BudgetPlanningPage()),
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit()),
+                  ],
+                  child: const BudgetPlanningPage(),
+                ),
+                //
+                const SettingsPage(),
                 // MultiBlocProvider(providers: [], child: const SettingsPage())
               ],
             ),
@@ -115,11 +104,7 @@ class _LandingPageViewState extends State<LandingPageView> {
 
 class MyBehavior extends ScrollBehavior {
   @override
-  Widget buildOverscrollIndicator(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
+  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
     return child;
   }
 }
