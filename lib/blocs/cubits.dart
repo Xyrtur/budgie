@@ -64,9 +64,12 @@ class AddingDateRangeCubit extends Cubit<List<DateTime?>> {
   AddingDateRangeCubit() : super([null, null]);
   // state
 
-  void updateDates(int editingEndDate, DateTime newDate) {
-    state[editingEndDate] = newDate;
-    emit(state);
+  void updateDates(List<DateTime?> newDates) {
+    if (newDates[0] == null) {
+      emit([state[0], newDates[1]]);
+    } else {
+      emit([newDates[0], state[1]]);
+    }
   }
 }
 

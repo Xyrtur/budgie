@@ -4,6 +4,7 @@
 */
 import 'dart:math';
 
+import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
@@ -39,17 +40,6 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
   List<String> fixedFormFieldLabelValues = [];
   List<double> categoryCostValues = [];
 
-  void toggleMenu() {
-    setState(() {
-      if (_isOpen) {
-        controller.reverse();
-      } else {
-        controller.forward();
-      }
-      _isOpen = !_isOpen;
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -65,13 +55,59 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
   }
 
   Widget dateRangeDropdownMenu() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Dropdown Header / Trigger Button
-        GestureDetector(
+    return Builder(
+      builder: (context) {
+        return GestureDetector(
           onTap: () {
-            toggleMenu();
+            controller.forward();
+            showAlignedDialog(
+              followerAnchor: Alignment.topLeft,
+              targetAnchor: Alignment.bottomLeft,
+              barrierColor: Colors.transparent,
+              offset: Offset(0, 1.h),
+              avoidOverflow: true,
+              context: context,
+              builder: (BuildContext ycontext) {
+                return SizeTransition(
+                  sizeFactor: heightAnimation,
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Centre.dialogBgColor,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Centre.shadowbgColor, // Shadow color
+                          spreadRadius: 1, // Extends the shadow past the box shape
+                          blurRadius: 2, // Softens the shadow edges
+                          offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: options.map((item) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedRole = item;
+                            });
+                            controller.reset();
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
+                            child: Text(item, style: Centre.semiTitle2Text),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              },
+            ).then((_) {
+              controller.reset();
+            });
           },
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.5.h),
@@ -91,43 +127,8 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
               ],
             ),
           ),
-        ),
-        SizedBox(height: 0.5.h),
-        SizeTransition(
-          sizeFactor: heightAnimation,
-          alignment: Alignment.topCenter,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: Centre.dialogBgColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Centre.shadowbgColor, // Shadow color
-                  spreadRadius: 1, // Extends the shadow past the box shape
-                  blurRadius: 2, // Softens the shadow edges
-                  offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
-                ),
-              ],
-            ),
-            child: Column(
-              children: options.map((item) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selectedRole = item;
-                    });
-                    toggleMenu(); // Automatically close menu
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
-                    child: Text(item, style: Centre.semiTitle2Text),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 
@@ -184,87 +185,76 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () {
-          setState(() {
-            if (_isOpen) {
-              controller.reverse();
-            }
-            _isOpen = !_isOpen;
-          });
-        },
-        child: Scaffold(
-          backgroundColor: Centre.bgColor,
-          body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [dateRangeDropdownMenu()]),
-                SizedBox(height: 2.h),
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    padding: EdgeInsets.all(2.w),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Centre.accentColor),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: BlocBuilder<LiveBudgetTotalTrackerCubit, double>(
-                      builder: (_, currentBudget) {
-                        return Text("Monthly Budget: ${currentBudget.toStringAsFixed(2)}");
-                      },
-                    ),
+      child: Scaffold(
+        backgroundColor: Centre.bgColor,
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [dateRangeDropdownMenu()]),
+              SizedBox(height: 2.h),
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  padding: EdgeInsets.all(2.w),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Centre.accentColor),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: BlocBuilder<LiveBudgetTotalTrackerCubit, double>(
+                    builder: (_, currentBudget) {
+                      return Text("Monthly Budget: ${currentBudget.toStringAsFixed(2)}");
+                    },
                   ),
                 ),
-                SizedBox(height: 2.h),
-                Wrap(
-                  alignment: WrapAlignment.center,
-                  crossAxisAlignment: WrapCrossAlignment.center,
-                  spacing: 3.w,
-                  runSpacing: 5.h,
-                  children: [
-                    Container(
-                      width: 70.w,
+              ),
+              SizedBox(height: 2.h),
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 3.w,
+                runSpacing: 5.h,
+                children: [
+                  Container(
+                    width: 70.w,
 
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 2.h),
-                          Text("Fixed", style: Centre.semiTitle2Text),
-                          ...fixedCostFormFields(),
-                          SizedBox(height: 2.h),
-
-                          IconButton.outlined(
-                            onPressed: () {
-                              setState(() {
-                                fixedFormFieldCostValues.add('');
-                                fixedFormFieldLabelValues.add('');
-                              });
-                            },
-                            iconSize: 6.w,
-                            color: Centre.accentColor,
-                            icon: const Icon(Icons.add),
-                          ),
-                          SizedBox(height: 2.h),
-                        ],
-                      ),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(6),
                     ),
-                    for (String i in categories)
-                      CategoryBox(
-                        categoryName: i,
-                        categoryColor: Centre.colors[Random().nextInt(18)],
-                        categoryCosts: categoryCostValues,
-                        categoryIndex: categories.indexOf(i),
-                      ),
-                  ],
-                ),
-                SizedBox(height: 5.h),
-              ],
-            ),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 2.h),
+                        Text("Fixed", style: Centre.semiTitle2Text),
+                        ...fixedCostFormFields(),
+                        SizedBox(height: 2.h),
+
+                        IconButton.outlined(
+                          onPressed: () {
+                            setState(() {
+                              fixedFormFieldCostValues.add('');
+                              fixedFormFieldLabelValues.add('');
+                            });
+                          },
+                          iconSize: 6.w,
+                          color: Centre.accentColor,
+                          icon: const Icon(Icons.add),
+                        ),
+                        SizedBox(height: 2.h),
+                      ],
+                    ),
+                  ),
+                  for (String i in categories)
+                    CategoryBox(
+                      categoryName: i,
+                      categoryColor: Centre.colors[Random().nextInt(18)],
+                      categoryCosts: categoryCostValues,
+                      categoryIndex: categories.indexOf(i),
+                    ),
+                ],
+              ),
+              SizedBox(height: 5.h),
+            ],
           ),
         ),
       ),

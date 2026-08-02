@@ -27,7 +27,7 @@ class BudgieApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale('en', 'GB')],
         title: "Budgie",
-        theme: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.amber, fontFamily: 'Raleway'),
+        theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Raleway'),
         home: RepositoryProvider(
           create: (context) => BudgieDatabase(),
           child: MultiBlocProvider(

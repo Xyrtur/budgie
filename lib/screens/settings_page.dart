@@ -13,18 +13,14 @@ class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
 
   final formKey = GlobalKey<FormState>();
-  final TextEditingController editingController = TextEditingController(
-    text: "",
-  );
+  final TextEditingController editingController = TextEditingController(text: "");
 
   // Value notifiers to send events to their respective blocs when needed since shouldn't call context in async gaps
-  final ValueNotifier<List<dynamic>?>
-  editingYearMonthResults = // [dateRangeID, 0 / 1 {startDate OR endDate}, newDate ]
+  final ValueNotifier<List<dynamic>?> editingYearMonthResults = // [dateRangeID, 0 / 1 {startDate OR endDate}, newDate ]
   ValueNotifier<List<dynamic>?>([
     null,
   ]);
-  final ValueNotifier<List<DateTime?>> addingYearMonthResults =
-      ValueNotifier<List<DateTime?>>([null, null]);
+  final ValueNotifier<List<DateTime?>> addingYearMonthResults = ValueNotifier<List<DateTime?>>([null, null]);
 
   final Map<String, int> categories = {
     "Entertainment": Centre.colors[Random().nextInt(54)].toARGB32(),
@@ -55,9 +51,7 @@ class SettingsPage extends StatelessWidget {
               editingName == null || editingName != name
                   ? GestureDetector(
                       onTap: () {
-                        context.read<SettingsEditingTextCubit>().editing(
-                          name: name,
-                        );
+                        context.read<SettingsEditingTextCubit>().editing(name: name);
                       },
                       child: Text(name, style: Centre.listText),
                     )
@@ -79,14 +73,10 @@ class SettingsPage extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           // TODO: Update category from old "name" to new "editingcontroller.text"
                           editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(
-                            name: "",
-                          );
+                          context.read<SettingsEditingTextCubit>().editing(name: "");
                         }
                       },
-                      child: const SizedBox(
-                        child: Center(child: Icon(Icons.check)),
-                      ),
+                      child: const SizedBox(child: Center(child: Icon(Icons.check))),
                     ),
               name == "Other"
                   ? const SizedBox()
@@ -98,18 +88,12 @@ class SettingsPage extends StatelessWidget {
                         } else {
                           // If in editing mode, just clear
                           editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(
-                            name: "",
-                          );
+                          context.read<SettingsEditingTextCubit>().editing(name: "");
                         }
                       },
                       iconSize: 5.w,
                       color: Colors.white,
-                      icon: Icon(
-                        editingName == null || editingName != name
-                            ? Icons.delete
-                            : Icons.close,
-                      ),
+                      icon: Icon(editingName == null || editingName != name ? Icons.delete : Icons.close),
                     ),
             ],
           ),
@@ -122,11 +106,60 @@ class SettingsPage extends StatelessWidget {
 
       BlocProvider<SettingsAddColorCubit>(
         create: (_) => SettingsAddColorCubit(null),
-        child: AddCategoryTextField(
-          existingCategories: categories.keys.toList(),
-        ),
+        child: AddCategoryTextField(existingCategories: categories.keys.toList()),
       ),
     ];
+  }
+
+  Future<DateTime?> showCustomMonthPicker(BuildContext context) {
+    return showMonthPicker(
+      context: context,
+
+      initialDate: DateTime.now(),
+      monthStylePredicate: (DateTime val) {
+        if (val.month == DateTime.now().month && val.year == DateTime.now().year) {
+          return TextButton.styleFrom(backgroundColor: Centre.colors[28]);
+        }
+        return null;
+      },
+      yearStylePredicate: (int val) {
+        if (val == DateTime.now().year) {
+          return TextButton.styleFrom(backgroundColor: Centre.colors[28]);
+        }
+        return null;
+      },
+      monthPickerDialogSettings: MonthPickerDialogSettings(
+        dialogSettings: PickerDialogSettings(
+          verticalScrolling: false,
+          dialogBackgroundColor: Centre.dialogBgColor,
+          dialogRoundedCornersRadius: 12,
+        ),
+        headerSettings: PickerHeaderSettings(
+          headerPadding: EdgeInsets.only(top: 4.w, left: 4.w, right: 4.w),
+          headerBackgroundColor: Centre.dialogBgColor,
+          headerCurrentPageTextStyle: Centre.semiTitleText,
+          headerSelectedIntervalTextStyle: Centre.semiTitle2Text,
+          headerIconsColor: Colors.white,
+        ),
+        dateButtonsSettings: PickerDateButtonsSettings(
+          selectedMonthBackgroundColor: Centre.colors[33],
+          selectedMonthTextColor: Centre.bgColor,
+          unselectedMonthsTextColor: Centre.colors[33],
+          currentMonthTextColor: Centre.bgColor,
+          monthTextStyle: Centre.listText,
+        ),
+        actionBarSettings: PickerActionBarSettings(
+          confirmWidget: Padding(
+            padding: EdgeInsets.all(3.w),
+            child: Text('OK', style: Centre.listText),
+          ),
+          cancelWidget: Padding(
+            padding: EdgeInsets.all(3.w),
+            child: Text('Cancel', style: Centre.listText),
+          ),
+        ),
+      ),
+    );
   }
 
   List<Widget> dateRangeList(BuildContext context) {
@@ -140,50 +173,46 @@ class SettingsPage extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  showMonthPicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                  ).then((date) {
+                  showCustomMonthPicker(context).then((date) {
                     if (date != null) {
                       editingYearMonthResults.value = [id, 0, date];
                     }
                   });
                 },
-                child:
-                    BlocBuilder<
-                      TempEditingDateRangesCubit,
-                      Map<int, List<DateTime>>
-                    >(
-                      builder: (_, dateRangeMap) {
-                        return Text(
-                          DateFormat('yMMM').format(dateRangeMap[id]![0]),
-                        );
-                      },
-                    ),
+                child: BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
+                  builder: (_, dateRangeMap) {
+                    return Container(
+                      padding: EdgeInsets.all(2.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1.5),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: Text(DateFormat('yMMM').format(dateRangeMap[id]![0]), style: Centre.listText),
+                    );
+                  },
+                ),
               ),
-              Text(" - "),
+              Text(" - ", style: Centre.semiTitleText),
               GestureDetector(
                 onTap: () {
-                  showMonthPicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                  ).then((date) {
+                  showCustomMonthPicker(context).then((date) {
                     if (date != null) {
                       editingYearMonthResults.value = [id, 1, date];
                     }
                   });
                 },
-                child:
-                    BlocBuilder<
-                      TempEditingDateRangesCubit,
-                      Map<int, List<DateTime>>
-                    >(
-                      builder: (_, dateRangeMap) {
-                        return Text(
-                          DateFormat('yMMM').format(dateRangeMap[id]![1]),
-                        );
-                      },
-                    ),
+                child: BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
+                  builder: (_, dateRangeMap) {
+                    return Container(
+                      padding: EdgeInsets.all(2.w),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 1.5),
+                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                      ),
+                      child: Text(DateFormat('yMMM').format(dateRangeMap[id]![1]), style: Centre.listText),
+                    );
+                  },
+                ),
               ),
             ],
           ),
@@ -192,58 +221,83 @@ class SettingsPage extends StatelessWidget {
     });
     return [
       ...rangeList,
-      SizedBox(height: 0.6.h),
+      Flex(direction: Axis.horizontal),
       Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton.outlined(
-            onPressed: () {
-              showMonthPicker(
-                context: context,
-                initialDate: DateTime.now(),
-              ).then((date) {
-                if (date != null) {
-                  addingYearMonthResults.value[0] = date;
-                }
-              });
+          Expanded(child: SizedBox()),
+          BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
+            builder: (_, newDates) {
+              return newDates[0] == null
+                  ? IconButton.outlined(
+                      onPressed: () {
+                        showCustomMonthPicker(context).then((date) {
+                          if (date != null) {
+                            addingYearMonthResults.value = [date, null];
+                          }
+                        });
+                      },
+                      iconSize: 8.w,
+                      color: Colors.white,
+                      icon: Icon(Icons.calendar_month),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        showCustomMonthPicker(context).then((date) {
+                          if (date != null) {
+                            addingYearMonthResults.value = [date, null];
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 1.5),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Text(DateFormat('yMMM').format(newDates[0]!), style: Centre.listText),
+                      ),
+                    );
             },
-            iconSize: 5.w,
-            color: Colors.white,
-            icon: BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
-              builder: (_, newDates) {
-                return newDates[0] == null
-                    ? Icon(Icons.calendar_month)
-                    : Text(DateFormat('yMMM').format(newDates[0]!));
-              },
-            ),
-          ),
-          Text("-"),
-          IconButton.outlined(
-            onPressed: () {
-              showMonthPicker(
-                context: context,
-                initialDate: DateTime.now(),
-              ).then((date) {
-                if (date != null) {
-                  addingYearMonthResults.value[1] = date;
-                }
-              });
-            },
-            iconSize: 5.w,
-            color: Colors.white,
-            icon: BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
-              builder: (_, newDates) {
-                return newDates[1] == null
-                    ? Icon(Icons.calendar_month)
-                    : Text(DateFormat('yMMM').format(newDates[1]!));
-              },
-            ),
           ),
 
-          IconButton.outlined(
-            onPressed: () {},
-            iconSize: 5.w,
-            color: Colors.white,
-            icon: Icon(Icons.add),
+          Text(" - ", style: Centre.semiTitleText),
+          BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
+            builder: (_, newDates) {
+              return newDates[1] == null
+                  ? IconButton.outlined(
+                      onPressed: () {
+                        showCustomMonthPicker(context).then((date) {
+                          if (date != null) {
+                            addingYearMonthResults.value = [null, date];
+                          }
+                        });
+                      },
+                      iconSize: 8.w,
+                      color: Colors.white,
+                      icon: Icon(Icons.calendar_month),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        showCustomMonthPicker(context).then((date) {
+                          if (date != null) {
+                            addingYearMonthResults.value = [null, date];
+                          }
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(2.w),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white, width: 1.5),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                        ),
+                        child: Text(DateFormat('yMMM').format(newDates[1]!), style: Centre.listText),
+                      ),
+                    );
+            },
+          ),
+          Expanded(
+            child: IconButton.outlined(onPressed: () {}, iconSize: 5.w, color: Colors.white, icon: Icon(Icons.add)),
           ),
         ],
       ),
@@ -263,6 +317,9 @@ class SettingsPage extends StatelessWidget {
         editingYearMonthResults.value![2],
       );
     });
+    addingYearMonthResults.addListener(() {
+      context.read<AddingDateRangeCubit>().updateDates(addingYearMonthResults.value);
+    });
     return SafeArea(
       child: Scaffold(
         backgroundColor: Centre.bgColor,
@@ -275,16 +332,11 @@ class SettingsPage extends StatelessWidget {
                 SizedBox(height: 2.h),
                 Divider(color: Colors.white),
                 SizedBox(height: 2.h),
-                ...categoryEditingList(
-                  context: context,
-                  categories: categories,
-                ),
+                ...categoryEditingList(context: context, categories: categories),
                 SizedBox(height: 4.h),
-                Text(
-                  "Budget Planning Date Ranges",
-                  style: Centre.semiTitleText,
-                ),
+                Text("Budget Planning Date Ranges", style: Centre.semiTitleText),
                 SizedBox(height: 2.h),
+                ...dateRangeList(context),
               ],
             ),
           ),
@@ -437,8 +489,7 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
                   return 'Too long';
                 } else if (widget.existingCategories.contains(text)) {
                   return 'Category already exists';
-                } else if (context.read<SettingsAddColorCubit>().state ==
-                    null) {
+                } else if (context.read<SettingsAddColorCubit>().state == null) {
                   return 'No color chosen';
                 }
                 return null;
@@ -483,9 +534,7 @@ class ChooseColorDialog extends StatelessWidget {
       return GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          context.read<SettingsAddColorCubit>().selectColor(
-            color: Centre.colors[i].toARGB32(),
-          );
+          context.read<SettingsAddColorCubit>().selectColor(color: Centre.colors[i].toARGB32());
         },
         child: BlocBuilder<SettingsAddColorCubit, int?>(
           builder: (context, chosenColor) {
@@ -510,9 +559,7 @@ class ChooseColorDialog extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Material(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
         color: Centre.dialogBgColor,
         elevation: 0,
         child: SizedBox(
@@ -525,9 +572,7 @@ class ChooseColorDialog extends StatelessWidget {
                 for (int i = 0; i < 3; i++)
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      for (int j = 0; j < 6; j++) colourBtn(i * 6 + j),
-                    ],
+                    children: [for (int j = 0; j < 6; j++) colourBtn(i * 6 + j)],
                   ),
               ],
             ),
