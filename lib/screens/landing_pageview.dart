@@ -30,6 +30,7 @@ class _LandingPageViewState extends State<LandingPageView> {
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         backgroundColor: Centre.bgColor,
         bottomNavigationBar: BottomAppBar(
           height: 9.2.h,
@@ -76,24 +77,35 @@ class _LandingPageViewState extends State<LandingPageView> {
             },
           ),
         ),
-        floatingActionButton: Container(
-          height: 15.w,
-          width: 15.w,
-          child: FloatingActionButton(
-            shape: const CircleBorder(),
-            onPressed: () {},
-            backgroundColor: Centre.primaryColor,
-            elevation: 5,
-            child: Icon(Icons.add, color: Colors.white, size: 6.w),
-          ),
+        floatingActionButton: BlocBuilder<FABIconCubit, IconData>(
+          builder: (_, icon) {
+            return SizedBox(
+              height: 15.w,
+              width: 15.w,
+              child: FloatingActionButton(
+                shape: const CircleBorder(),
+                onPressed: () {},
+                backgroundColor: Centre.primaryColor,
+                elevation: 5,
+                child: Icon(icon, color: Colors.white, size: 6.w),
+              ),
+            );
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Stack(
           children: [
             PageView(
-              onPageChanged: (index) => context.read<NavbarCubit>().changePage(
-                page: PageSelected.values[index],
-              ),
+              onPageChanged: (index) {
+                WidgetsBinding.instance.focusManager.primaryFocus
+                    ?.unfocus(); // ensures keyboard dismisses between page swipes
+                context.read<NavbarCubit>().changePage(
+                  page: PageSelected.values[index],
+                );
+                context.read<FABIconCubit>().changeIcon(
+                  page: PageSelected.values[index],
+                );
+              },
               controller: controller,
               children: [
                 SpendingOverviewPage(),
@@ -113,7 +125,16 @@ class _LandingPageViewState extends State<LandingPageView> {
 
                 // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
                 // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
-                // MultiBlocProvider(providers: [], child: const BudgetPlanningPage()),
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<LiveBudgetTotalTrackerCubit>(
+                      create: (context) => LiveBudgetTotalTrackerCubit(),
+                    ),
+                  ],
+                  child: const BudgetPlanningPage(),
+                ),
+                //
+                const SettingsPage(),
                 // MultiBlocProvider(providers: [], child: const SettingsPage())
               ],
             ),

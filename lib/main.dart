@@ -30,8 +30,11 @@ class BudgieApp extends StatelessWidget {
         theme: ThemeData(brightness: Brightness.dark, primarySwatch: Colors.amber, fontFamily: 'Raleway'),
         home: RepositoryProvider(
           create: (context) => BudgieDatabase(),
-          child: BlocProvider<NavbarCubit>(
-            create: (context) => NavbarCubit(PageSelected.Overview),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
+              BlocProvider<FABIconCubit>(create: (context) => FABIconCubit(Icons.add)),
+            ],
             child: const LandingPageView(),
           ),
         ),
