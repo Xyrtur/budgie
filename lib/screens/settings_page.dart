@@ -13,14 +13,18 @@ class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
 
   final formKey = GlobalKey<FormState>();
-  final TextEditingController editingController = TextEditingController(text: "");
+  final TextEditingController editingController = TextEditingController(
+    text: "",
+  );
 
   // Value notifiers to send events to their respective blocs when needed since shouldn't call context in async gaps
-  final ValueNotifier<List<dynamic>?> editingYearMonthResults = // [dateRangeID, 0 / 1 {startDate OR endDate}, newDate ]
+  final ValueNotifier<List<dynamic>?>
+  editingYearMonthResults = // [dateRangeID, 0 / 1 {startDate OR endDate}, newDate ]
   ValueNotifier<List<dynamic>?>([
     null,
   ]);
-  final ValueNotifier<List<DateTime?>> addingYearMonthResults = ValueNotifier<List<DateTime?>>([null, null]);
+  final ValueNotifier<List<DateTime?>> addingYearMonthResults =
+      ValueNotifier<List<DateTime?>>([null, null]);
 
   final Map<String, int> categories = {
     "Entertainment": Centre.colors[Random().nextInt(54)].toARGB32(),
@@ -51,7 +55,9 @@ class SettingsPage extends StatelessWidget {
               editingName == null || editingName != name
                   ? GestureDetector(
                       onTap: () {
-                        context.read<SettingsEditingTextCubit>().editing(name: name);
+                        context.read<SettingsEditingTextCubit>().editing(
+                          name: name,
+                        );
                       },
                       child: Text(name, style: Centre.listText),
                     )
@@ -63,7 +69,7 @@ class SettingsPage extends StatelessWidget {
               const Spacer(),
               BlocProvider<SettingsAddColorCubit>(
                 create: (context) => SettingsAddColorCubit(null),
-                child: ChooseColorBtn(color: color),
+                child: ChooseColorBtn(color: color, categoryName: name),
               ),
               SizedBox(width: 3.w),
               editingName == null || editingName != name
@@ -73,10 +79,14 @@ class SettingsPage extends StatelessWidget {
                         if (formKey.currentState!.validate()) {
                           // TODO: Update category from old "name" to new "editingcontroller.text"
                           editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(name: "");
+                          context.read<SettingsEditingTextCubit>().editing(
+                            name: "",
+                          );
                         }
                       },
-                      child: const SizedBox(child: Center(child: Icon(Icons.check))),
+                      child: const SizedBox(
+                        child: Center(child: Icon(Icons.check)),
+                      ),
                     ),
               name == "Other"
                   ? const SizedBox()
@@ -88,12 +98,18 @@ class SettingsPage extends StatelessWidget {
                         } else {
                           // If in editing mode, just clear
                           editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(name: "");
+                          context.read<SettingsEditingTextCubit>().editing(
+                            name: "",
+                          );
                         }
                       },
                       iconSize: 5.w,
                       color: Colors.white,
-                      icon: Icon(editingName == null || editingName != name ? Icons.delete : Icons.close),
+                      icon: Icon(
+                        editingName == null || editingName != name
+                            ? Icons.delete
+                            : Icons.close,
+                      ),
                     ),
             ],
           ),
@@ -106,7 +122,9 @@ class SettingsPage extends StatelessWidget {
 
       BlocProvider<SettingsAddColorCubit>(
         create: (_) => SettingsAddColorCubit(null),
-        child: AddCategoryTextField(existingCategories: categories.keys.toList()),
+        child: AddCategoryTextField(
+          existingCategories: categories.keys.toList(),
+        ),
       ),
     ];
   }
@@ -117,7 +135,8 @@ class SettingsPage extends StatelessWidget {
 
       initialDate: DateTime.now(),
       monthStylePredicate: (DateTime val) {
-        if (val.month == DateTime.now().month && val.year == DateTime.now().year) {
+        if (val.month == DateTime.now().month &&
+            val.year == DateTime.now().year) {
           return TextButton.styleFrom(backgroundColor: Centre.colors[28]);
         }
         return null;
@@ -167,7 +186,7 @@ class SettingsPage extends StatelessWidget {
     dateRanges.forEach((id, startEndDates) {
       rangeList.addAll([
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 0.6.h),
+          padding: EdgeInsets.only(bottom: 2.h),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -179,18 +198,27 @@ class SettingsPage extends StatelessWidget {
                     }
                   });
                 },
-                child: BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
-                  builder: (_, dateRangeMap) {
-                    return Container(
-                      padding: EdgeInsets.all(2.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.5),
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Text(DateFormat('yMMM').format(dateRangeMap[id]![0]), style: Centre.listText),
-                    );
-                  },
-                ),
+                child:
+                    BlocBuilder<
+                      TempEditingDateRangesCubit,
+                      Map<int, List<DateTime>>
+                    >(
+                      builder: (_, dateRangeMap) {
+                        return Container(
+                          padding: EdgeInsets.all(2.w),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            DateFormat('yMMM').format(dateRangeMap[id]![0]),
+                            style: Centre.listText,
+                          ),
+                        );
+                      },
+                    ),
               ),
               Text(" - ", style: Centre.semiTitleText),
               GestureDetector(
@@ -201,18 +229,27 @@ class SettingsPage extends StatelessWidget {
                     }
                   });
                 },
-                child: BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
-                  builder: (_, dateRangeMap) {
-                    return Container(
-                      padding: EdgeInsets.all(2.w),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white, width: 1.5),
-                        borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      ),
-                      child: Text(DateFormat('yMMM').format(dateRangeMap[id]![1]), style: Centre.listText),
-                    );
-                  },
-                ),
+                child:
+                    BlocBuilder<
+                      TempEditingDateRangesCubit,
+                      Map<int, List<DateTime>>
+                    >(
+                      builder: (_, dateRangeMap) {
+                        return Container(
+                          padding: EdgeInsets.all(2.w),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(8),
+                            ),
+                          ),
+                          child: Text(
+                            DateFormat('yMMM').format(dateRangeMap[id]![1]),
+                            style: Centre.listText,
+                          ),
+                        );
+                      },
+                    ),
               ),
             ],
           ),
@@ -253,9 +290,14 @@ class SettingsPage extends StatelessWidget {
                         padding: EdgeInsets.all(2.w),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
                         ),
-                        child: Text(DateFormat('yMMM').format(newDates[0]!), style: Centre.listText),
+                        child: Text(
+                          DateFormat('yMMM').format(newDates[0]!),
+                          style: Centre.listText,
+                        ),
                       ),
                     );
             },
@@ -289,15 +331,28 @@ class SettingsPage extends StatelessWidget {
                         padding: EdgeInsets.all(2.w),
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: const BorderRadius.all(Radius.circular(8)),
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(8),
+                          ),
                         ),
-                        child: Text(DateFormat('yMMM').format(newDates[1]!), style: Centre.listText),
+                        child: Text(
+                          DateFormat('yMMM').format(newDates[1]!),
+                          style: Centre.listText,
+                        ),
                       ),
                     );
             },
           ),
           Expanded(
-            child: IconButton.outlined(onPressed: () {}, iconSize: 5.w, color: Colors.white, icon: Icon(Icons.add)),
+            child: Align(
+              alignment: Alignment.topRight,
+              child: IconButton.outlined(
+                onPressed: () {},
+                iconSize: 5.w,
+                color: Colors.white,
+                icon: Icon(Icons.add),
+              ),
+            ),
           ),
         ],
       ),
@@ -318,7 +373,9 @@ class SettingsPage extends StatelessWidget {
       );
     });
     addingYearMonthResults.addListener(() {
-      context.read<AddingDateRangeCubit>().updateDates(addingYearMonthResults.value);
+      context.read<AddingDateRangeCubit>().updateDates(
+        addingYearMonthResults.value,
+      );
     });
     return SafeArea(
       child: Scaffold(
@@ -329,14 +386,52 @@ class SettingsPage extends StatelessWidget {
             child: Column(
               children: [
                 Text("Manage Categories", style: Centre.semiTitleText),
+                SizedBox(height: 1.h),
+                Divider(color: Centre.colors[36]),
                 SizedBox(height: 2.h),
-                Divider(color: Colors.white),
-                SizedBox(height: 2.h),
-                ...categoryEditingList(context: context, categories: categories),
+                ...categoryEditingList(
+                  context: context,
+                  categories: categories,
+                ),
                 SizedBox(height: 4.h),
-                Text("Budget Planning Date Ranges", style: Centre.semiTitleText),
+                Text(
+                  "Budget Planning Date Ranges",
+                  style: Centre.semiTitleText,
+                ),
+                SizedBox(height: 1.h),
+
+                Divider(color: Centre.colors[36]),
                 SizedBox(height: 2.h),
                 ...dateRangeList(context),
+
+                BlocBuilder<TempIncludeFixedCubit, bool>(
+                  builder: (_, enabled) {
+                    return GestureDetector(
+                      onTap: () {
+                        context.read<TempIncludeFixedCubit>().toggle();
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              enabled
+                                  ? Icons.check_box_sharp
+                                  : Icons.check_box_outline_blank_sharp,
+                              size: 5.w,
+                            ),
+                            SizedBox(width: 3.w),
+                            Text(
+                              "Include Fixed Costs in Bar Graphs",
+                              style: Centre.semiTitle2Text,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ),
@@ -348,47 +443,51 @@ class SettingsPage extends StatelessWidget {
 
 class ChooseColorBtn extends StatelessWidget {
   final int? color;
-  const ChooseColorBtn({super.key, required this.color});
+  final String? categoryName;
+  const ChooseColorBtn({
+    super.key,
+    required this.color,
+    required this.categoryName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<SettingsAddColorCubit, int?>(
       builder: (_, chosenColor) {
-        return GestureDetector(
-          onTap: () {
-            showAlignedDialog(
-              followerAnchor: Alignment.topLeft,
-              targetAnchor: Alignment.bottomLeft,
-              barrierColor: Colors.transparent,
-              offset: Offset(1.w, 0),
-              context: context,
-              builder: (BuildContext dialogContext) => GestureDetector(
-                onTap: () {
+        return Builder(
+          builder: (context) {
+            return GestureDetector(
+              onTap: () {
+                showAlignedDialog(
+                  followerAnchor: Alignment.topRight,
+                  targetAnchor: Alignment.bottomRight,
+                  barrierColor: Colors.transparent,
+                  offset: Offset(0, 1.h),
+                  context: context,
+                  builder: (BuildContext dialogContext) =>
+                      BlocProvider<SettingsAddColorCubit>.value(
+                        value: context.read<SettingsAddColorCubit>(),
+                        child: const ChooseColorDialog(),
+                      ),
+                ).then((_) {
                   if (context.read<SettingsAddColorCubit>().state != null) {
                     // TODO: update category color
+                    print(categoryName);
                   }
-                  Navigator.pop(dialogContext);
-                },
-                child: Scaffold(
-                  backgroundColor: Colors.transparent,
-                  body: BlocProvider<SettingsAddColorCubit>.value(
-                    value: context.read<SettingsAddColorCubit>(),
-                    child: const ChooseColorDialog(),
-                  ),
+                });
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 2.w),
+                width: 6.w,
+                height: 6.w,
+                decoration: BoxDecoration(
+                  color: Color(chosenColor ?? color!),
+                  border: Border.all(color: Colors.white, width: 1.5),
+                  borderRadius: const BorderRadius.all(Radius.circular(40)),
                 ),
               ),
             );
           },
-          child: Container(
-            margin: EdgeInsets.only(right: 2.w),
-            width: 6.w,
-            height: 6.w,
-            decoration: BoxDecoration(
-              color: Color(chosenColor ?? color!),
-              border: Border.all(color: Colors.white, width: 1.5),
-              borderRadius: const BorderRadius.all(Radius.circular(40)),
-            ),
-          ),
         );
       },
     );
@@ -489,7 +588,8 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
                   return 'Too long';
                 } else if (widget.existingCategories.contains(text)) {
                   return 'Category already exists';
-                } else if (context.read<SettingsAddColorCubit>().state == null) {
+                } else if (context.read<SettingsAddColorCubit>().state ==
+                    null) {
                   return 'No color chosen';
                 }
                 return null;
@@ -505,7 +605,10 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
           ),
         ),
         SizedBox(width: 3.w),
-        ChooseColorBtn(color: Colors.transparent.toARGB32()),
+        ChooseColorBtn(
+          color: Colors.transparent.toARGB32(),
+          categoryName: null,
+        ),
         SizedBox(width: 3.w),
 
         IconButton.outlined(
@@ -532,16 +635,16 @@ class ChooseColorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget colourBtn(int i) {
       return GestureDetector(
-        behavior: HitTestBehavior.translucent,
         onTap: () {
-          context.read<SettingsAddColorCubit>().selectColor(color: Centre.colors[i].toARGB32());
+          context.read<SettingsAddColorCubit>().selectColor(
+            color: Centre.colors[i].toARGB32(),
+          );
         },
         child: BlocBuilder<SettingsAddColorCubit, int?>(
           builder: (context, chosenColor) {
             return Container(
-              margin: EdgeInsets.symmetric(vertical: 0.8.h, horizontal: 2.w),
-              width: 6.5.w,
-              height: 6.5.w,
+              width: 6.w,
+              height: 6.w,
               decoration: BoxDecoration(
                 color: Centre.colors[i],
                 border: Border.all(color: Colors.white, width: 1.5),
@@ -556,28 +659,26 @@ class ChooseColorDialog extends StatelessWidget {
       );
     }
 
-    return GestureDetector(
-      onTap: () {},
-      child: Material(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
         color: Centre.dialogBgColor,
-        elevation: 0,
-        child: SizedBox(
-          height: 15.8.h,
-          width: 69.w,
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
-            child: Column(
-              children: [
-                for (int i = 0; i < 3; i++)
-                  Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [for (int j = 0; j < 6; j++) colourBtn(i * 6 + j)],
-                  ),
-              ],
-            ),
+        boxShadow: [
+          BoxShadow(
+            color: Centre.shadowbgColor, // Shadow color
+            spreadRadius: 1, // Extends the shadow past the box shape
+            blurRadius: 2, // Softens the shadow edges
+            offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
           ),
-        ),
+        ],
+      ),
+
+      width: 67.w,
+      child: Wrap(
+        spacing: 4.w,
+        runSpacing: 1.5.h,
+        children: [for (int i = 0; i < 54; i++) colourBtn(i)],
       ),
     );
   }

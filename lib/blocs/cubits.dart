@@ -73,6 +73,13 @@ class AddingDateRangeCubit extends Cubit<List<DateTime?>> {
   }
 }
 
+class TempIncludeFixedCubit extends Cubit<bool> {
+  TempIncludeFixedCubit() : super(false);
+  void toggle() {
+    emit(!state);
+  }
+}
+
 class FABIconCubit extends Cubit<IconData> {
   final IconData icon;
   FABIconCubit(this.icon) : super(icon);

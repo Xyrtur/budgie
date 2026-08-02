@@ -43,11 +43,35 @@ class _LandingPageViewState extends State<LandingPageView> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                  navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
+                  navBarBtn(
+                    controller,
+                    PageSelected.Overview,
+                    Icons.auto_graph_sharp,
+                    "Overview",
+                    pageSelected,
+                  ),
+                  navBarBtn(
+                    controller,
+                    PageSelected.TripPlanning,
+                    Icons.checklist,
+                    "Trip Planning",
+                    pageSelected,
+                  ),
                   SizedBox(width: 9.w),
-                  navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
-                  navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
+                  navBarBtn(
+                    controller,
+                    PageSelected.BudgetPlanning,
+                    Icons.attach_money,
+                    "Set Budget",
+                    pageSelected,
+                  ),
+                  navBarBtn(
+                    controller,
+                    PageSelected.UserSettings,
+                    Icons.settings,
+                    "Settings",
+                    pageSelected,
+                  ),
                 ],
               );
             },
@@ -75,8 +99,12 @@ class _LandingPageViewState extends State<LandingPageView> {
               onPageChanged: (index) {
                 WidgetsBinding.instance.focusManager.primaryFocus
                     ?.unfocus(); // ensures keyboard dismisses between page swipes
-                context.read<NavbarCubit>().changePage(page: PageSelected.values[index]);
-                context.read<FABIconCubit>().changeIcon(page: PageSelected.values[index]);
+                context.read<NavbarCubit>().changePage(
+                  page: PageSelected.values[index],
+                );
+                context.read<FABIconCubit>().changeIcon(
+                  page: PageSelected.values[index],
+                );
               },
               controller: controller,
               children: [
@@ -84,15 +112,27 @@ class _LandingPageViewState extends State<LandingPageView> {
                 const AllTripPlanningPage(),
                 MultiBlocProvider(
                   providers: [
-                    BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit()),
+                    BlocProvider<LiveBudgetTotalTrackerCubit>(
+                      create: (context) => LiveBudgetTotalTrackerCubit(),
+                    ),
                   ],
                   child: const BudgetPlanningPage(),
                 ),
 
                 MultiBlocProvider(
                   providers: [
-                    BlocProvider<TempEditingDateRangesCubit>(create: (context) => TempEditingDateRangesCubit()),
-                    BlocProvider<AddingDateRangeCubit>(create: (context) => AddingDateRangeCubit()),
+                    BlocProvider<TempIncludeFixedCubit>(
+                      create: (context) => TempIncludeFixedCubit(),
+                    ),
+                    BlocProvider<TempEditingDateRangesCubit>(
+                      create: (context) => TempEditingDateRangesCubit(),
+                    ),
+                    BlocProvider<AddingDateRangeCubit>(
+                      create: (context) => AddingDateRangeCubit(),
+                    ),
+                    BlocProvider<SettingsEditingTextCubit>(
+                      create: (context) => SettingsEditingTextCubit(),
+                    ),
                   ],
                   child: SettingsPage(),
                 ),
@@ -114,7 +154,11 @@ class _LandingPageViewState extends State<LandingPageView> {
 
 class MyBehavior extends ScrollBehavior {
   @override
-  Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
+  Widget buildOverscrollIndicator(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
     return child;
   }
 }
