@@ -30,68 +30,72 @@ class _LandingPageViewState extends State<LandingPageView> {
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         backgroundColor: Centre.bgColor,
-        bottomNavigationBar: BottomAppBar(
-          height: 9.2.h,
-          color: Centre.dialogBgColor,
-          shape: CircularNotchedRectangle(),
-          notchMargin: 0.8.h,
-          child: BlocBuilder<NavbarCubit, PageSelected>(
-            builder: (_, pageSelected) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  navBarBtn(
-                    controller,
-                    PageSelected.Overview,
-                    Icons.auto_graph_sharp,
-                    "Overview",
-                    pageSelected,
-                  ),
-                  navBarBtn(
-                    controller,
-                    PageSelected.TripPlanning,
-                    Icons.checklist,
-                    "Trip Planning",
-                    pageSelected,
-                  ),
-                  SizedBox(width: 9.w),
-                  navBarBtn(
-                    controller,
-                    PageSelected.BudgetPlanning,
-                    Icons.attach_money,
-                    "Set Budget",
-                    pageSelected,
-                  ),
-                  navBarBtn(
-                    controller,
-                    PageSelected.UserSettings,
-                    Icons.settings,
-                    "Settings",
-                    pageSelected,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-        floatingActionButton: BlocBuilder<FABIconCubit, IconData>(
-          builder: (_, icon) {
-            return SizedBox(
-              height: 15.w,
-              width: 15.w,
-              child: FloatingActionButton(
-                shape: const CircleBorder(),
-                onPressed: () {},
-                backgroundColor: Centre.primaryColor,
-                elevation: 5,
-                child: Icon(icon, color: Colors.white, size: 6.w),
+        bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom > 0
+            ? null
+            : BottomAppBar(
+                height: 9.2.h,
+                color: Centre.dialogBgColor,
+                shape: CircularNotchedRectangle(),
+                notchMargin: 0.8.h,
+                child: BlocBuilder<NavbarCubit, PageSelected>(
+                  builder: (_, pageSelected) {
+                    return Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        navBarBtn(
+                          controller,
+                          PageSelected.Overview,
+                          Icons.auto_graph_sharp,
+                          "Overview",
+                          pageSelected,
+                        ),
+                        navBarBtn(
+                          controller,
+                          PageSelected.TripPlanning,
+                          Icons.checklist,
+                          "Trip Planning",
+                          pageSelected,
+                        ),
+                        SizedBox(width: 9.w),
+                        navBarBtn(
+                          controller,
+                          PageSelected.BudgetPlanning,
+                          Icons.attach_money,
+                          "Set Budget",
+                          pageSelected,
+                        ),
+                        navBarBtn(
+                          controller,
+                          PageSelected.UserSettings,
+                          Icons.settings,
+                          "Settings",
+                          pageSelected,
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
-            );
-          },
-        ),
+        floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 0
+            ? null
+            : BlocBuilder<FABIconCubit, IconData>(
+                builder: (_, icon) {
+                  return SizedBox(
+                    height: 15.w,
+                    width: 15.w,
+                    child: FloatingActionButton(
+                      shape: const CircleBorder(),
+                      onPressed: () {},
+                      backgroundColor: Centre.primaryColor,
+                      elevation: 5,
+                      child: Icon(icon, color: Colors.white, size: 6.w),
+                    ),
+                  );
+                },
+              ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: Stack(
           children: [

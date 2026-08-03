@@ -18,13 +18,17 @@ class BudgetPlanningPage extends StatefulWidget {
   State<BudgetPlanningPage> createState() => _BudgetPlanningPageState();
 }
 
-class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTickerProviderStateMixin {
+class _BudgetPlanningPageState extends State<BudgetPlanningPage>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> heightAnimation;
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  bool _isOpen = false;
   String selectedRole = "Jan 2024 - Current";
-  final List<String> options = ["Jan 2024 - Current", "Jan 2023 - Dec 2023", "Jan 2022 - Dec 2022"];
+  final List<String> options = [
+    "Jan 2024 - Current",
+    "Jan 2023 - Dec 2023",
+    "Jan 2022 - Dec 2022",
+  ];
   final List<String> categories = [
     "Groceries",
     "Entertainment",
@@ -36,15 +40,21 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
     "Category 2",
   ];
   double currentBudget = 0;
-  List<String> fixedFormFieldCostValues = [];
+  List<double> fixedFormFieldCostValues = [];
   List<String> fixedFormFieldLabelValues = [];
   List<double> categoryCostValues = [];
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(duration: const Duration(milliseconds: 150), vsync: this);
-    heightAnimation = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+    controller = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    heightAnimation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+    );
     categoryCostValues = List.generate(categories.length, (_) => 0);
   }
 
@@ -78,9 +88,13 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
                       boxShadow: [
                         BoxShadow(
                           color: Centre.shadowbgColor, // Shadow color
-                          spreadRadius: 1, // Extends the shadow past the box shape
+                          spreadRadius:
+                              1, // Extends the shadow past the box shape
                           blurRadius: 2, // Softens the shadow edges
-                          offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
+                          offset: const Offset(
+                            -1,
+                            4,
+                          ), // Positions shadow (x-axis, y-axis)
                         ),
                       ],
                     ),
@@ -96,7 +110,10 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
                             Navigator.pop(context);
                           },
                           child: Container(
-                            padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 6.w,
+                              vertical: 1.5.h,
+                            ),
                             child: Text(item, style: Centre.semiTitle2Text),
                           ),
                         );
@@ -132,56 +149,6 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
     );
   }
 
-  List<Widget> fixedCostFormFields() {
-    var formFieldRows = <Widget>[];
-    for (var i = 0; i < fixedFormFieldCostValues.length; i++) {
-      formFieldRows.add(
-        Row(
-          children: [
-            SizedBox(width: 2.w),
-            IconButton(
-              padding: EdgeInsets.all(2.w),
-              onPressed: () {
-                setState(() {
-                  fixedFormFieldCostValues.removeAt(i);
-                });
-              },
-              icon: Icon(Icons.delete_outline),
-            ),
-            Expanded(
-              child: TextFormField(
-                textAlign: TextAlign.center,
-
-                onFieldSubmitted: (value) {
-                  fixedFormFieldLabelValues[i] = value;
-                },
-              ),
-            ),
-            SizedBox(width: 5.w),
-            SizedBox(
-              width: 15.w,
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                keyboardType: TextInputType.number,
-
-                onFieldSubmitted: (value) {
-                  double budget = context.read<LiveBudgetTotalTrackerCubit>().state;
-                  budget -= double.tryParse(fixedFormFieldCostValues[i]) ?? 0;
-                  fixedFormFieldCostValues[i] = value;
-                  context.read<LiveBudgetTotalTrackerCubit>().updateTotal(
-                    value: budget + (double.tryParse(value) ?? 0),
-                  );
-                },
-              ),
-            ),
-            SizedBox(width: 2.w),
-          ],
-        ),
-      );
-    }
-    return formFieldRows;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -191,7 +158,10 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [dateRangeDropdownMenu()]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [dateRangeDropdownMenu()],
+              ),
               SizedBox(height: 2.h),
               Align(
                 alignment: Alignment.center,
@@ -203,7 +173,9 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
                   ),
                   child: BlocBuilder<LiveBudgetTotalTrackerCubit, double>(
                     builder: (_, currentBudget) {
-                      return Text("Monthly Budget: ${currentBudget.toStringAsFixed(2)}");
+                      return Text(
+                        "Monthly Budget: ${currentBudget.toStringAsFixed(2)}",
+                      );
                     },
                   ),
                 ),
@@ -226,13 +198,22 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
                       children: [
                         SizedBox(height: 2.h),
                         Text("Fixed", style: Centre.semiTitle2Text),
-                        ...fixedCostFormFields(),
+                        for (
+                          var i = 0;
+                          i < fixedFormFieldCostValues.length;
+                          i++
+                        )
+                          FixedFormFieldRow(
+                            index: i,
+                            fixedCosts: fixedFormFieldCostValues,
+                            fixedLabels: fixedFormFieldLabelValues,
+                          ),
                         SizedBox(height: 2.h),
 
                         IconButton.outlined(
                           onPressed: () {
                             setState(() {
-                              fixedFormFieldCostValues.add('');
+                              fixedFormFieldCostValues.add(0);
                               fixedFormFieldLabelValues.add('');
                             });
                           },
@@ -262,6 +243,101 @@ class _BudgetPlanningPageState extends State<BudgetPlanningPage> with SingleTick
   }
 }
 
+class FixedFormFieldRow extends StatefulWidget {
+  final List<double> fixedCosts;
+  final int index;
+  final List<String> fixedLabels;
+
+  const FixedFormFieldRow({
+    super.key,
+    required this.index,
+    required this.fixedCosts,
+    required this.fixedLabels,
+  });
+
+  @override
+  State<FixedFormFieldRow> createState() => _FixedFormFieldRowState();
+}
+
+class _FixedFormFieldRowState extends State<FixedFormFieldRow> {
+  final TextEditingController labelController = TextEditingController();
+  final FocusNode labelFocusNode = FocusNode();
+  final TextEditingController costController = TextEditingController();
+  final FocusNode costFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    labelController.dispose();
+    labelFocusNode.dispose();
+    costController.dispose();
+    costFocusNode.dispose();
+    super.dispose();
+  }
+
+  void updateBudgetTotal(double value) {
+    double budget = context.read<LiveBudgetTotalTrackerCubit>().state;
+    budget -= widget.fixedCosts[widget.index];
+    widget.fixedCosts[widget.index] = value;
+    context.read<LiveBudgetTotalTrackerCubit>().updateTotal(
+      value: budget + value,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    labelFocusNode.addListener(() {
+      if (!labelFocusNode.hasFocus) {
+        widget.fixedLabels[widget.index] = labelController.text;
+      }
+    });
+    costFocusNode.addListener(() {
+      if (!costFocusNode.hasFocus) {
+        updateBudgetTotal(double.tryParse(costController.text) ?? 0);
+      }
+    });
+    return Row(
+      children: [
+        SizedBox(width: 2.w),
+        IconButton(
+          padding: EdgeInsets.all(2.w),
+          onPressed: () {
+            setState(() {
+              widget.fixedCosts.removeAt(widget.index);
+              widget.fixedLabels.removeAt(widget.index);
+            });
+          },
+          icon: Icon(Icons.delete_outline),
+        ),
+        Expanded(
+          child: TextFormField(
+            textAlign: TextAlign.center,
+            controller: labelController,
+            focusNode: labelFocusNode,
+            onFieldSubmitted: (value) {
+              widget.fixedLabels[widget.index] = value;
+            },
+          ),
+        ),
+        SizedBox(width: 5.w),
+        SizedBox(
+          width: 15.w,
+          child: TextFormField(
+            controller: costController,
+            focusNode: costFocusNode,
+            textAlign: TextAlign.center,
+            keyboardType: TextInputType.number,
+
+            onFieldSubmitted: (value) {
+              updateBudgetTotal(double.tryParse(value) ?? 0);
+            },
+          ),
+        ),
+        SizedBox(width: 2.w),
+      ],
+    );
+  }
+}
+
 class CategoryBox extends StatefulWidget {
   final String categoryName;
   final Color categoryColor;
@@ -282,15 +358,31 @@ class CategoryBox extends StatefulWidget {
 
 class _CategoryBoxState extends State<CategoryBox> {
   final TextEditingController controller = TextEditingController();
+  final FocusNode focusNode = FocusNode();
+
+  void updateBudgetTotal(String value) {
+    double budget = context.read<LiveBudgetTotalTrackerCubit>().state;
+    budget -= widget.categoryCosts[widget.categoryIndex];
+    widget.categoryCosts[widget.categoryIndex] = double.tryParse(value) ?? 0;
+    context.read<LiveBudgetTotalTrackerCubit>().updateTotal(
+      value: budget + (double.tryParse(value) ?? 0),
+    );
+  }
 
   @override
   void dispose() {
     controller.dispose();
+    focusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    focusNode.addListener(() {
+      if (!focusNode.hasFocus) {
+        updateBudgetTotal(controller.text);
+      }
+    });
     return Container(
       width: 28.w,
       padding: EdgeInsets.all(3.w),
@@ -324,17 +416,11 @@ class _CategoryBoxState extends State<CategoryBox> {
               Expanded(
                 child: TextFormField(
                   controller: controller,
+                  focusNode: focusNode,
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.number,
                   onFieldSubmitted: (value) {
-                    setState(() {
-                      double budget = context.read<LiveBudgetTotalTrackerCubit>().state;
-                      budget -= widget.categoryCosts[widget.categoryIndex];
-                      widget.categoryCosts[widget.categoryIndex] = double.tryParse(value) ?? 0;
-                      context.read<LiveBudgetTotalTrackerCubit>().updateTotal(
-                        value: budget + (double.tryParse(value) ?? 0),
-                      );
-                    });
+                    updateBudgetTotal(value);
                   },
                 ),
               ),
