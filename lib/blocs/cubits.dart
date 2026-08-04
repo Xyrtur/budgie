@@ -105,3 +105,24 @@ class LiveBudgetTotalTrackerCubit extends Cubit<double> {
     emit(value);
   }
 }
+
+class SpendingGraphViewToggleCubit extends Cubit<bool> {
+  SpendingGraphViewToggleCubit() : super(false);
+
+  void toggle() {
+    emit(!state);
+  }
+}
+
+class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
+  SpendingCategoriesToggledCubit() : super([]);
+
+  void toggleCategory(String category) {
+    if (state.contains(category)) {
+      state.remove(category);
+      emit([...state]);
+    } else {
+      emit([...state, category]);
+    }
+  }
+}

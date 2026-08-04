@@ -9,7 +9,10 @@ import 'package:sizer/sizer.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   runApp(const BudgieApp());
 }
 
@@ -32,8 +35,15 @@ class BudgieApp extends StatelessWidget {
           create: (context) => BudgieDatabase(),
           child: MultiBlocProvider(
             providers: [
-              BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
-              BlocProvider<FABIconCubit>(create: (context) => FABIconCubit(Icons.add)),
+              BlocProvider<NavbarCubit>(
+                create: (context) => NavbarCubit(PageSelected.Overview),
+              ),
+              BlocProvider<FABIconCubit>(
+                create: (context) => FABIconCubit(Icons.add),
+              ),
+              BlocProvider<SpendingGraphViewToggleCubit>(
+                create: (context) => SpendingGraphViewToggleCubit(),
+              ),
             ],
             child: const LandingPageView(),
           ),

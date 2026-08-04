@@ -112,7 +112,15 @@ class _LandingPageViewState extends State<LandingPageView> {
               },
               controller: controller,
               children: [
-                SpendingOverviewPage(),
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<SpendingCategoriesToggledCubit>(
+                      create: (context) => SpendingCategoriesToggledCubit(),
+                    ),
+                  ],
+                  child: const SpendingOverviewPage(),
+                ),
+
                 const AllTripPlanningPage(),
                 MultiBlocProvider(
                   providers: [

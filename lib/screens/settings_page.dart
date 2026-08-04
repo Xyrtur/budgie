@@ -137,13 +137,13 @@ class SettingsPage extends StatelessWidget {
       monthStylePredicate: (DateTime val) {
         if (val.month == DateTime.now().month &&
             val.year == DateTime.now().year) {
-          return TextButton.styleFrom(backgroundColor: Centre.colors[28]);
+          return TextButton.styleFrom(backgroundColor: Centre.colors[33]);
         }
         return null;
       },
       yearStylePredicate: (int val) {
         if (val == DateTime.now().year) {
-          return TextButton.styleFrom(backgroundColor: Centre.colors[28]);
+          return TextButton.styleFrom(backgroundColor: Centre.colors[33]);
         }
         return null;
       },
@@ -161,9 +161,9 @@ class SettingsPage extends StatelessWidget {
           headerIconsColor: Colors.white,
         ),
         dateButtonsSettings: PickerDateButtonsSettings(
-          selectedMonthBackgroundColor: Centre.colors[33],
+          selectedMonthBackgroundColor: Centre.colors[42],
           selectedMonthTextColor: Centre.bgColor,
-          unselectedMonthsTextColor: Centre.colors[33],
+          unselectedMonthsTextColor: Centre.colors[42],
           currentMonthTextColor: Centre.bgColor,
           monthTextStyle: Centre.listText,
         ),

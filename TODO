@@ -1,11 +1,11 @@
 ✔ Pick colors @done
 ✔ Polish up Monthly Overview page @done
 ✔ Create Trip Planning page @done
+✔ Create Settings Page @done
+✔ Create Budget Planning page @done
 ----------------------------------
-☐ Create Settings Page @started
-☐ Create Budget Planning page @started
+ ☐ Create Yearly Graphview page @started
 ----------------------------------
-☐ Create Yearly Graphview page
 ☐ Create Single Trip page
 ☐ Create Add Expense/Income Dialog
 ☐ Create Year Picker Dialog
