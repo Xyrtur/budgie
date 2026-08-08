@@ -39,6 +39,7 @@ dependencies:
   intl: ^0.20.2
   aligned_dialog: ^0.0.7
   month_picker_dialog: ^6.7.2
+  fl_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:

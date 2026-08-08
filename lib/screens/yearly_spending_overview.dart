@@ -6,6 +6,7 @@ import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/budget_planning.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/spending_overview/month_tile.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +46,20 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage>
     "Category 1",
     "Category 2",
   ];
+
+  final 
+
+  LineChartData get sampleData1 => LineChartData(
+        lineTouchData: lineTouchData1,
+        gridData: gridData,
+        titlesData: titlesData1,
+        borderData: borderData,
+        lineBarsData: lineBarsData1,
+        minX: 0,
+        maxX: 14,
+        maxY: 4,
+        minY: 0,
+      );
 
   late final AnimationController controller = AnimationController(
     duration: const Duration(milliseconds: 1300),
@@ -154,7 +169,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage>
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
-                                    children: [
+                                    children: [ //TODO: graphview add
                                       Container(
                                         color: Centre.colors[33],
                                         height: 35.h,
@@ -172,9 +187,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage>
                                   child: Row(
                                     children: [
                                       Expanded(child: categoryBoxes()),
-                                      Container(
-                                        color: Colors.transparent,
-                                        width: 50.h,
+                                      LineChart(data)
                                       ),
                                     ],
                                   ),
