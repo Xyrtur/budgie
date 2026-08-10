@@ -3,11 +3,11 @@
 ✔ Create Trip Planning page @done
 ✔ Create Settings Page @done
 ✔ Create Budget Planning page @done
-----------------------------------
- ☐ Create Yearly Graphview page @started
+✔ Create Year Picker Dialog @done
+✔ Create Yearly Graphview page @done
 ----------------------------------
 ☐ Create Single Trip page
 ☐ Create Add Expense/Income Dialog
-☐ Create Year Picker Dialog
+----------------------------------
 ☐ Learn Drift 
 ☐ Create Blocs
