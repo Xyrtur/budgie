@@ -7,12 +7,7 @@ class AllTripPlanningPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<String> tripNames = [
-      "After Grad",
-      "Europe",
-      "Japan",
-      "Australia Trip",
-    ];
+    const List<String> tripNames = ["After Grad", "Europe", "Japan", "Australia Trip"];
 
     return SafeArea(
       child: Scaffold(
@@ -27,19 +22,12 @@ class AllTripPlanningPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Spacer(),
-                Text(
-                  "Trip Planning",
-                  textAlign: TextAlign.center,
-                  style: Centre.titleText,
-                ),
+                Text("Trip Planning", textAlign: TextAlign.center, style: Centre.titleText),
 
                 Expanded(
                   child: Padding(
                     padding: EdgeInsetsGeometry.only(left: 3.w),
-                    child: Align(
-                      alignment: AlignmentGeometry.bottomLeft,
-                      child: SortButton(),
-                    ),
+                    child: Align(alignment: AlignmentGeometry.bottomLeft, child: SortButton()),
                   ),
                 ),
               ],
@@ -52,44 +40,39 @@ class AllTripPlanningPage extends StatelessWidget {
               child: ListView(
                 children: [
                   for (String i in tripNames)
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 5.w,
-                        vertical: 1.h,
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 1.5.h,
-                        horizontal: 3.w,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Centre.dialogBgColor,
-                        borderRadius: BorderRadius.circular(8),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                      child: Ink(
+                        decoration: BoxDecoration(
+                          color: const Color(0xff131524),
+                          borderRadius: BorderRadius.circular(8),
 
-                        boxShadow: [
-                          BoxShadow(
-                            color: Centre.shadowbgColor, // Shadow color
-                            spreadRadius:
-                                1, // Extends the shadow past the box shape
-                            blurRadius: 2, // Softens the shadow edges
-                            offset: const Offset(
-                              -1,
-                              4,
-                            ), // Positions shadow (x-axis, y-axis)
+                          // Outer depth
+                          boxShadow: const [
+                            BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 5),
+                            BoxShadow(color: Color(0xff1D1F32), offset: Offset(-4, -4), blurRadius: 5),
+                          ],
+                        ),
+
+                        child: InkWell(
+                          splashColor: Centre.bgSplashColor,
+                          highlightColor: Centre.bgSplashColor,
+                          borderRadius: BorderRadius.circular(8),
+
+                          onTap: () async {
+                            // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
+                          },
+
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                            child: Column(
+                              children: [
+                                Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
+                                Text("Jul 2024 - Aug 2024", style: Centre.listText.copyWith(color: Colors.grey)),
+                              ],
+                            ),
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            i,
-                            style: Centre.semiTitle2Text,
-                            textAlign: TextAlign.start,
-                          ),
-                          Text(
-                            "Jul 2024 - Aug 2024",
-                            style: Centre.listText.copyWith(color: Colors.grey),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                 ],

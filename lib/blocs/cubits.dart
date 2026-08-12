@@ -115,7 +115,8 @@ class SpendingGraphViewToggleCubit extends Cubit<bool> {
 }
 
 class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
-  SpendingCategoriesToggledCubit() : super([]);
+  SpendingCategoriesToggledCubit()
+    : super(["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2", "Category 3", "Category 4"]);
 
   void toggleCategory(String category) {
     if (state.contains(category)) {
@@ -124,5 +125,22 @@ class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
     } else {
       emit([...state, category]);
     }
+  }
+}
+
+class YearsSelectedCubit extends Cubit<Map<int, bool>> {
+  YearsSelectedCubit() : super({DateTime.now().year: true});
+
+  void updateSelectedYears(List<int> yearsSelected) {
+    Map<int, bool> newMap = {};
+    for (int year in yearsSelected) {
+      newMap[year] = state[year] ?? false;
+    }
+    emit(newMap);
+  }
+
+  void toggleYear(int year) {
+    state[year] = !state[year]!;
+    emit({...state});
   }
 }

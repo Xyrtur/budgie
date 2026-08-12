@@ -4,9 +4,13 @@ import 'package:sizer/sizer.dart';
 class Centre {
   static Color bgColor = const Color(0xff131524);
   static Color primaryColor = const Color.fromARGB(255, 110, 62, 92);
-  static Color accentColor = const Color.fromARGB(255, 134, 97, 120);
+  static Color accentColor = const Color.fromARGB(255, 170, 120, 151);
+  static Color splashColor = const Color(0xFF8F647F);
+  static Color bgSplashColor = const Color(0xff25283D);
   static Color shadowbgColor = const Color.fromARGB(255, 27, 26, 25);
   static Color dialogBgColor = const Color(0xff22263D);
+  static Color graphLinesColor = const Color.fromARGB(255, 76, 81, 110);
+  static Color scrollTrackColor = const Color(0xff0D0E1A);
 
   static const List<Color> colors = [
     Color(0xffffa69e),
@@ -65,31 +69,11 @@ class Centre {
     Color(0xfff8c0c8),
   ];
 
-  static final titleText = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-    fontSize: 18.sp,
-    fontFamily: 'Raleway',
-  );
+  static final titleText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 18.sp, fontFamily: 'Raleway');
 
-  static final semiTitleText = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-    fontSize: 17.sp,
-    fontFamily: 'Raleway',
-  );
+  static final semiTitleText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 17.sp, fontFamily: 'Raleway');
 
-  static final semiTitle2Text = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-    fontSize: 16.sp,
-    fontFamily: 'Raleway',
-  );
+  static final semiTitle2Text = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 16.sp, fontFamily: 'Raleway');
 
-  static final listText = TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w400,
-    fontSize: 14.sp,
-    fontFamily: 'Raleway',
-  );
+  static final listText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14.sp, fontFamily: 'Raleway');
 }

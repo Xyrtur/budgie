@@ -46,21 +46,9 @@ class _LandingPageViewState extends State<LandingPageView> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                        navBarBtn(
-                          controller,
-                          PageSelected.TripPlanning,
-                          Icons.checklist,
-                          "Trip Planning",
-                          pageSelected,
-                        ),
+                        navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
                         SizedBox(width: 9.w),
-                        navBarBtn(
-                          controller,
-                          PageSelected.BudgetPlanning,
-                          Icons.attach_money,
-                          "Set Budget",
-                          pageSelected,
-                        ),
+                        navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
                         navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
                       ],
                     );
@@ -98,15 +86,14 @@ class _LandingPageViewState extends State<LandingPageView> {
                 MultiBlocProvider(
                   providers: [
                     BlocProvider<SpendingCategoriesToggledCubit>(create: (context) => SpendingCategoriesToggledCubit()),
+                    BlocProvider<YearsSelectedCubit>(create: (context) => YearsSelectedCubit()),
                   ],
                   child: const SpendingOverviewPage(),
                 ),
 
                 const AllTripPlanningPage(),
                 MultiBlocProvider(
-                  providers: [
-                    BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit()),
-                  ],
+                  providers: [BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit())],
                   child: const BudgetPlanningPage(),
                 ),
 
