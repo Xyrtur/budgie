@@ -34,7 +34,6 @@ Container(color: genreColor, Text(genreName), list of expenses)
 
 */
 import 'dart:math';
-import 'dart:math' as math;
 
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/spending_overview/bar_graphs.dart';
@@ -48,6 +47,7 @@ class MonthlySpendingOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: Scaffold(
         backgroundColor: Centre.bgColor,
         body: Padding(
@@ -70,11 +70,7 @@ class MonthlySpendingOverview extends StatelessWidget {
 
               SizedBox(
                 width: 90.w,
-                child: Wrap(
-                  spacing: 3.w,
-                  runSpacing: 0.4.h,
-                  children: barGraphLegend(),
-                ),
+                child: Wrap(spacing: 3.w, runSpacing: 0.4.h, children: barGraphLegend()),
               ),
               SizedBox(height: 3.h),
 
@@ -90,21 +86,13 @@ class MonthlySpendingOverview extends StatelessWidget {
 
                     SizedBox(
                       width: 90.w,
-                      child: Wrap(
-                        spacing: 3.w,
-                        runSpacing: 0.4.h,
-                        children: incomeBoxes(),
-                      ),
+                      child: Wrap(spacing: 3.w, runSpacing: 0.4.h, children: incomeBoxes()),
                     ),
                     SizedBox(height: 4.h),
                     Text("Expenses", style: Centre.semiTitleText),
                     SizedBox(height: 1.h),
 
-                    Wrap(
-                      spacing: 5.w,
-                      runSpacing: 3.h,
-                      children: [...categories()],
-                    ),
+                    Wrap(spacing: 5.w, runSpacing: 3.h, children: [...categories()]),
                   ],
                 ),
               ),
@@ -152,10 +140,7 @@ List<Widget> categories() {
               Center(
                 child: Text(
                   "\$285.71",
-                  style: Centre.listText.copyWith(
-                    fontSize: 13.sp,
-                    color: const Color.fromARGB(255, 233, 117, 109),
-                  ),
+                  style: Centre.listText.copyWith(fontSize: 13.sp, color: const Color.fromARGB(255, 233, 117, 109)),
                 ),
               ),
               SizedBox(
@@ -166,7 +151,7 @@ List<Widget> categories() {
                   duration: const Duration(milliseconds: 3500),
                   curve: Curves.fastLinearToSlowEaseIn,
                   builder: (context, value, _) => Transform.rotate(
-                    angle: math.pi,
+                    angle: pi,
                     child: CircularProgressIndicator(
                       value: value,
                       strokeWidth: 4.w,
@@ -183,24 +168,12 @@ List<Widget> categories() {
           Text("Category 2", style: Centre.semiTitleText),
           Text(
             "\$120.71 remaining",
-            style: Centre.listText.copyWith(
-              fontSize: 13.sp,
-              color: Colors.lightGreen,
-            ),
+            style: Centre.listText.copyWith(fontSize: 13.sp, color: Colors.lightGreen),
           ),
           SizedBox(height: 2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("ice cream"), Text("\$18.56")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("shoes"), Text("\$170.45")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("boba"), Text("\$15.75")],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("ice cream"), Text("\$18.56")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("shoes"), Text("\$170.45")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("boba"), Text("\$15.75")]),
         ],
       ),
     ),
@@ -223,10 +196,7 @@ List<Widget> categories() {
               Center(
                 child: Text(
                   "\$285.71",
-                  style: Centre.listText.copyWith(
-                    fontSize: 13.sp,
-                    color: const Color.fromARGB(255, 233, 117, 109),
-                  ),
+                  style: Centre.listText.copyWith(fontSize: 13.sp, color: const Color.fromARGB(255, 233, 117, 109)),
                 ),
               ),
               SizedBox(
@@ -237,7 +207,7 @@ List<Widget> categories() {
                   duration: const Duration(milliseconds: 3500),
                   curve: Curves.fastLinearToSlowEaseIn,
                   builder: (context, value, _) => Transform.rotate(
-                    angle: math.pi,
+                    angle: pi,
                     child: CircularProgressIndicator(
                       value: value,
                       strokeWidth: 4.w,
@@ -254,24 +224,12 @@ List<Widget> categories() {
           Text("Category 2", style: Centre.semiTitleText),
           Text(
             "\$120.71 remaining",
-            style: Centre.listText.copyWith(
-              fontSize: 13.sp,
-              color: Colors.lightGreen,
-            ),
+            style: Centre.listText.copyWith(fontSize: 13.sp, color: Colors.lightGreen),
           ),
           SizedBox(height: 2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("ice cream"), Text("\$18.56")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("shoes"), Text("\$170.45")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("boba"), Text("\$15.75")],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("ice cream"), Text("\$18.56")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("shoes"), Text("\$170.45")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("boba"), Text("\$15.75")]),
         ],
       ),
     ),
@@ -294,10 +252,7 @@ List<Widget> categories() {
               Center(
                 child: Text(
                   "\$285.71",
-                  style: Centre.listText.copyWith(
-                    fontSize: 13.sp,
-                    color: const Color.fromARGB(255, 233, 117, 109),
-                  ),
+                  style: Centre.listText.copyWith(fontSize: 13.sp, color: const Color.fromARGB(255, 233, 117, 109)),
                 ),
               ),
               SizedBox(
@@ -308,7 +263,7 @@ List<Widget> categories() {
                   duration: const Duration(milliseconds: 3500),
                   curve: Curves.fastLinearToSlowEaseIn,
                   builder: (context, value, _) => Transform.rotate(
-                    angle: math.pi,
+                    angle: pi,
                     child: CircularProgressIndicator(
                       value: value,
                       strokeWidth: 4.w,
@@ -325,24 +280,12 @@ List<Widget> categories() {
           Text("Category 2", style: Centre.semiTitleText),
           Text(
             "\$120.71 remaining",
-            style: Centre.listText.copyWith(
-              fontSize: 13.sp,
-              color: Colors.lightGreen,
-            ),
+            style: Centre.listText.copyWith(fontSize: 13.sp, color: Colors.lightGreen),
           ),
           SizedBox(height: 2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("ice cream"), Text("\$18.56")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("shoes"), Text("\$170.45")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("boba"), Text("\$15.75")],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("ice cream"), Text("\$18.56")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("shoes"), Text("\$170.45")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("boba"), Text("\$15.75")]),
         ],
       ),
     ),
@@ -365,10 +308,7 @@ List<Widget> categories() {
               Center(
                 child: Text(
                   "\$285.71",
-                  style: Centre.listText.copyWith(
-                    fontSize: 13.sp,
-                    color: const Color.fromARGB(255, 233, 117, 109),
-                  ),
+                  style: Centre.listText.copyWith(fontSize: 13.sp, color: const Color.fromARGB(255, 233, 117, 109)),
                 ),
               ),
               SizedBox(
@@ -379,7 +319,7 @@ List<Widget> categories() {
                   duration: const Duration(milliseconds: 3500),
                   curve: Curves.fastLinearToSlowEaseIn,
                   builder: (context, value, _) => Transform.rotate(
-                    angle: math.pi,
+                    angle: pi,
                     child: CircularProgressIndicator(
                       value: value,
                       strokeWidth: 4.w,
@@ -396,24 +336,12 @@ List<Widget> categories() {
           Text("Category 2", style: Centre.semiTitleText),
           Text(
             "\$120.71 remaining",
-            style: Centre.listText.copyWith(
-              fontSize: 13.sp,
-              color: Colors.lightGreen,
-            ),
+            style: Centre.listText.copyWith(fontSize: 13.sp, color: Colors.lightGreen),
           ),
           SizedBox(height: 2.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("ice cream"), Text("\$18.56")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("shoes"), Text("\$170.45")],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("boba"), Text("\$15.75")],
-          ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("ice cream"), Text("\$18.56")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("shoes"), Text("\$170.45")]),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("boba"), Text("\$15.75")]),
         ],
       ),
     ),

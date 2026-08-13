@@ -5,7 +5,7 @@ import 'package:sizer/sizer.dart';
 
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
-import 'package:budgie/widgets/spending_overview/barrel.dart';
+import 'package:budgie/widgets/barrels/spending_overview_barrel.dart';
 
 class SpendingOverviewPage extends StatefulWidget {
   const SpendingOverviewPage({super.key});
@@ -15,7 +15,20 @@ class SpendingOverviewPage extends StatefulWidget {
 }
 
 class _SpendingOverviewPageState extends State<SpendingOverviewPage> with TickerProviderStateMixin {
-  List<String> months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  List<String> months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
   final List<String> categories = [
     "Groceries",
@@ -43,7 +56,10 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
     "Category 4": [214.67, 327.41, 158.92, 289.35, 246.18, 119.54, 341.73, 275.86, 193.47, 305.29, 137.68, 228.91],
   };
 
-  late final AnimationController controller = AnimationController(duration: const Duration(milliseconds: 1300), vsync: this);
+  late final AnimationController controller = AnimationController(
+    duration: const Duration(milliseconds: 1300),
+    vsync: this,
+  );
   late final Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastLinearToSlowEaseIn);
   bool isPortrait = true;
 
@@ -76,6 +92,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      bottom: false,
       child: Scaffold(
         backgroundColor: Centre.bgColor,
         body: BlocBuilder<SpendingGraphViewToggleCubit, bool>(
@@ -88,15 +105,16 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SizedBox(height: 6.h),
+                            SizedBox(height: 8.h),
                             for (String i in months) MonthTile(month: i, controller: controller, animation: animation),
+                            SizedBox(height: 10.5.h),
                           ],
                         )
                       : RotatedBox(
                           quarterTurns: isPortrait ? 0 : 1,
                           child: isPortrait
                               ? Padding(
-                                  padding: EdgeInsets.only(left: 2.w, right: 4.w),
+                                  padding: EdgeInsets.only(left: 2.w, right: 4.w, bottom: 10.5.h),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
@@ -104,15 +122,18 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                         padding: EdgeInsets.symmetric(vertical: 1.5.h),
                                         child: Row(
                                           children: [
+                                            SizedBox(width: 2.w),
                                             Text("Spending Graphview", style: Centre.titleText),
                                             Spacer(),
 
-                                            !isPortrait ? Expanded(child: Container(color: Colors.transparent)) : ToggleGraphviewButton(),
+                                            !isPortrait
+                                                ? Expanded(child: Container(color: Colors.transparent))
+                                                : ToggleGraphviewButton(),
                                           ],
                                         ),
                                       ),
                                       YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: false),
-                                      SizedBox(height: 1.h),
+                                      SizedBox(height: 2.h),
                                       SizedBox(
                                         height: 40.h,
                                         child: SpendingGraph(
@@ -131,16 +152,24 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                         padding: EdgeInsets.only(left: 2.w, top: 2.h),
                                         child: Text("Toggle Categories Shown", style: Centre.semiTitle2Text),
                                       ),
-                                      ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
+                                      ToggleCategoryArea(
+                                        isPortrait: isPortrait,
+                                        categories: categories,
+                                        categoryColors: categoryColors,
+                                      ),
                                     ],
                                   ),
                                 )
                               : Padding(
-                                  padding: EdgeInsets.only(right: 4.w, left: 2.w),
+                                  padding: EdgeInsets.only(right: 13.h, left: 2.w),
                                   child: Row(
                                     children: [
                                       Expanded(
-                                        child: ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
+                                        child: ToggleCategoryArea(
+                                          isPortrait: isPortrait,
+                                          categories: categories,
+                                          categoryColors: categoryColors,
+                                        ),
                                       ),
 
                                       SizedBox(
@@ -157,16 +186,18 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                                 YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: true),
                                               ],
                                             ),
-                                            SpendingGraph(
-                                              isPortrait: isPortrait,
-                                              categoriesData: categoriesData,
-                                              categoryColors: categoryColors,
-                                              categories: categories,
-                                              toggleLandscapeOnPressed: () {
-                                                setState(() {
-                                                  isPortrait = !isPortrait;
-                                                });
-                                              },
+                                            Expanded(
+                                              child: SpendingGraph(
+                                                isPortrait: isPortrait,
+                                                categoriesData: categoriesData,
+                                                categoryColors: categoryColors,
+                                                categories: categories,
+                                                toggleLandscapeOnPressed: () {
+                                                  setState(() {
+                                                    isPortrait = !isPortrait;
+                                                  });
+                                                },
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -176,7 +207,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                 ),
                         ),
                 ),
-                graphviewEnabled ? SizedBox() : SpendingListviewHeader(isPortrait: isPortrait),
+                graphviewEnabled ? SizedBox() : SpendingListviewHeader(),
 
                 BlocBuilder<SpendingGraphViewToggleCubit, bool>(
                   builder: (_, graphviewEnabled) {

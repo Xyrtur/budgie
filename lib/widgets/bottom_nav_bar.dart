@@ -17,11 +17,7 @@ Widget navBarBtn(
       customBorder: BeveledRectangleBorder(),
       highlightColor: Centre.dialogBgColor,
       onTap: () {
-        controller.animateToPage(
-          page.index,
-          duration: Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
+        controller.animateToPage(page.index, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       },
       child: Container(
         width: 20.w,
@@ -30,12 +26,12 @@ Widget navBarBtn(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(iconData, color: Colors.white, size: 5.w),
+            Icon(iconData, color: Centre.offWhite, size: 5.w),
             Text(
               text,
               softWrap: false,
               overflow: TextOverflow.visible,
-              style: TextStyle(color: Colors.white, fontSize: 2.6.w),
+              style: TextStyle(color: Centre.offWhite, fontSize: 2.6.w),
             ),
             currentPage == page
                 ? Container(

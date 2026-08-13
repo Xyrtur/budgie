@@ -3,7 +3,8 @@ import 'package:sizer/sizer.dart';
 
 class Centre {
   static Color bgColor = const Color(0xff131524);
-  static Color primaryColor = const Color.fromARGB(255, 110, 62, 92);
+  static Color primaryColor = const Color(0xFFB66F9A);
+  static Color secondaryColor = Color(0xFF6E3E5C);
   static Color accentColor = const Color.fromARGB(255, 170, 120, 151);
   static Color splashColor = const Color(0xFF8F647F);
   static Color bgSplashColor = const Color(0xff25283D);
@@ -11,6 +12,8 @@ class Centre {
   static Color dialogBgColor = const Color(0xff22263D);
   static Color graphLinesColor = const Color.fromARGB(255, 76, 81, 110);
   static Color scrollTrackColor = const Color(0xff0D0E1A);
+  static Color offWhite = const Color(0xFFF0E8EF);
+  static Color buttonBorderColor = const Color(0xFF363B56);
 
   static const List<Color> colors = [
     Color(0xffffa69e),
@@ -69,11 +72,31 @@ class Centre {
     Color(0xfff8c0c8),
   ];
 
-  static final titleText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 18.sp, fontFamily: 'Raleway');
+  static final titleText = TextStyle(
+    color: offWhite,
+    fontWeight: FontWeight.w400,
+    fontSize: 18.sp,
+    fontFamily: 'Raleway',
+  );
 
-  static final semiTitleText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 17.sp, fontFamily: 'Raleway');
+  static final semiTitleText = TextStyle(
+    color: offWhite,
+    fontWeight: FontWeight.w400,
+    fontSize: 17.sp,
+    fontFamily: 'Raleway',
+  );
 
-  static final semiTitle2Text = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 16.sp, fontFamily: 'Raleway');
+  static final semiTitle2Text = TextStyle(
+    color: offWhite,
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    fontFamily: 'Raleway',
+  );
 
-  static final listText = TextStyle(color: Colors.white, fontWeight: FontWeight.w400, fontSize: 14.sp, fontFamily: 'Raleway');
+  static final listText = TextStyle(
+    color: offWhite,
+    fontWeight: FontWeight.w400,
+    fontSize: 14.sp,
+    fontFamily: 'Raleway',
+  );
 }

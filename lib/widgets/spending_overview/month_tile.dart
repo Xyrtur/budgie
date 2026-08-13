@@ -17,14 +17,16 @@ class MonthTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
       child: Ink(
         decoration: BoxDecoration(
-          color: const Color(0xff131524),
+          color: Centre.bgColor,
           borderRadius: BorderRadius.circular(8),
-          border: DateFormat("MMMM").format(DateTime.now()) == month ? Border.all(color: Centre.colors[1], width: 0.5.w) : null,
+          border: DateFormat("MMMM").format(DateTime.now()) == month
+              ? Border.all(color: Centre.colors[1], width: 0.5.w)
+              : null,
 
           // Outer depth
           boxShadow: const [
-            BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 10),
-            BoxShadow(color: Color(0xff1D1F32), offset: Offset(-4, -4), blurRadius: 10),
+            BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 8),
+            BoxShadow(color: Color.fromARGB(255, 42, 45, 69), offset: Offset(-4, -4), blurRadius: 8),
           ],
         ),
 
@@ -34,7 +36,9 @@ class MonthTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
 
           onTap: () async {
-            await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
+            await Navigator.of(
+              context,
+            ).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
 
             controller.reset();
             controller.forward();

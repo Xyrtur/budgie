@@ -1,5 +1,6 @@
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -9,34 +10,15 @@ class ToggleGraphviewButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton.outlined(
-      onPressed: () {
+    return CustomIconButton(
+      onTap: () {
         context.read<SpendingGraphViewToggleCubit>().toggle();
       },
-      iconSize: 6.w,
-      color: Centre.accentColor,
-      icon: BlocBuilder<SpendingGraphViewToggleCubit, bool>(
+      child: BlocBuilder<SpendingGraphViewToggleCubit, bool>(
         builder: (_, graphviewEnabled) {
-          return ClipOval(
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
-              reverseDuration: const Duration(milliseconds: 200),
-
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                final isIncoming = child.key == (graphviewEnabled ? ValueKey(1) : ValueKey(2));
-                final offsetAnimation = Tween<Offset>(
-                  begin: isIncoming
-                      ? const Offset(0, 1) // New icon starts below
-                      : const Offset(0, -1),
-                  end: Offset.zero,
-                ).animate(animation);
-                return SlideTransition(position: offsetAnimation, child: child);
-              },
-              child: graphviewEnabled
-                  ? Icon(Icons.auto_graph_sharp, key: ValueKey(1), color: Centre.colors[42])
-                  : Icon(Icons.list, key: ValueKey(2), color: Centre.colors[42]),
-            ),
-          );
+          return graphviewEnabled
+              ? Icon(Icons.auto_graph_sharp, key: ValueKey(1), color: Centre.primaryColor, size: 6.w)
+              : Icon(Icons.list, key: ValueKey(2), color: Centre.primaryColor, size: 6.w);
         },
       ),
     );

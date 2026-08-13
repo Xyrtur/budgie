@@ -5,29 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
 class SpendingListviewHeader extends StatelessWidget {
-  final bool isPortrait;
-  const SpendingListviewHeader({super.key, required this.isPortrait});
+  const SpendingListviewHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: 1.h),
+      padding: EdgeInsets.only(bottom: 0.h),
       decoration: BoxDecoration(
         color: Centre.bgColor,
         border: Border(bottom: BorderSide(width: 1.5, color: Centre.dialogBgColor)),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 3.w),
+        padding: EdgeInsets.symmetric(horizontal: 4.w),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 1.5.h),
-              child: Text("Spending Overview : ", style: Centre.semiTitleText),
+              padding: EdgeInsets.symmetric(vertical: 2.h),
+              child: Text("Spending Overview : ", style: Centre.titleText),
             ),
             YearPickerMenu(startYear: 2025, endYear: 2029, initialYear: 2026),
             Spacer(),
-            !isPortrait ? SizedBox() : ToggleGraphviewButton(),
+            ToggleGraphviewButton(),
           ],
         ),
       ),

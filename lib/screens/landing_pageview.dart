@@ -30,8 +30,8 @@ class _LandingPageViewState extends State<LandingPageView> {
     return ScrollConfiguration(
       behavior: MyBehavior(),
       child: Scaffold(
+        extendBody: true,
         resizeToAvoidBottomInset: false,
-        backgroundColor: Centre.bgColor,
         bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom > 0
             ? null
             : BottomAppBar(
@@ -46,9 +46,21 @@ class _LandingPageViewState extends State<LandingPageView> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                        navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
+                        navBarBtn(
+                          controller,
+                          PageSelected.TripPlanning,
+                          Icons.checklist,
+                          "Trip Planning",
+                          pageSelected,
+                        ),
                         SizedBox(width: 9.w),
-                        navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
+                        navBarBtn(
+                          controller,
+                          PageSelected.BudgetPlanning,
+                          Icons.attach_money,
+                          "Set Budget",
+                          pageSelected,
+                        ),
                         navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
                       ],
                     );
@@ -65,56 +77,55 @@ class _LandingPageViewState extends State<LandingPageView> {
                     child: FloatingActionButton(
                       shape: const CircleBorder(),
                       onPressed: () {},
-                      backgroundColor: Centre.primaryColor,
+                      backgroundColor: Centre.secondaryColor,
                       elevation: 5,
-                      child: Icon(icon, color: Colors.white, size: 6.w),
+
+                      child: Icon(icon, color: Centre.offWhite, size: 6.w),
                     ),
                   );
                 },
               ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        body: Stack(
+        body: PageView(
+          physics: NeverScrollableScrollPhysics(),
+          onPageChanged: (index) {
+            context.read<NavbarCubit>().changePage(page: PageSelected.values[index]);
+            context.read<FABIconCubit>().changeIcon(page: PageSelected.values[index]);
+          },
+          controller: controller,
           children: [
-            PageView(
-              physics: NeverScrollableScrollPhysics(),
-              onPageChanged: (index) {
-                context.read<NavbarCubit>().changePage(page: PageSelected.values[index]);
-                context.read<FABIconCubit>().changeIcon(page: PageSelected.values[index]);
-              },
-              controller: controller,
-              children: [
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider<SpendingCategoriesToggledCubit>(create: (context) => SpendingCategoriesToggledCubit()),
-                    BlocProvider<YearsSelectedCubit>(create: (context) => YearsSelectedCubit()),
-                  ],
-                  child: const SpendingOverviewPage(),
-                ),
-
-                const AllTripPlanningPage(),
-                MultiBlocProvider(
-                  providers: [BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit())],
-                  child: const BudgetPlanningPage(),
-                ),
-
-                MultiBlocProvider(
-                  providers: [
-                    BlocProvider<TempIncludeFixedCubit>(create: (context) => TempIncludeFixedCubit()),
-                    BlocProvider<TempEditingDateRangesCubit>(create: (context) => TempEditingDateRangesCubit()),
-                    BlocProvider<AddingDateRangeCubit>(create: (context) => AddingDateRangeCubit()),
-                    BlocProvider<SettingsEditingTextCubit>(create: (context) => SettingsEditingTextCubit()),
-                  ],
-                  child: SettingsPage(),
-                ),
-
-                // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
-                // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
-
-                //
-
-                // MultiBlocProvider(providers: [], child: const SettingsPage())
+            MultiBlocProvider(
+              providers: [
+                BlocProvider<SpendingCategoriesToggledCubit>(create: (context) => SpendingCategoriesToggledCubit()),
+                BlocProvider<YearsSelectedCubit>(create: (context) => YearsSelectedCubit()),
               ],
+              child: const SpendingOverviewPage(),
             ),
+
+            const AllTripPlanningPage(),
+            MultiBlocProvider(
+              providers: [
+                BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit()),
+              ],
+              child: const BudgetPlanningPage(),
+            ),
+
+            MultiBlocProvider(
+              providers: [
+                BlocProvider<TempIncludeFixedCubit>(create: (context) => TempIncludeFixedCubit()),
+                BlocProvider<TempEditingDateRangesCubit>(create: (context) => TempEditingDateRangesCubit()),
+                BlocProvider<AddingDateRangeCubit>(create: (context) => AddingDateRangeCubit()),
+                BlocProvider<SettingsEditingTextCubit>(create: (context) => SettingsEditingTextCubit()),
+              ],
+              child: SettingsPage(),
+            ),
+
+            // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
+            // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
+
+            //
+
+            // MultiBlocProvider(providers: [], child: const SettingsPage())
           ],
         ),
       ),

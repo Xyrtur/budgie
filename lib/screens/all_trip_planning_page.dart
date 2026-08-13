@@ -1,4 +1,5 @@
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -10,6 +11,8 @@ class AllTripPlanningPage extends StatelessWidget {
     const List<String> tripNames = ["After Grad", "Europe", "Japan", "Australia Trip"];
 
     return SafeArea(
+      bottom: false,
+
       child: Scaffold(
         backgroundColor: Centre.bgColor,
         body: Column(
@@ -97,20 +100,18 @@ class _SortButtonState extends State<SortButton> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton.outlined(
-      onPressed: () {
+    return CustomIconButton(
+      onTap: () {
         setState(() {
           isAscending = !isAscending;
         });
       },
-      iconSize: 6.w,
-      color: Centre.accentColor,
-      icon: AnimatedRotation(
+      child: AnimatedRotation(
         // 0.5 turns equals exactly 180 degrees flip
         turns: isAscending ? 0 : 0.5,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        child: const Icon(Icons.arrow_upward),
+        child: Icon(Icons.arrow_upward, size: 6.w, color: Centre.primaryColor),
       ),
     );
   }
