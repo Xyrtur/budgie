@@ -62,7 +62,7 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                 gradient: const LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [Color.fromARGB(255, 18, 19, 36), Color(0xff131524), Color(0xff181A2C)],
+                  colors: [Color(0xff22263D), Color(0xff191C30), Color(0xff1E2135)],
                 ),
               ),
               child: InkWell(
@@ -78,7 +78,7 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                     targetAnchor: Alignment.bottomCenter,
 
                     barrierColor: Colors.transparent,
-                    offset: Offset(0, -1.5.h),
+                    offset: Offset(0, 1),
                     context: context,
                     builder: (BuildContext ycontext) {
                       return SizeTransition(
@@ -89,10 +89,20 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                           width: 20.w,
                           height: 15.h,
                           decoration: BoxDecoration(
-                            color: const Color(0xff171927),
-                            borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: const Color(0xff22243A), width: 1),
-                            boxShadow: const [BoxShadow(color: Color(0xff070810), offset: Offset(0, 5), blurRadius: 5)],
+                            borderRadius: BorderRadius.circular(8),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [Color(0xff242943), Color(0xff1B1F33)],
+                            ),
+                            border: Border.all(color: const Color(0xff363B56)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.30),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
                           child: ListWheelScrollView.useDelegate(
                             controller: scrollController,
@@ -127,7 +137,10 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                     children: [
                       Text(selectedDate.year.toString(), style: Centre.semiTitle2Text),
                       SizedBox(width: 3.w),
-                      RotationTransition(turns: Tween(begin: 0.0, end: 0.5).animate(heightAnimation), child: const Icon(Icons.keyboard_arrow_down)),
+                      RotationTransition(
+                        turns: Tween(begin: 0.0, end: 0.5).animate(heightAnimation),
+                        child: const Icon(Icons.keyboard_arrow_down),
+                      ),
                     ],
                   ),
                 ),

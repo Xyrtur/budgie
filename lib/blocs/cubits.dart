@@ -1,3 +1,5 @@
+import 'package:budgie/widgets/budget_planning/category_box.dart';
+import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -99,7 +101,8 @@ class FABIconCubit extends Cubit<IconData> {
 }
 
 class LiveBudgetTotalTrackerCubit extends Cubit<double> {
-  LiveBudgetTotalTrackerCubit() : super(0);
+  final double startingTotal;
+  LiveBudgetTotalTrackerCubit(this.startingTotal) : super(startingTotal);
 
   void updateTotal({required double value}) {
     emit(value);
@@ -116,7 +119,18 @@ class SpendingGraphViewToggleCubit extends Cubit<bool> {
 
 class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
   SpendingCategoriesToggledCubit()
-    : super(["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2", "Category 3", "Category 4"]);
+    : super([
+        "Groceries",
+        "Entertainment",
+        "House",
+        "Gas",
+        "Junk Food",
+        "Ava",
+        "Category 1",
+        "Category 2",
+        "Category 3",
+        "Category 4",
+      ]);
 
   void toggleCategory(String category) {
     if (state.contains(category)) {
@@ -142,5 +156,73 @@ class YearsSelectedCubit extends Cubit<Map<int, bool>> {
   void toggleYear(int year) {
     state[year] = !state[year]!;
     emit({...state});
+  }
+}
+
+class FixedCostFieldKeysCubit extends Cubit<List<GlobalKey<FixedFormFieldRowState>>> {
+  final List<GlobalKey<FixedFormFieldRowState>> keyList;
+  FixedCostFieldKeysCubit(this.keyList) : super(keyList);
+
+  void add() {
+    emit([...state, GlobalKey<FixedFormFieldRowState>()]);
+  }
+
+  void delete({required int index}) {
+    final newList = [...state];
+    newList.removeAt(index);
+    emit(newList);
+  }
+}
+
+class FixedLabelsAndCostsCubit extends Cubit<List<String>> {
+  final List<String> initialLabelsAndCostsList;
+  FixedLabelsAndCostsCubit(this.initialLabelsAndCostsList) : super(initialLabelsAndCostsList);
+
+  void updateList(List<String> newList) {
+    emit(newList);
+  }
+
+  void add() {
+    final newList = [...state];
+
+    newList.addAll(["", ""]);
+    emit(newList);
+  }
+
+  void delete({required int index}) {
+    // Because two are deleted at a time, remove label field at index
+    // the cost field gets shifted up to same index
+    // Reuse index given to also delete the cost field
+    final newList = [...state];
+    newList.removeAt(index);
+    newList.removeAt(index);
+    emit(newList);
+  }
+}
+
+class CategoryBoxKeysCubit extends Cubit<List<GlobalKey<CategoryBoxState>>> {
+  final List<GlobalKey<CategoryBoxState>> keys;
+  CategoryBoxKeysCubit(this.keys) : super(keys);
+
+  void add() {
+    emit([...state, GlobalKey<CategoryBoxState>()]);
+  }
+
+  void remove() {
+    final newList = [...state];
+    newList.removeLast();
+    emit(newList);
+  }
+}
+
+class CategoryBoxTextsCubit extends Cubit<Map<String, String>> {
+  // category name and budget limit for category
+  final Map<String, String> categoryBoxTexts;
+  CategoryBoxTextsCubit(this.categoryBoxTexts) : super(categoryBoxTexts);
+
+  void update({required String categoryName, required String categoryLimit}) {
+    final newMap = {...state};
+    newMap[categoryName] = categoryLimit;
+    emit(newMap);
   }
 }

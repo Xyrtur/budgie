@@ -17,8 +17,8 @@ class ToggleGraphviewButton extends StatelessWidget {
       child: BlocBuilder<SpendingGraphViewToggleCubit, bool>(
         builder: (_, graphviewEnabled) {
           return graphviewEnabled
-              ? Icon(Icons.auto_graph_sharp, key: ValueKey(1), color: Centre.primaryColor, size: 6.w)
-              : Icon(Icons.list, key: ValueKey(2), color: Centre.primaryColor, size: 6.w);
+              ? Icon(Icons.auto_graph_sharp, color: Centre.primaryColor, size: 6.w)
+              : Icon(Icons.list, color: Centre.primaryColor, size: 6.w);
         },
       ),
     );

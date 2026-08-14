@@ -1,5 +1,6 @@
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/icon_button.dart';
 import 'package:budgie/widgets/settings_page/choose_color_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,21 +115,18 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
             ),
           ),
         ),
-        SizedBox(width: 3.w),
+        SizedBox(width: 4.w),
         ChooseColorBtn(color: Colors.transparent.toARGB32(), categoryName: null),
-        SizedBox(width: 3.w),
-
-        IconButton.outlined(
-          onPressed: () {
+        Spacer(),
+        CustomIconButton(
+          onTap: () {
             if (formKey.currentState!.validate()) {
               // Add category with controller.text, context.read<SettingsAddColorCubit>().state!,
               controller.clear();
               context.read<SettingsAddColorCubit>().selectColor(color: null);
             }
           },
-          iconSize: 5.w,
-          color: Colors.white,
-          icon: Icon(Icons.add),
+          child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),
         ),
       ],
     );

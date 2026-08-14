@@ -5,6 +5,8 @@ import 'package:budgie/screens/settings_page.dart';
 import 'package:budgie/screens/yearly_spending_overview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/bottom_nav_bar.dart';
+import 'package:budgie/widgets/budget_planning/category_box.dart';
+import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -105,9 +107,76 @@ class _LandingPageViewState extends State<LandingPageView> {
             const AllTripPlanningPage(),
             MultiBlocProvider(
               providers: [
-                BlocProvider<LiveBudgetTotalTrackerCubit>(create: (context) => LiveBudgetTotalTrackerCubit()),
+                BlocProvider<LiveBudgetTotalTrackerCubit>(
+                  create: (context) {
+                    double startingTotal = 0;
+                    for (double i in [150, 37.25, 5.25]) {
+                      startingTotal += i;
+                    }
+                    for (double i in [0, 0, 0, 0, 0, 0, 0, 0]) {
+                      startingTotal += i;
+                    }
+                    return LiveBudgetTotalTrackerCubit(startingTotal);
+                  },
+                ),
+                BlocProvider<FixedCostFieldKeysCubit>(
+                  create: (context) {
+                    List<GlobalKey<FixedFormFieldRowState>> newList = [];
+                    for (int i = 0; i < 3; i++) {
+                      newList.add(GlobalKey<FixedFormFieldRowState>());
+                    }
+                    return FixedCostFieldKeysCubit(newList);
+                  },
+                ),
+                BlocProvider<FixedLabelsAndCostsCubit>(
+                  create: (context) {
+                    List<String> newList = [];
+                    newList.addAll(["utilities", "150", "phone", "37.25", "spotify", "5.25"]);
+
+                    return FixedLabelsAndCostsCubit(newList);
+                  },
+                ),
+                BlocProvider<CategoryBoxKeysCubit>(
+                  create: (context) {
+                    List<GlobalKey<CategoryBoxState>> newList = [];
+                    final List<String> categories = [
+                      "Groceries",
+                      "Entertainment",
+                      "House",
+                      "Gas",
+                      "Junk Food",
+                      "Ava",
+                      "Category 1",
+                      "Category 2",
+                    ];
+                    for (int i = 0; i < categories.length; i++) {
+                      newList.add(GlobalKey<CategoryBoxState>());
+                    }
+                    return CategoryBoxKeysCubit(newList);
+                  },
+                ),
+                BlocProvider<CategoryBoxTextsCubit>(
+                  create: (context) {
+                    final List<String> categories = [
+                      "Groceries",
+                      "Entertainment",
+                      "House",
+                      "Gas",
+                      "Junk Food",
+                      "Ava",
+                      "Category 1",
+                      "Category 2",
+                    ];
+
+                    Map<String, String> newMap = {};
+                    for (int i = 0; i < categories.length; i++) {
+                      newMap[categories[i]] = "";
+                    }
+                    return CategoryBoxTextsCubit(newMap);
+                  },
+                ),
               ],
-              child: const BudgetPlanningPage(),
+              child: BudgetPlanningPage(),
             ),
 
             MultiBlocProvider(

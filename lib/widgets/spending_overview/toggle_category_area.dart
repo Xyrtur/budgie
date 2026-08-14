@@ -65,7 +65,7 @@ class _ToggleCategoryAreaState extends State<ToggleCategoryArea> {
 
                   child: Column(
                     children: [
-                      SizedBox(height: 2.h),
+                      SizedBox(height: widget.isPortrait ? 0 : 2.h),
                       Wrap(
                         direction: widget.isPortrait ? Axis.horizontal : Axis.vertical,
                         alignment: widget.isPortrait ? WrapAlignment.center : WrapAlignment.start,
