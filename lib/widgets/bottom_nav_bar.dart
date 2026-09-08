@@ -31,7 +31,7 @@ Widget navBarBtn(
               text,
               softWrap: false,
               overflow: TextOverflow.visible,
-              style: TextStyle(color: Centre.offWhite, fontSize: 2.6.w),
+              style: TextStyle(color: Centre.offWhite, fontSize: 15.sp),
             ),
             currentPage == page
                 ? Container(

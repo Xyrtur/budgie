@@ -67,7 +67,7 @@ class BudgetPlanningPage extends StatelessWidget {
                 width: 70.w,
 
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: Centre.offWhite),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Column(

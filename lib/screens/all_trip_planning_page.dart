@@ -47,13 +47,17 @@ class AllTripPlanningPage extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                       child: Ink(
                         decoration: BoxDecoration(
-                          color: const Color(0xff131524),
+                          color: Centre.cardColor,
                           borderRadius: BorderRadius.circular(8),
 
                           // Outer depth
-                          boxShadow: const [
-                            BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 5),
-                            BoxShadow(color: Color(0xff1D1F32), offset: Offset(-4, -4), blurRadius: 5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Centre.shadowbgColor,
+                              offset: Offset(0, 2),
+                              blurRadius: 6,
+                              spreadRadius: 0,
+                            ),
                           ],
                         ),
 

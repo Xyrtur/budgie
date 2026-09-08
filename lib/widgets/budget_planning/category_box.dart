@@ -61,17 +61,10 @@ class CategoryBoxState extends State<CategoryBox> {
       width: 28.w,
       padding: EdgeInsets.all(3.w),
       decoration: BoxDecoration(
-        color: Color.lerp(const Color(0xff20243A), widget.categoryColor, 0.02),
+        color: Centre.cardColor,
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: Color(0xff4A506F).withValues(alpha: 0.8)),
 
-        boxShadow: [
-          BoxShadow(
-            color: Centre.shadowbgColor, // Shadow color
-            blurRadius: 6, // Softens the shadow edges
-            offset: const Offset(0, 4), // Positions shadow (x-axis, y-axis)
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -80,7 +73,7 @@ class CategoryBoxState extends State<CategoryBox> {
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 0.5.h),
             decoration: BoxDecoration(
-              color: const Color(0xff292D46),
+              color: Centre.cardColor,
               borderRadius: BorderRadius.circular(6),
               border: Border.all(color: Color.lerp(const Color(0xff363B56), widget.categoryColor, 0.4)!),
             ),

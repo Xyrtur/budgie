@@ -44,105 +44,93 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) {
-        return Container(
-          decoration: BoxDecoration(
-            color: const Color(0xff131524),
-            borderRadius: BorderRadius.circular(18),
+        return Material(
+          color: Colors.transparent,
+          child: Ink(
+            decoration: BoxDecoration(
+              color: Centre.dialogBgColor,
+              borderRadius: BorderRadius.circular(8),
 
-            // Outer depth
-            boxShadow: const [BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 3)],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: Ink(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
+              // Outer depth
+              boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
+            ),
+            child: InkWell(
+              splashColor: Centre.bgSplashColor,
+              highlightColor: Centre.bgSplashColor,
+              borderRadius: BorderRadius.circular(8),
+              radius: 200,
+              onTap: () {
+                controller.forward();
+                showAlignedDialog(
+                  followerAnchor: Alignment.topCenter,
 
-                // Creates the "pressed" edge
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xff22263D), Color(0xff191C30), Color(0xff1E2135)],
-                ),
-              ),
-              child: InkWell(
-                splashColor: Centre.bgSplashColor,
-                highlightColor: Centre.bgSplashColor,
-                borderRadius: BorderRadius.circular(18),
-                radius: 40,
-                onTap: () {
-                  controller.forward();
-                  showAlignedDialog(
-                    followerAnchor: Alignment.topCenter,
+                  targetAnchor: Alignment.bottomCenter,
 
-                    targetAnchor: Alignment.bottomCenter,
-
-                    barrierColor: Colors.transparent,
-                    offset: Offset(0, 1),
-                    context: context,
-                    builder: (BuildContext ycontext) {
-                      return SizeTransition(
-                        sizeFactor: heightAnimation,
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          margin: EdgeInsets.all(1.h),
-                          width: 20.w,
-                          height: 15.h,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [Color(0xff242943), Color(0xff1B1F33)],
-                            ),
-                            border: Border.all(color: const Color(0xff363B56)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.30),
-                                blurRadius: 8,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
+                  barrierColor: Colors.transparent,
+                  offset: Offset(0, 1),
+                  context: context,
+                  builder: (BuildContext ycontext) {
+                    return SizeTransition(
+                      sizeFactor: heightAnimation,
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: EdgeInsets.all(1.h),
+                        width: 20.w,
+                        height: 15.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          gradient: const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xff242943), Color(0xff1B1F33)],
                           ),
-                          child: ListWheelScrollView.useDelegate(
-                            controller: scrollController,
-                            itemExtent: 42, // Height of each individual year row
-                            perspective: 0.005, // Subtle 3D cylinder curve effect
-                            diameterRatio: 1.2,
-                            physics: const FixedExtentScrollPhysics(), // Snaps perfectly to items
-                            onSelectedItemChanged: (index) {
-                              setState(() {
-                                selectedDate = DateTime(yearsToScroll[index]);
-                              });
-                            },
-
-                            childDelegate: ListWheelChildBuilderDelegate(
-                              childCount: yearsToScroll.length,
-                              builder: (context, index) {
-                                return Center(child: Text(yearsToScroll[index].toString(), style: Centre.listText));
-                              },
+                          border: Border.all(color: const Color(0xff363B56)),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.30),
+                              blurRadius: 8,
+                              offset: const Offset(0, 4),
                             ),
+                          ],
+                        ),
+                        child: ListWheelScrollView.useDelegate(
+                          controller: scrollController,
+                          itemExtent: 42, // Height of each individual year row
+                          perspective: 0.005, // Subtle 3D cylinder curve effect
+                          diameterRatio: 1.2,
+                          physics: const FixedExtentScrollPhysics(), // Snaps perfectly to items
+                          onSelectedItemChanged: (index) {
+                            setState(() {
+                              selectedDate = DateTime(yearsToScroll[index]);
+                            });
+                          },
+
+                          childDelegate: ListWheelChildBuilderDelegate(
+                            childCount: yearsToScroll.length,
+                            builder: (context, index) {
+                              return Center(child: Text(yearsToScroll[index].toString(), style: Centre.listText));
+                            },
                           ),
                         ),
-                      );
-                    },
-                  ).then((_) {
-                    controller.reset();
-                  });
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.5.h),
-
-                  child: Row(
-                    children: [
-                      Text(selectedDate.year.toString(), style: Centre.semiTitle2Text),
-                      SizedBox(width: 3.w),
-                      RotationTransition(
-                        turns: Tween(begin: 0.0, end: 0.5).animate(heightAnimation),
-                        child: const Icon(Icons.keyboard_arrow_down),
                       ),
-                    ],
-                  ),
+                    );
+                  },
+                ).then((_) {
+                  controller.reset();
+                });
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+
+                child: Row(
+                  children: [
+                    Text(selectedDate.year.toString(), style: Centre.semiTitle2Text),
+                    SizedBox(width: 3.w),
+                    RotationTransition(
+                      turns: Tween(begin: 0.0, end: 0.5).animate(heightAnimation),
+                      child: const Icon(Icons.keyboard_arrow_down),
+                    ),
+                  ],
                 ),
               ),
             ),

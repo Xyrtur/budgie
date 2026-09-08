@@ -56,6 +56,8 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
     "Category 4": [214.67, 327.41, 158.92, 289.35, 246.18, 119.54, 341.73, 275.86, 193.47, 305.29, 137.68, 228.91],
   };
 
+  final ScrollController scrollController = ScrollController();
+
   late final AnimationController controller = AnimationController(
     duration: const Duration(milliseconds: 1300),
     vsync: this,
@@ -97,9 +99,19 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
         backgroundColor: Centre.bgColor,
         body: BlocBuilder<SpendingGraphViewToggleCubit, bool>(
           builder: (_, graphviewEnabled) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (scrollController.hasClients) {
+                scrollController.animateTo(
+                  0.0,
+                  duration: const Duration(milliseconds: 40),
+                  curve: Curves.fastOutSlowIn,
+                );
+              }
+            });
             return Stack(
               children: [
                 ConditionalScrollView(
+                  controller: scrollController,
                   enabled: isPortrait,
                   child: !graphviewEnabled
                       ? Column(
@@ -150,7 +162,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(left: 2.w, top: 2.h),
-                                        child: Text("Toggle Categories Shown", style: Centre.semiTitle2Text),
+                                        child: Text("Toggle Categories Shown", style: Centre.semiTitleText),
                                       ),
                                       ToggleCategoryArea(
                                         isPortrait: isPortrait,

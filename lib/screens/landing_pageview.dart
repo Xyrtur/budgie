@@ -1,3 +1,4 @@
+import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/all_trip_planning_page.dart';
 import 'package:budgie/screens/budget_planning.dart';
@@ -7,6 +8,7 @@ import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/bottom_nav_bar.dart';
 import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
+import 'package:budgie/widgets/dialogs/add_expense_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
@@ -37,8 +39,8 @@ class _LandingPageViewState extends State<LandingPageView> {
         bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom > 0
             ? null
             : BottomAppBar(
-                height: 9.2.h,
-                color: Centre.dialogBgColor,
+                height: 9.9.h,
+                color: Centre.navBarColor,
                 shape: CircularNotchedRectangle(),
                 notchMargin: 0.8.h,
                 child: BlocBuilder<NavbarCubit, PageSelected>(
@@ -71,18 +73,63 @@ class _LandingPageViewState extends State<LandingPageView> {
               ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 0
             ? null
-            : BlocBuilder<FABIconCubit, IconData>(
-                builder: (_, icon) {
+            : BlocBuilder<FABIconCubit, PageSelected>(
+                builder: (_, page) {
                   return SizedBox(
                     height: 15.w,
                     width: 15.w,
-                    child: FloatingActionButton(
-                      shape: const CircleBorder(),
-                      onPressed: () {},
-                      backgroundColor: Centre.secondaryColor,
-                      elevation: 5,
+                    child: Builder(
+                      builder: (context) {
+                        return FloatingActionButton(
+                          shape: const CircleBorder(),
+                          onPressed: () {
+                            switch (page) {
+                              // Case: Spending overview page
+                              case PageSelected.Overview:
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) {
+                                    return GestureDetector(
+                                      onTap: () {},
+                                      child: Scaffold(
+                                        backgroundColor: Colors.transparent,
+                                        body: MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<AddExpenseCategoryBtnsCubit>(
+                                              create: (context) => AddExpenseCategoryBtnsCubit("Groceries"),
+                                            ),
+                                            BlocProvider<DateSelectedCubit>(create: (context) => DateSelectedCubit()),
+                                            BlocProvider<IsIncomeToggleCubit>(
+                                              create: (context) => IsIncomeToggleCubit(),
+                                            ),
+                                          ],
+                                          child: AddExpenseDialog(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              case PageSelected.TripPlanning:
+                              case PageSelected.BudgetPlanning:
+                              case PageSelected.UserSettings:
+                            }
+                          },
+                          backgroundColor: Centre.secondaryColor,
+                          elevation: 5,
 
-                      child: Icon(icon, color: Centre.offWhite, size: 6.w),
+                          child: Icon(
+                            page == PageSelected.Overview || page == PageSelected.TripPlanning
+                                ? Icons.add
+                                : page == PageSelected.BudgetPlanning
+                                ? Icons.check
+                                : page == PageSelected.UserSettings
+                                ? Icons.import_export
+                                : null,
+                            color: Centre.offWhite,
+                            size: 6.w,
+                          ),
+                        );
+                      },
                     ),
                   );
                 },

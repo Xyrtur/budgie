@@ -1,61 +1,76 @@
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_date_pickers/flutter_date_pickers.dart';
 import 'package:intl/intl.dart';
-import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:sizer/sizer.dart';
 
-Future<DateTime?> showCustomMonthPicker(BuildContext context) {
-  return showMonthPicker(
-    context: context,
+class CustomMonthPicker extends StatefulWidget {
+  final DateTime? dateSelected;
+  const CustomMonthPicker({super.key, this.dateSelected});
 
-    initialDate: DateTime.now(),
-    monthStylePredicate: (DateTime val) {
-      if (val.month == DateTime.now().month && val.year == DateTime.now().year) {
-        return TextButton.styleFrom(backgroundColor: Centre.colors[33]);
-      }
-      return null;
-    },
-    yearStylePredicate: (int val) {
-      if (val == DateTime.now().year) {
-        return TextButton.styleFrom(backgroundColor: Centre.colors[33]);
-      }
-      return null;
-    },
-    monthPickerDialogSettings: MonthPickerDialogSettings(
-      dialogSettings: PickerDialogSettings(
-        verticalScrolling: false,
-        dialogBackgroundColor: Centre.dialogBgColor,
-        dialogRoundedCornersRadius: 12,
+  @override
+  State<CustomMonthPicker> createState() => CustomMonthPickerState();
+}
+
+class CustomMonthPickerState extends State<CustomMonthPicker> {
+  final DateTime firstDate = DateTime.now().subtract(Duration(days: 700));
+  final DateTime lastDate = DateTime.now().add(Duration(days: 700));
+  DateTime dateChosen = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+
+    dateChosen = widget.dateSelected ?? DateTime.now();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+      backgroundColor: Centre.dialogBgColor,
+      elevation: 1,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 30.h,
+            child: MonthPicker.single(
+              datePickerStyles: DatePickerStyles(
+                selectedDateStyle: Centre.semiTitle2Text,
+                selectedSingleDateDecoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(color: Centre.accentColor),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              selectedDate: dateChosen,
+
+              onChanged: (value) {
+                setState(() {
+                  dateChosen = value;
+                });
+              },
+              firstDate: firstDate,
+              lastDate: lastDate,
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context, dateChosen);
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Text("OK"),
+            ),
+          ),
+        ],
       ),
-      headerSettings: PickerHeaderSettings(
-        headerPadding: EdgeInsets.only(top: 4.w, left: 4.w, right: 4.w),
-        headerBackgroundColor: Centre.dialogBgColor,
-        headerCurrentPageTextStyle: Centre.semiTitleText,
-        headerSelectedIntervalTextStyle: Centre.semiTitle2Text,
-        headerIconsColor: Colors.white,
-      ),
-      dateButtonsSettings: PickerDateButtonsSettings(
-        selectedMonthBackgroundColor: Centre.colors[42],
-        selectedMonthTextColor: Centre.bgColor,
-        unselectedMonthsTextColor: Centre.colors[42],
-        currentMonthTextColor: Centre.bgColor,
-        monthTextStyle: Centre.listText,
-      ),
-      actionBarSettings: PickerActionBarSettings(
-        confirmWidget: Padding(
-          padding: EdgeInsets.all(3.w),
-          child: Text('OK', style: Centre.listText),
-        ),
-        cancelWidget: Padding(
-          padding: EdgeInsets.all(3.w),
-          child: Text('Cancel', style: Centre.listText),
-        ),
-      ),
-    ),
-  );
+    );
+  }
 }
 
 class MonthYearAddingRangeButton extends StatelessWidget {
@@ -67,12 +82,12 @@ class MonthYearAddingRangeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
       builder: (_, newDates) {
-        return newDates[0] == null
+        return newDates[isStartDate ? 0 : 1] == null
             ? IconButton.outlined(
                 onPressed: () {
-                  showCustomMonthPicker(context).then((date) {
+                  showDialog(context: context, builder: (unUsedContext) => CustomMonthPicker()).then((date) {
                     if (date != null) {
-                      dialogResult.value = isStartDate ? [null, date] : [date, null];
+                      dialogResult.value = isStartDate ? [date, null] : [null, date];
                     }
                   });
                 },
@@ -82,9 +97,12 @@ class MonthYearAddingRangeButton extends StatelessWidget {
               )
             : GestureDetector(
                 onTap: () {
-                  showCustomMonthPicker(context).then((date) {
+                  showDialog(
+                    context: context,
+                    builder: (unUsedContext) => CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
+                  ).then((date) {
                     if (date != null) {
-                      dialogResult.value = isStartDate ? [null, date] : [date, null];
+                      dialogResult.value = isStartDate ? [date, null] : [null, date];
                     }
                   });
                 },
@@ -115,26 +133,29 @@ class MonthYearEditingRangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showCustomMonthPicker(context).then((date) {
-          if (date != null) {
-            dialogResult.value = [id, isStartDate ? 0 : 1, date];
-          }
-        });
-      },
-      child: BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
-        builder: (_, dateRangeMap) {
-          return Container(
+    return BlocBuilder<TempEditingDateRangesCubit, Map<int, List<DateTime>>>(
+      builder: (_, dateRangeMap) {
+        return GestureDetector(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (unUsedContext) => CustomMonthPicker(dateSelected: dateRangeMap[id]![isStartDate ? 0 : 1]),
+            ).then((date) {
+              if (date != null) {
+                dialogResult.value = [id, isStartDate ? 0 : 1, date];
+              }
+            });
+          },
+          child: Container(
             padding: EdgeInsets.all(2.w),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.white, width: 1.5),
               borderRadius: const BorderRadius.all(Radius.circular(8)),
             ),
             child: Text(DateFormat('yMMM').format(dateRangeMap[id]![isStartDate ? 0 : 1]), style: Centre.listText),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

@@ -35,14 +35,15 @@ class SpendingListviewHeader extends StatelessWidget {
 }
 
 class ConditionalScrollView extends StatelessWidget {
+  final ScrollController controller;
   final bool enabled;
   final Widget child;
 
-  const ConditionalScrollView({super.key, required this.enabled, required this.child});
+  const ConditionalScrollView({super.key, required this.enabled, required this.child, required this.controller});
   @override
   Widget build(BuildContext context) {
     if (!enabled) return child;
 
-    return SingleChildScrollView(child: child);
+    return SingleChildScrollView(controller: controller, child: child);
   }
 }

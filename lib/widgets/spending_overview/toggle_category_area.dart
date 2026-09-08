@@ -117,7 +117,7 @@ class _ToggleCategoryAreaState extends State<ToggleCategoryArea> {
                                   child: Text(
                                     widget.categories[i],
                                     style: Centre.listText.copyWith(
-                                      fontSize: widget.isPortrait ? 14.sp : 13.5.sp,
+                                      fontSize: widget.isPortrait ? 15.sp : 14.5.sp,
                                       fontWeight: FontWeight.bold,
                                       color: categoriesToggled.contains(widget.categories[i])
                                           ? Centre.bgColor

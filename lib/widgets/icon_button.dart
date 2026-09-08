@@ -14,10 +14,7 @@ class CustomIconButton extends StatelessWidget {
         color: Centre.dialogBgColor,
         borderRadius: BorderRadius.circular(30),
         border: Border.all(color: Centre.buttonBorderColor, width: 1),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.35), blurRadius: 16, offset: const Offset(0, 5)),
-          BoxShadow(color: Colors.white.withValues(alpha: 0.1), blurRadius: 1, offset: const Offset(0, -1)),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.35), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: Material(
         color: Colors.transparent,

@@ -17,17 +17,14 @@ class MonthTile extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 2.h),
       child: Ink(
         decoration: BoxDecoration(
-          color: Centre.bgColor,
+          color: Centre.cardColor,
           borderRadius: BorderRadius.circular(8),
           border: DateFormat("MMMM").format(DateTime.now()) == month
               ? Border.all(color: Centre.colors[1], width: 0.5.w)
               : null,
 
           // Outer depth
-          boxShadow: const [
-            BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 8),
-            BoxShadow(color: Color.fromARGB(255, 42, 45, 69), offset: Offset(-4, -4), blurRadius: 8),
-          ],
+          boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
         ),
 
         child: InkWell(

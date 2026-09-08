@@ -9,7 +9,13 @@ class MultiYearPickerDialog extends StatefulWidget {
   final int endYear;
   final List<int> initialYears;
   final bool isPortrait;
-  const MultiYearPickerDialog({super.key, required this.endYear, required this.startYear, required this.initialYears, required this.isPortrait});
+  const MultiYearPickerDialog({
+    super.key,
+    required this.endYear,
+    required this.startYear,
+    required this.initialYears,
+    required this.isPortrait,
+  });
 
   @override
   State<MultiYearPickerDialog> createState() => _MultiYearPickerDialogState();
@@ -42,7 +48,7 @@ class _MultiYearPickerDialogState extends State<MultiYearPickerDialog> {
             crossAxisAlignment: CrossAxisAlignment.center,
 
             children: [
-              Text("View Expenses From", style: Centre.semiTitle2Text),
+              Text("View Expenses From", style: Centre.semiTitleText),
               Divider(),
               SizedBox(height: 2.h),
               Wrap(
@@ -72,8 +78,8 @@ class _MultiYearPickerDialogState extends State<MultiYearPickerDialog> {
                         ),
                         child: Text(
                           year.toString(),
-                          style: Centre.listText.copyWith(
-                            fontSize: widget.isPortrait ? 14.sp : 13.5.sp,
+                          style: Centre.semiTitle2Text.copyWith(
+                            fontSize: widget.isPortrait ? 15.5.sp : 15.sp,
                             fontWeight: FontWeight.w400,
                             color: yearsSelected.contains(year) ? Centre.bgColor : Colors.white,
                           ),

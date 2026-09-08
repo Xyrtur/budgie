@@ -82,21 +82,11 @@ class TempIncludeFixedCubit extends Cubit<bool> {
   }
 }
 
-class FABIconCubit extends Cubit<IconData> {
-  final IconData icon;
-  FABIconCubit(this.icon) : super(icon);
+class FABIconCubit extends Cubit<PageSelected> {
+  FABIconCubit() : super(PageSelected.Overview);
 
   void changeIcon({required PageSelected page}) {
-    switch (page) {
-      case PageSelected.Overview:
-        emit(Icons.add);
-      case PageSelected.TripPlanning:
-        emit(Icons.add);
-      case PageSelected.BudgetPlanning:
-        emit(Icons.check);
-      case PageSelected.UserSettings:
-        emit(Icons.import_export);
-    }
+    emit(page);
   }
 }
 
@@ -224,5 +214,28 @@ class CategoryBoxTextsCubit extends Cubit<Map<String, String>> {
     final newMap = {...state};
     newMap[categoryName] = categoryLimit;
     emit(newMap);
+  }
+}
+
+class AddExpenseCategoryBtnsCubit extends Cubit<String> {
+  final String categorySelected;
+  AddExpenseCategoryBtnsCubit(this.categorySelected) : super(categorySelected);
+
+  void update({required String category}) {
+    emit(category);
+  }
+}
+
+class DateSelectedCubit extends Cubit<DateTime?> {
+  DateSelectedCubit() : super(null);
+  void update({required DateTime? date}) {
+    emit(date);
+  }
+}
+
+class IsIncomeToggleCubit extends Cubit<bool> {
+  IsIncomeToggleCubit() : super(false);
+  void toggle() {
+    emit(!state);
   }
 }

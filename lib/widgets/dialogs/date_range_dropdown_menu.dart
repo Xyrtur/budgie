@@ -33,25 +33,15 @@ class _DateRangeDropDownMenuState extends State<DateRangeDropDownMenu> with Sing
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xff131524),
-        borderRadius: BorderRadius.circular(18),
+        color: Centre.cardColor,
+        borderRadius: BorderRadius.circular(10),
 
         // Outer depth
-        boxShadow: const [BoxShadow(color: Color(0xff080912), offset: Offset(4, 4), blurRadius: 3)],
+        boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
       ),
       child: Material(
         color: Colors.transparent,
         child: Ink(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-
-            // Creates the "pressed" edge
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff2A2F4A), Color(0xff22263D), Color(0xff282C46)],
-            ),
-          ),
           child: InkWell(
             splashColor: Centre.bgSplashColor,
             highlightColor: Centre.bgSplashColor,
@@ -73,12 +63,8 @@ class _DateRangeDropDownMenuState extends State<DateRangeDropDownMenu> with Sing
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [Color(0xff242943), Color(0xff1B1F33)],
-                        ),
-                        border: Border.all(color: const Color(0xff363B56)),
+                        color: Centre.cardColor,
+
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.30),

@@ -86,7 +86,7 @@ class _YearMultiSelectAreaState extends State<YearMultiSelectArea> {
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        Text(e.key.toString(), style: Centre.listText.copyWith(fontSize: 15.sp)),
+                                        Text(e.key.toString(), style: Centre.listText),
 
                                         Container(
                                           height: 4.5.w,

@@ -3,16 +3,18 @@ import 'package:sizer/sizer.dart';
 
 class Centre {
   static Color bgColor = const Color(0xff131524);
+  static Color cardColor = const Color(0xff1B1D2C);
   static Color primaryColor = const Color(0xFFB66F9A);
   static Color secondaryColor = Color(0xFF6E3E5C);
   static Color accentColor = const Color.fromARGB(255, 170, 120, 151);
   static Color splashColor = const Color(0xFF8F647F);
   static Color bgSplashColor = const Color(0xff25283D);
-  static Color shadowbgColor = const Color.fromARGB(255, 27, 26, 25);
-  static Color dialogBgColor = const Color(0xff22263D);
+  static Color shadowbgColor = const Color.fromARGB(89, 0, 0, 0);
+  static Color navBarColor = const Color(0xff22263D);
+  static Color dialogBgColor = const Color(0xff1B1D2D);
   static Color graphLinesColor = const Color.fromARGB(255, 76, 81, 110);
   static Color scrollTrackColor = const Color(0xff0D0E1A);
-  static Color offWhite = const Color(0xFFF0E8EF);
+  static Color offWhite = const Color(0xFFF5F3F0);
   static Color buttonBorderColor = const Color(0xFF363B56);
 
   static const List<Color> colors = [
@@ -96,7 +98,7 @@ class Centre {
   static final listText = TextStyle(
     color: offWhite,
     fontWeight: FontWeight.w400,
-    fontSize: 14.sp,
+    fontSize: 15.5.sp,
     fontFamily: 'Raleway',
   );
 }
