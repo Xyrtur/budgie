@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
 import 'package:flutter/material.dart';
@@ -35,12 +38,34 @@ class SettingsEditingTextCubit extends Cubit<String> {
 /// This cubit tracks what color is selected in the color dialog on the settings page.
 ///
 /// The initial state is the old color of the category.
-class SettingsAddColorCubit extends Cubit<int?> {
-  final int? color;
-  SettingsAddColorCubit(this.color) : super(color);
+class ChooseColorCubit extends Cubit<List<int>> {
+  final List<int> colorList;
+  ChooseColorCubit(this.colorList) : super(colorList);
 
-  void selectColor({required int? color}) {
-    emit(color);
+  void selectColor({required int color, required bool inSettingsPage}) {
+    // if transparent color selected, all colors cleared
+    if (color == Colors.transparent.toARGB32()) {
+      emit([]);
+      return;
+    }
+    if (inSettingsPage) {
+      emit([color]);
+      return;
+    }
+
+    if (state.contains(color)) {
+      // Toggle off
+      List<int> newState = [...state];
+      newState.remove(color);
+      emit(newState);
+      return;
+    } else {
+      // Toggle on and get rid of oldest color if >3 colors chosen
+      final newState = [...state, color];
+      if (newState.length > 3) newState.removeAt(0);
+      emit(newState);
+      return;
+    }
   }
 }
 
@@ -237,5 +262,139 @@ class IsIncomeToggleCubit extends Cubit<bool> {
   IsIncomeToggleCubit() : super(false);
   void toggle() {
     emit(!state);
+  }
+}
+
+enum RecordType { entry, total, title }
+
+typedef Record = ({
+  String name,
+  DateTime? startDate,
+  DateTime? endDate,
+  List<int> colors,
+  double value,
+  RecordType type,
+});
+
+class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
+  TempTripRecordsCubit()
+    : super({
+        "Europe Trip": [
+          (
+            name: "Vienna Stay",
+            startDate: DateTime(2024, 05, 19),
+            endDate: DateTime(2024, 05, 24),
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1234.65,
+            type: RecordType.entry,
+          ),
+          (
+            name: "Vienna Transport",
+            startDate: null,
+            endDate: null,
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 546.67,
+            type: RecordType.entry,
+          ),
+          (
+            name: "Total",
+            startDate: null,
+            endDate: null,
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1781.22,
+            type: RecordType.total,
+          ),
+          (
+            name: "Amsterdam Stay",
+            startDate: DateTime(2024, 05, 26),
+            endDate: DateTime(2024, 05, 30),
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1537.22,
+            type: RecordType.entry,
+          ),
+        ],
+
+        "Japan": [
+          (
+            name: "Osaka Stay",
+            startDate: DateTime(2025, 11, 05),
+            endDate: DateTime(2025, 11, 15),
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1234.65,
+            type: RecordType.entry,
+          ),
+          (
+            name: "Tokyo Transport",
+            startDate: null,
+            endDate: null,
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 546.67,
+            type: RecordType.entry,
+          ),
+          (
+            name: "Tokyo Stay",
+            startDate: null,
+            endDate: null,
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 546.67,
+            type: RecordType.entry,
+          ),
+          (
+            name: "Total",
+            startDate: null,
+            endDate: null,
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1781.22,
+            type: RecordType.total,
+          ),
+          (
+            name: "Kyoto Stay",
+            startDate: DateTime(2026, 01, 1),
+            endDate: DateTime(2026, 01, 12),
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            value: 1537.22,
+            type: RecordType.entry,
+          ),
+        ],
+      });
+
+  void changeColor(String tripName, int index, List<int> newColors) {
+    final newState = {...state};
+    Record rec = (
+      name: newState[tripName]![index].name,
+      startDate: newState[tripName]![index].startDate,
+      endDate: newState[tripName]![index].endDate,
+      colors: newColors,
+      value: newState[tripName]![index].value,
+      type: newState[tripName]![index].type,
+    );
+    newState[tripName]!.removeAt(index);
+
+    newState[tripName]!.insert(index, rec);
+    emit(newState);
+  }
+
+  void reOrder(String tripName, List<Record> recordList) {
+    final newState = {...state};
+    newState[tripName] = recordList;
+    emit(newState);
+  }
+
+  void insertAt(String tripName, int index, RecordType type) {
+    final newState = {...state};
+    int newValue = 0;
+    if (type == RecordType.total) {
+      // TODO: Finish this code during bloc implementation
+    }
+    Record rec = (
+      name: type == RecordType.total ? "Total" : "Placeholder Title",
+      startDate: null,
+      endDate: null,
+      colors: [],
+      value: 0,
+      type: type,
+    );
+    newState[tripName]!.insert(index, rec);
+    emit(newState);
   }
 }

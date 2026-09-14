@@ -228,7 +228,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                         : Align(
                             alignment: AlignmentGeometry.bottomLeft,
                             child: Container(
-                              margin: EdgeInsets.only(left: 3.w, bottom: 2.h),
+                              margin: EdgeInsets.only(left: 3.w, bottom: 13.h),
                               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                               decoration: BoxDecoration(
                                 color: Centre.bgColor,

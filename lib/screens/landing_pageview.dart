@@ -150,8 +150,11 @@ class _LandingPageViewState extends State<LandingPageView> {
               ],
               child: const SpendingOverviewPage(),
             ),
+            MultiBlocProvider(
+              providers: [BlocProvider<TempTripRecordsCubit>(create: (context) => TempTripRecordsCubit())],
+              child: const AllTripPlanningPage(),
+            ),
 
-            const AllTripPlanningPage(),
             MultiBlocProvider(
               providers: [
                 BlocProvider<LiveBudgetTotalTrackerCubit>(

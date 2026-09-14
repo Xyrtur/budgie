@@ -74,6 +74,13 @@ class Centre {
     Color(0xfff8c0c8),
   ];
 
+  static final bigTitleText = TextStyle(
+    color: offWhite,
+    fontWeight: FontWeight.w400,
+    fontSize: 20.sp,
+    fontFamily: 'Raleway',
+  );
+
   static final titleText = TextStyle(
     color: offWhite,
     fontWeight: FontWeight.w400,

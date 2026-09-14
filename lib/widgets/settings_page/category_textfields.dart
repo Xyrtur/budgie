@@ -100,7 +100,7 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
                   return 'Too long';
                 } else if (widget.existingCategories.contains(text)) {
                   return 'Category already exists';
-                } else if (context.read<SettingsAddColorCubit>().state == null) {
+                } else if (context.read<ChooseColorCubit>().state == []) {
                   return 'No color chosen';
                 }
                 return null;
@@ -116,14 +116,14 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
           ),
         ),
         SizedBox(width: 4.w),
-        ChooseColorBtn(color: Colors.transparent.toARGB32(), categoryName: null),
+        ChooseColorBtn(categoryName: null),
         Spacer(),
         CustomIconButton(
           onTap: () {
             if (formKey.currentState!.validate()) {
               // Add category with controller.text, context.read<SettingsAddColorCubit>().state!,
               controller.clear();
-              context.read<SettingsAddColorCubit>().selectColor(color: null);
+              context.read<ChooseColorCubit>().selectColor(color: Colors.transparent.toARGB32(), inSettingsPage: true);
             }
           },
           child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),

@@ -1,6 +1,9 @@
+import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/trip_planning_page.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 class AllTripPlanningPage extends StatelessWidget {
@@ -8,8 +11,6 @@ class AllTripPlanningPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const List<String> tripNames = ["After Grad", "Europe", "Japan", "Australia Trip"];
-
     return SafeArea(
       bottom: false,
 
@@ -39,51 +40,62 @@ class AllTripPlanningPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
               child: Divider(),
             ),
-            Expanded(
-              child: ListView(
-                children: [
-                  for (String i in tripNames)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                      child: Ink(
-                        decoration: BoxDecoration(
-                          color: Centre.cardColor,
-                          borderRadius: BorderRadius.circular(8),
+            BlocBuilder<TempTripRecordsCubit, Map<String, List<Record>>>(
+              builder: (_, trips) {
+                return Expanded(
+                  child: ListView(
+                    children: [
+                      for (String i in trips.keys)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                          child: Ink(
+                            decoration: BoxDecoration(
+                              color: Centre.cardColor,
+                              borderRadius: BorderRadius.circular(8),
 
-                          // Outer depth
-                          boxShadow: [
-                            BoxShadow(
-                              color: Centre.shadowbgColor,
-                              offset: Offset(0, 2),
-                              blurRadius: 6,
-                              spreadRadius: 0,
-                            ),
-                          ],
-                        ),
-
-                        child: InkWell(
-                          splashColor: Centre.bgSplashColor,
-                          highlightColor: Centre.bgSplashColor,
-                          borderRadius: BorderRadius.circular(8),
-
-                          onTap: () async {
-                            // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
-                          },
-
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-                            child: Column(
-                              children: [
-                                Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
-                                Text("Jul 2024 - Aug 2024", style: Centre.listText.copyWith(color: Colors.grey)),
+                              // Outer depth
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Centre.shadowbgColor,
+                                  offset: Offset(0, 2),
+                                  blurRadius: 6,
+                                  spreadRadius: 0,
+                                ),
                               ],
+                            ),
+
+                            child: InkWell(
+                              splashColor: Centre.bgSplashColor,
+                              highlightColor: Centre.bgSplashColor,
+                              borderRadius: BorderRadius.circular(8),
+
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (unUsedContext) => BlocProvider.value(
+                                      value: context.read<TempTripRecordsCubit>(),
+                                      child: TripPlanningPage(tripName: i, recordList: trips[i]!),
+                                    ),
+                                  ),
+                                );
+                              },
+
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                                child: Column(
+                                  children: [
+                                    Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
+                                    Text("Jul 2024 - Aug 2024", style: Centre.listText.copyWith(color: Colors.grey)),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                ],
-              ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

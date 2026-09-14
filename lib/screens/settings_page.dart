@@ -63,9 +63,9 @@ class SettingsPage extends StatelessWidget {
                       controller: editingController..text = name,
                     ),
               const Spacer(),
-              BlocProvider<SettingsAddColorCubit>(
-                create: (context) => SettingsAddColorCubit(null),
-                child: ChooseColorBtn(color: color, categoryName: name),
+              BlocProvider<ChooseColorCubit>(
+                create: (context) => ChooseColorCubit([color]),
+                child: ChooseColorBtn(categoryName: name),
               ),
               SizedBox(width: 3.w),
               editingName == null || editingName != name
@@ -108,8 +108,8 @@ class SettingsPage extends StatelessWidget {
       ...categoryList,
       SizedBox(height: 0.6.h),
 
-      BlocProvider<SettingsAddColorCubit>(
-        create: (_) => SettingsAddColorCubit(null),
+      BlocProvider<ChooseColorCubit>(
+        create: (_) => ChooseColorCubit([]),
         child: AddCategoryTextField(existingCategories: categories.keys.toList()),
       ),
     ];
