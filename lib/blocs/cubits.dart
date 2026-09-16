@@ -251,10 +251,18 @@ class AddExpenseCategoryBtnsCubit extends Cubit<String> {
   }
 }
 
-class DateSelectedCubit extends Cubit<DateTime?> {
-  DateSelectedCubit() : super(null);
-  void update({required DateTime? date}) {
-    emit(date);
+class DatesSelectedCubit extends Cubit<List<DateTime?>> {
+  DatesSelectedCubit() : super([null, null]);
+  void updateSingle({required DateTime date}) {
+    emit([date]);
+  }
+
+  void updateStart({required DateTime date}) {
+    emit([date, state.last]);
+  }
+
+  void updateEnd({required DateTime date}) {
+    emit([state.first, date]);
   }
 }
 

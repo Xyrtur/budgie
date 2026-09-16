@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/dialogs/edit_trip_entry_dialog.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:budgie/widgets/settings_page/choose_color_button.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -136,47 +135,82 @@ class TripPlanningPage extends StatelessWidget {
                                           );
                                         },
                                         builder: (context, candidateData, rejectedData) {
-                                          return ReorderableDelayedDragStartListener(
-                                            index: index,
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-                                              padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-                                              decoration: BoxDecoration(
-                                                border: BoxBorder.all(
-                                                  color: recordList[index].colors.isNotEmpty
-                                                      ? Color(recordList[index].colors[0])
-                                                      : const Color.fromARGB(255, 54, 54, 54),
-                                                ),
-                                                borderRadius: BorderRadius.circular(8),
-                                              ),
-                                              child: Row(
-                                                children: [
-                                                  Text(recordList[index].name, style: Centre.semiTitle2Text),
-                                                  recordList[index].startDate != null
-                                                      ? Container(
-                                                          margin: EdgeInsets.only(left: 2.w),
-                                                          padding: EdgeInsetsGeometry.symmetric(
-                                                            horizontal: 2.w,
-                                                            vertical: 0.5.h,
+                                          return GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext dialogContext) {
+                                                  return GestureDetector(
+                                                    onTap: () {},
+                                                    child: Scaffold(
+                                                      backgroundColor: Colors.transparent,
+                                                      body: MultiBlocProvider(
+                                                        providers: [
+                                                          BlocProvider<ChooseColorCubit>(
+                                                            create: (context) =>
+                                                                ChooseColorCubit(recordList[index].colors),
                                                           ),
-                                                          decoration: BoxDecoration(
-                                                            border: BoxBorder.all(
-                                                              color: Color(recordList[index].colors[0]),
-                                                            ),
-                                                            borderRadius: BorderRadius.circular(8),
+                                                          BlocProvider<DatesSelectedCubit>(
+                                                            create: (context) => DatesSelectedCubit(),
                                                           ),
-                                                          child: Text(
-                                                            "${DateFormat('MMM d').format(recordList[index].startDate!)} - ${DateFormat('MMM d').format(recordList[index].endDate!)}",
-                                                            style: Centre.listText,
-                                                          ),
-                                                        )
-                                                      : SizedBox(),
-                                                  Spacer(),
-                                                  Text(
-                                                    recordList[index].value.toStringAsFixed(2),
-                                                    style: Centre.semiTitle2Text,
+                                                        ],
+                                                        child: EditTripEntryDialog(
+                                                          name: recordList[index].name,
+                                                          colors: recordList[index].colors,
+                                                          amount: recordList[index].value,
+                                                          dates: [
+                                                            recordList[index].startDate,
+                                                            recordList[index].endDate,
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                            child: ReorderableDelayedDragStartListener(
+                                              index: index,
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                                                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                                                decoration: BoxDecoration(
+                                                  border: BoxBorder.all(
+                                                    color: recordList[index].colors.isNotEmpty
+                                                        ? Color(recordList[index].colors[0])
+                                                        : const Color.fromARGB(255, 54, 54, 54),
                                                   ),
-                                                ],
+                                                  borderRadius: BorderRadius.circular(8),
+                                                ),
+                                                child: Row(
+                                                  children: [
+                                                    Text(recordList[index].name, style: Centre.semiTitle2Text),
+                                                    recordList[index].startDate != null
+                                                        ? Container(
+                                                            margin: EdgeInsets.only(left: 2.w),
+                                                            padding: EdgeInsetsGeometry.symmetric(
+                                                              horizontal: 2.w,
+                                                              vertical: 0.5.h,
+                                                            ),
+                                                            decoration: BoxDecoration(
+                                                              border: BoxBorder.all(
+                                                                color: Color(recordList[index].colors[0]),
+                                                              ),
+                                                              borderRadius: BorderRadius.circular(8),
+                                                            ),
+                                                            child: Text(
+                                                              "${DateFormat('MMM d').format(recordList[index].startDate!)} - ${DateFormat('MMM d').format(recordList[index].endDate!)}",
+                                                              style: Centre.listText,
+                                                            ),
+                                                          )
+                                                        : SizedBox(),
+                                                    Spacer(),
+                                                    Text(
+                                                      recordList[index].value.toStringAsFixed(2),
+                                                      style: Centre.semiTitle2Text,
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           );

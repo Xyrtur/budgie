@@ -1,4 +1,3 @@
-import 'package:aligned_dialog/aligned_dialog.dart';
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/all_trip_planning_page.dart';
 import 'package:budgie/screens/budget_planning.dart';
@@ -98,7 +97,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                                             BlocProvider<AddExpenseCategoryBtnsCubit>(
                                               create: (context) => AddExpenseCategoryBtnsCubit("Groceries"),
                                             ),
-                                            BlocProvider<DateSelectedCubit>(create: (context) => DateSelectedCubit()),
+                                            BlocProvider<DatesSelectedCubit>(create: (context) => DatesSelectedCubit()),
                                             BlocProvider<IsIncomeToggleCubit>(
                                               create: (context) => IsIncomeToggleCubit(),
                                             ),

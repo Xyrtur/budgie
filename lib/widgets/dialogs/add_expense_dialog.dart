@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/dialogs/dialog_textfield.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:budgie/widgets/settings_page/month_year_picker.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class AddExpenseDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     dateResult.addListener(() {
-      context.read<DateSelectedCubit>().update(date: dateResult.value);
+      context.read<DatesSelectedCubit>().updateSingle(date: dateResult.value!);
     });
 
     return AlertDialog(
@@ -50,7 +51,7 @@ class AddExpenseDialog extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: ExpenseInfoTextField(isName: true, controller: nameController),
+                child: DialogInfoTextField(isName: true, controller: nameController),
               ),
               SizedBox(height: 3.h),
               Container(
@@ -117,7 +118,7 @@ class AddExpenseDialog extends StatelessWidget {
 
                     SizedBox(
                       width: 20.w,
-                      child: ExpenseInfoTextField(isName: false, controller: amountController),
+                      child: DialogInfoTextField(isName: false, controller: amountController),
                     ),
                   ],
                 ),
@@ -139,7 +140,7 @@ class AddExpenseDialog extends StatelessWidget {
                                 showDialog(
                                   context: context,
                                   builder: (unUsedContext) =>
-                                      CustomMonthPicker(dateSelected: context.read<DateSelectedCubit>().state),
+                                      CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
                                 ).then((date) {
                                   if (date != null) {
                                     dateResult.value = date;
@@ -149,10 +150,10 @@ class AddExpenseDialog extends StatelessWidget {
                               child: Icon(Icons.calendar_month, color: Centre.primaryColor),
                             ),
                             SizedBox(width: 2.w),
-                            BlocBuilder<DateSelectedCubit, DateTime?>(
+                            BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
                               builder: (unUsedcontext, dateChosen) {
                                 return Text(
-                                  dateChosen != null ? DateFormat('MMM, y').format(dateChosen) : "",
+                                  dateChosen.first != null ? DateFormat('MMM, y').format(dateChosen.first!) : "",
                                   style: Centre.semiTitle2Text,
                                 );
                               },
@@ -229,50 +230,6 @@ class AddExpenseDialog extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ExpenseInfoTextField extends StatefulWidget {
-  // It's either name or amount
-  final bool isName;
-  final TextEditingController controller;
-  const ExpenseInfoTextField({super.key, required this.isName, required this.controller});
-  @override
-  State<ExpenseInfoTextField> createState() => _ExpenseInfoTextFieldState();
-}
-
-class _ExpenseInfoTextFieldState extends State<ExpenseInfoTextField> {
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: widget.controller,
-      autofocus: widget.isName,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: (text) {
-        if (text == null || text.isEmpty) {
-          return 'Can\'t be empty';
-        } else if (text.length > 100) {
-          return 'Too long';
-        }
-        return null;
-      },
-      style: widget.isName ? Centre.titleText : Centre.semiTitleText,
-      keyboardType: widget.isName ? null : TextInputType.number,
-
-      decoration: InputDecoration(
-        prefixIcon: widget.isName
-            ? null
-            : Text('\$ ', style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14)),
-        prefixIconConstraints: widget.isName ? null : BoxConstraints(minWidth: 0, minHeight: 0),
-        errorStyle: TextStyle(height: 0.5),
-
-        hintText: widget.isName ? "Expense name" : "123.45",
-        hintStyle: widget.isName
-            ? Centre.titleText.copyWith(color: const Color.fromARGB(255, 181, 181, 181))
-            : Centre.semiTitleText.copyWith(color: Colors.grey),
-        isDense: true,
       ),
     );
   }
