@@ -13,16 +13,7 @@ import 'package:sizer/sizer.dart';
 class AddExpenseDialog extends StatelessWidget {
   AddExpenseDialog({super.key});
 
-  final List<String> categories = [
-    "Groceries",
-    "Entertainment",
-    "House",
-    "Gas",
-    "Junk Food",
-    "Ava",
-    "Category 1",
-    "Category 2",
-  ];
+  final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   late final TextEditingController amountController = TextEditingController();
@@ -41,148 +32,86 @@ class AddExpenseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       elevation: 1,
 
-      content: SizedBox(
-        width: 75.w,
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: DialogInfoTextField(isName: true, controller: nameController),
-              ),
-              SizedBox(height: 3.h),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 2.w),
-                padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
-                decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(10)),
-                child: RawScrollbar(
-                  padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  interactive: false,
-                  trackVisibility: true,
-                  thumbVisibility: true,
+      content: Form(
+        key: formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 5.w),
+              child: DialogInfoTextField(isName: true, controller: nameController, autofocus: true),
+            ),
+            SizedBox(height: 3.h),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 2.w),
+              padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
+              decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(10)),
+              child: RawScrollbar(
+                padding: EdgeInsets.symmetric(horizontal: 4.w),
+                interactive: false,
+                trackVisibility: true,
+                thumbVisibility: true,
+                controller: scrollController,
+                thumbColor: Centre.primaryColor.withAlpha(200),
+                radius: const Radius.circular(8),
+                thickness: 0.5.h,
+                child: SingleChildScrollView(
                   controller: scrollController,
-                  thumbColor: Centre.primaryColor.withAlpha(200),
-                  radius: const Radius.circular(8),
-                  thickness: 0.5.h,
-                  child: SingleChildScrollView(
-                    controller: scrollController,
-                    scrollDirection: Axis.horizontal,
-                    child: BlocBuilder<AddExpenseCategoryBtnsCubit, String>(
-                      builder: (unUsedcontext, categorySelected) {
-                        return Row(
-                          children: [
-                            for (String category in categories)
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<AddExpenseCategoryBtnsCubit>().update(category: category);
-                                },
-                                child: Container(
-                                  constraints: BoxConstraints(minWidth: 18.w),
-                                  margin: EdgeInsets.only(bottom: 1.5.h),
-                                  padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: categorySelected == category
-                                        ? Border.all(color: Centre.colors[Random(category.length).nextInt(54)])
-                                        : null,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Text(category.toString()),
-                                      Icon(
-                                        Icons.ac_unit_sharp,
-                                        size: 5.w,
-                                        color: Centre.colors[Random(category.length).nextInt(54)],
-                                      ),
-                                    ],
-                                  ),
+                  scrollDirection: Axis.horizontal,
+                  child: BlocBuilder<AddExpenseCategoryBtnsCubit, String>(
+                    builder: (unUsedcontext, categorySelected) {
+                      return Row(
+                        children: [
+                          for (String category in categories)
+                            GestureDetector(
+                              onTap: () {
+                                context.read<AddExpenseCategoryBtnsCubit>().update(category: category);
+                              },
+                              child: Container(
+                                constraints: BoxConstraints(minWidth: 18.w),
+                                margin: EdgeInsets.only(bottom: 1.5.h),
+                                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: categorySelected == category ? Border.all(color: Centre.colors[Random(category.length).nextInt(54)]) : null,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Text(category.toString()),
+                                    Icon(Icons.ac_unit_sharp, size: 5.w, color: Centre.colors[Random(category.length).nextInt(54)]),
+                                  ],
                                 ),
                               ),
-                          ],
-                        );
-                      },
-                    ),
+                            ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),
-              SizedBox(height: 2.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 3.w),
-                child: Row(
-                  children: [
-                    Text("Amount", style: Centre.semiTitleText),
-                    SizedBox(width: 3.w),
+            ),
+            SizedBox(height: 2.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Row(
+                children: [
+                  Text("Amount", style: Centre.semiTitleText),
+                  SizedBox(width: 3.w),
 
-                    SizedBox(
-                      width: 20.w,
-                      child: DialogInfoTextField(isName: false, controller: amountController),
-                    ),
-                  ],
-                ),
+                  SizedBox(
+                    width: 20.w,
+                    child: DialogInfoTextField(isName: false, controller: amountController),
+                  ),
+                ],
               ),
-              SizedBox(height: 3.h),
-              Row(
+            ),
+            SizedBox(height: 3.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.w),
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 2.w),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            CustomIconButton(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (unUsedContext) =>
-                                      CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
-                                ).then((date) {
-                                  if (date != null) {
-                                    dateResult.value = date;
-                                  }
-                                });
-                              },
-                              child: Icon(Icons.calendar_month, color: Centre.primaryColor),
-                            ),
-                            SizedBox(width: 2.w),
-                            BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                              builder: (unUsedcontext, dateChosen) {
-                                return Text(
-                                  dateChosen.first != null ? DateFormat('MMM, y').format(dateChosen.first!) : "",
-                                  style: Centre.semiTitle2Text,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 2.h),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            CustomIconButton(
-                              onTap: () {},
-                              child: Icon(Icons.check, color: Centre.primaryColor),
-                            ),
-                            SizedBox(width: 3.w),
-                            CustomIconButton(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Icon(Icons.close, color: Centre.primaryColor),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Spacer(),
-
                   GestureDetector(
                     onTap: () {
                       context.read<IsIncomeToggleCubit>().toggle();
@@ -224,11 +153,65 @@ class AddExpenseDialog extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  Spacer(),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CustomIconButton(
+                            onTap: () {
+                              // Stops focus from going back to text fields after dialog closes
+                              FocusManager.instance.primaryFocus?.unfocus();
+
+                              showDialog(
+                                context: context,
+                                builder: (unUsedContext) => CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
+                              ).then((date) {
+                                if (date != null) {
+                                  dateResult.value = date;
+                                }
+                              });
+                            },
+                            child: Icon(Icons.calendar_month, size: 6.w, color: Centre.primaryColor),
+                          ),
+                          SizedBox(width: 2.w),
+                          BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
+                            builder: (unUsedcontext, dateChosen) {
+                              return Text(
+                                dateChosen.first != null ? DateFormat('MMM, y').format(dateChosen.first!) : "",
+                                style: Centre.semiTitle2Text,
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 2.h),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          CustomIconButton(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(Icons.close, size: 6.w, color: Centre.primaryColor),
+                          ),
+                          SizedBox(width: 3.w),
+                          CustomIconButton(
+                            onTap: () {},
+                            child: Icon(Icons.check, size: 6.w, color: Centre.primaryColor),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ],
               ),
-              SizedBox(height: 1.h),
-            ],
-          ),
+            ),
+            SizedBox(height: 1.h),
+          ],
         ),
       ),
     );

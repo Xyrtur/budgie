@@ -10,12 +10,7 @@ class ChooseColorBtn extends StatelessWidget {
   final String? categoryName;
   final bool inTripsPage;
   final List<Color> colorsToChooseFrom;
-  const ChooseColorBtn({
-    super.key,
-    required this.categoryName,
-    this.inTripsPage = false,
-    this.colorsToChooseFrom = Centre.colors,
-  });
+  const ChooseColorBtn({super.key, required this.categoryName, this.inTripsPage = false, this.colorsToChooseFrom = Centre.colors});
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +51,9 @@ class ChooseColorBtn extends StatelessWidget {
                   )
                 : GestureDetector(
                     onTap: () {
+                      // Stops focus from going back to text fields after dialog closes
+                      FocusManager.instance.primaryFocus?.unfocus();
+
                       showAlignedDialog(
                         followerAnchor: Alignment.topLeft,
                         targetAnchor: Alignment.bottomLeft,
@@ -74,7 +72,6 @@ class ChooseColorBtn extends StatelessWidget {
                     },
                     child: colorList.isEmpty
                         ? Container(
-                            margin: EdgeInsets.only(right: 2.w),
                             width: 6.w,
                             height: 6.w,
                             decoration: BoxDecoration(
@@ -84,10 +81,10 @@ class ChooseColorBtn extends StatelessWidget {
                             ),
                           )
                         : Row(
+                            spacing: 2.w,
                             children: [
                               for (int color in colorList)
                                 Container(
-                                  margin: EdgeInsets.only(right: 2.w),
                                   width: 6.w,
                                   height: 6.w,
                                   decoration: BoxDecoration(

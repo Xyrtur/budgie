@@ -77,47 +77,49 @@ class TripPlanningPage extends StatelessWidget {
                                         key: ValueKey(index),
 
                                         onAcceptWithDetails: (details) {
-                                          context.read<TempTripRecordsCubit>().insertAt(
-                                            tripName,
-                                            index + 1,
-                                            details.data,
-                                          );
+                                          context.read<TempTripRecordsCubit>().insertAt(tripName, index + 1, details.data);
                                         },
                                         builder: (context, candidateData, rejectedData) {
-                                          return ReorderableDelayedDragStartListener(
-                                            index: index,
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-                                              padding: EdgeInsets.symmetric(vertical: 1.h),
-                                              child: Row(
-                                                children: [
-                                                  Text("Total", style: Centre.semiTitle2Text),
-                                                  SizedBox(width: 3.w),
-                                                  BlocProvider<ChooseColorCubit>(
-                                                    create: (context) => ChooseColorCubit(recordList[index].colors),
-                                                    child: ChooseColorBtn(
-                                                      categoryName: null,
-                                                      inTripsPage: true,
-                                                      // TODO: only give colors of the records currently present
-                                                      colorsToChooseFrom: ([
-                                                        ...Centre.colors,
-                                                      ]..shuffle()).sublist(0, 12),
-                                                    ),
-                                                  ),
-                                                  Expanded(
-                                                    child: Container(
-                                                      color: Colors.transparent,
-                                                      height: 4.h,
-                                                      child: Center(
-                                                        child: DottedLine(dashGapLength: 1.5.w, dashColor: Colors.grey),
+                                          return GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext dialogContext) {
+                                                  return EditTripEntryDialog.title(name: recordList[index].name);
+                                                },
+                                              );
+                                            },
+                                            child: ReorderableDelayedDragStartListener(
+                                              index: index,
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                                                padding: EdgeInsets.symmetric(vertical: 1.h),
+                                                child: Row(
+                                                  children: [
+                                                    Text("Total", style: Centre.semiTitle2Text),
+                                                    SizedBox(width: 3.w),
+                                                    BlocProvider<ChooseColorCubit>(
+                                                      create: (context) => ChooseColorCubit(recordList[index].colors),
+                                                      child: ChooseColorBtn(
+                                                        categoryName: null,
+                                                        inTripsPage: true,
+                                                        // TODO: only give colors of the records currently present
+                                                        colorsToChooseFrom: ([...Centre.colors]..shuffle()).sublist(0, 12),
                                                       ),
                                                     ),
-                                                  ),
-                                                  Text(
-                                                    " ${recordList[index].value.toStringAsFixed(2)}",
-                                                    style: Centre.semiTitle2Text,
-                                                  ),
-                                                ],
+                                                    SizedBox(width: 3.w),
+                                                    Expanded(
+                                                      child: Container(
+                                                        color: Colors.transparent,
+                                                        height: 4.h,
+                                                        child: Center(
+                                                          child: DottedLine(dashGapLength: 1.5.w, dashColor: Colors.grey),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Text(" ${recordList[index].value.toStringAsFixed(2)}", style: Centre.semiTitle2Text),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           );
@@ -128,11 +130,7 @@ class TripPlanningPage extends StatelessWidget {
                                         key: ValueKey(index),
 
                                         onAcceptWithDetails: (details) {
-                                          context.read<TempTripRecordsCubit>().insertAt(
-                                            tripName,
-                                            index + 1,
-                                            details.data,
-                                          );
+                                          context.read<TempTripRecordsCubit>().insertAt(tripName, index + 1, details.data);
                                         },
                                         builder: (context, candidateData, rejectedData) {
                                           return GestureDetector(
@@ -140,30 +138,19 @@ class TripPlanningPage extends StatelessWidget {
                                               showDialog(
                                                 context: context,
                                                 builder: (BuildContext dialogContext) {
-                                                  return GestureDetector(
-                                                    onTap: () {},
-                                                    child: Scaffold(
-                                                      backgroundColor: Colors.transparent,
-                                                      body: MultiBlocProvider(
-                                                        providers: [
-                                                          BlocProvider<ChooseColorCubit>(
-                                                            create: (context) =>
-                                                                ChooseColorCubit(recordList[index].colors),
-                                                          ),
-                                                          BlocProvider<DatesSelectedCubit>(
-                                                            create: (context) => DatesSelectedCubit(),
-                                                          ),
-                                                        ],
-                                                        child: EditTripEntryDialog(
-                                                          name: recordList[index].name,
-                                                          colors: recordList[index].colors,
-                                                          amount: recordList[index].value,
-                                                          dates: [
-                                                            recordList[index].startDate,
-                                                            recordList[index].endDate,
-                                                          ],
-                                                        ),
+                                                  return MultiBlocProvider(
+                                                    providers: [
+                                                      BlocProvider<ChooseColorCubit>(create: (context) => ChooseColorCubit(recordList[index].colors)),
+                                                      BlocProvider<DatesSelectedCubit>(
+                                                        create: (context) =>
+                                                            DatesSelectedCubit(dates: [recordList[index].startDate, recordList[index].endDate]),
                                                       ),
+                                                    ],
+                                                    child: EditTripEntryDialog.entry(
+                                                      name: recordList[index].name,
+                                                      colors: recordList[index].colors,
+                                                      amount: recordList[index].value,
+                                                      dates: [recordList[index].startDate, recordList[index].endDate],
                                                     ),
                                                   );
                                                 },
@@ -188,14 +175,9 @@ class TripPlanningPage extends StatelessWidget {
                                                     recordList[index].startDate != null
                                                         ? Container(
                                                             margin: EdgeInsets.only(left: 2.w),
-                                                            padding: EdgeInsetsGeometry.symmetric(
-                                                              horizontal: 2.w,
-                                                              vertical: 0.5.h,
-                                                            ),
+                                                            padding: EdgeInsetsGeometry.symmetric(horizontal: 2.w, vertical: 0.5.h),
                                                             decoration: BoxDecoration(
-                                                              border: BoxBorder.all(
-                                                                color: Color(recordList[index].colors[0]),
-                                                              ),
+                                                              border: BoxBorder.all(color: Color(recordList[index].colors[0])),
                                                               borderRadius: BorderRadius.circular(8),
                                                             ),
                                                             child: Text(
@@ -205,10 +187,7 @@ class TripPlanningPage extends StatelessWidget {
                                                           )
                                                         : SizedBox(),
                                                     Spacer(),
-                                                    Text(
-                                                      recordList[index].value.toStringAsFixed(2),
-                                                      style: Centre.semiTitle2Text,
-                                                    ),
+                                                    Text(recordList[index].value.toStringAsFixed(2), style: Centre.semiTitle2Text),
                                                   ],
                                                 ),
                                               ),
@@ -220,33 +199,39 @@ class TripPlanningPage extends StatelessWidget {
                                         key: ValueKey(index),
 
                                         onAcceptWithDetails: (details) {
-                                          context.read<TempTripRecordsCubit>().insertAt(
-                                            tripName,
-                                            index + 1,
-                                            details.data,
-                                          );
+                                          context.read<TempTripRecordsCubit>().insertAt(tripName, index + 1, details.data);
                                         },
                                         builder: (context, candidateData, rejectedData) {
-                                          return ReorderableDelayedDragStartListener(
-                                            index: index,
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-                                              padding: EdgeInsets.symmetric(vertical: 1.h),
-                                              child: Row(
-                                                children: [
-                                                  Text(recordList[index].name, style: Centre.semiTitle2Text),
-                                                  SizedBox(width: 3.w),
+                                          return GestureDetector(
+                                            onTap: () {
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext dialogContext) {
+                                                  return EditTripEntryDialog.title(name: recordList[index].name);
+                                                },
+                                              );
+                                            },
+                                            child: ReorderableDelayedDragStartListener(
+                                              index: index,
+                                              child: Container(
+                                                margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
+                                                padding: EdgeInsets.symmetric(vertical: 1.h),
+                                                child: Row(
+                                                  children: [
+                                                    Text(recordList[index].name, style: Centre.semiTitle2Text),
+                                                    SizedBox(width: 3.w),
 
-                                                  Expanded(
-                                                    child: Container(
-                                                      color: Colors.transparent,
-                                                      height: 4.h,
-                                                      child: Center(
-                                                        child: DottedLine(dashGapLength: 1.5.w, dashColor: Colors.grey),
+                                                    Expanded(
+                                                      child: Container(
+                                                        color: Colors.transparent,
+                                                        height: 4.h,
+                                                        child: Center(
+                                                          child: DottedLine(dashGapLength: 1.5.w, dashColor: Colors.grey),
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           );
@@ -273,9 +258,7 @@ class TripPlanningPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                   border: BoxBorder.all(color: Centre.secondaryColor, width: 0.2.w),
                   color: Centre.cardColor,
-                  boxShadow: [
-                    BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0),
-                  ],
+                  boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
                 ),
                 child: Text("Total      \$5,678.34", style: Centre.semiTitle2Text),
               ),
@@ -293,9 +276,7 @@ class TripPlanningPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: Centre.cardColor,
-                        boxShadow: [
-                          BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0),
-                        ],
+                        boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
                       ),
                       margin: EdgeInsets.only(left: 4.w, bottom: 1.5.h),
                       padding: EdgeInsets.only(top: 1.h, right: 3.w, left: 1.w, bottom: 1.h),
@@ -304,12 +285,7 @@ class TripPlanningPage extends StatelessWidget {
                           Positioned.fill(
                             child: IgnorePointer(
                               child: CustomPaint(
-                                painter: BucketBorderPainter(
-                                  color: Centre.accentColor,
-                                  strokeWidth: 0.3.w,
-                                  left: 2.w,
-                                  bottom: 0.5.h,
-                                ),
+                                painter: BucketBorderPainter(color: Centre.accentColor, strokeWidth: 0.3.w, left: 2.w, bottom: 0.5.h),
                               ),
                             ),
                           ),
@@ -321,10 +297,7 @@ class TripPlanningPage extends StatelessWidget {
                                 width: 90.w,
                                 margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
                                 padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-                                decoration: BoxDecoration(
-                                  color: Centre.cardColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                decoration: BoxDecoration(color: Centre.cardColor, borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   children: [
                                     Text("Total", style: Centre.semiTitle2Text),
@@ -365,9 +338,7 @@ class TripPlanningPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: Centre.cardColor,
-                        boxShadow: [
-                          BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0),
-                        ],
+                        boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
                       ),
                       margin: EdgeInsets.only(left: 4.w, bottom: 1.5.h),
                       padding: EdgeInsets.only(top: 1.h, right: 3.w, left: 1.w, bottom: 1.h),
@@ -377,12 +348,7 @@ class TripPlanningPage extends StatelessWidget {
                           Positioned.fill(
                             child: IgnorePointer(
                               child: CustomPaint(
-                                painter: BucketBorderPainter(
-                                  color: Centre.accentColor,
-                                  strokeWidth: 0.3.w,
-                                  left: 2.w,
-                                  bottom: 0.5.h,
-                                ),
+                                painter: BucketBorderPainter(color: Centre.accentColor, strokeWidth: 0.3.w, left: 2.w, bottom: 0.5.h),
                               ),
                             ),
                           ),
@@ -422,9 +388,7 @@ class TripPlanningPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: Centre.cardColor,
-                        boxShadow: [
-                          BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0),
-                        ],
+                        boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
                       ),
                       margin: EdgeInsets.only(left: 4.w),
                       padding: EdgeInsets.only(top: 1.h, right: 3.w, left: 1.w, bottom: 1.h),
@@ -434,12 +398,7 @@ class TripPlanningPage extends StatelessWidget {
                           Positioned.fill(
                             child: IgnorePointer(
                               child: CustomPaint(
-                                painter: BucketBorderPainter(
-                                  color: Centre.accentColor,
-                                  strokeWidth: 0.3.w,
-                                  left: 2.w,
-                                  bottom: 0.5.h,
-                                ),
+                                painter: BucketBorderPainter(color: Centre.accentColor, strokeWidth: 0.3.w, left: 2.w, bottom: 0.5.h),
                               ),
                             ),
                           ),
@@ -452,10 +411,7 @@ class TripPlanningPage extends StatelessWidget {
                                 width: 90.w,
                                 margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
                                 padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-                                decoration: BoxDecoration(
-                                  color: Centre.cardColor,
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
+                                decoration: BoxDecoration(color: Centre.cardColor, borderRadius: BorderRadius.circular(8)),
                                 child: Row(
                                   children: [
                                     Text("Placeholder Section", style: Centre.semiTitle2Text),
@@ -524,9 +480,6 @@ class BucketBorderPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant BucketBorderPainter oldDelegate) {
-    return color != oldDelegate.color ||
-        strokeWidth != oldDelegate.strokeWidth ||
-        left != oldDelegate.left ||
-        bottom != oldDelegate.bottom;
+    return color != oldDelegate.color || strokeWidth != oldDelegate.strokeWidth || left != oldDelegate.left || bottom != oldDelegate.bottom;
   }
 }

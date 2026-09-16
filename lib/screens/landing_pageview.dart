@@ -49,21 +49,9 @@ class _LandingPageViewState extends State<LandingPageView> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                        navBarBtn(
-                          controller,
-                          PageSelected.TripPlanning,
-                          Icons.checklist,
-                          "Trip Planning",
-                          pageSelected,
-                        ),
+                        navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
                         SizedBox(width: 9.w),
-                        navBarBtn(
-                          controller,
-                          PageSelected.BudgetPlanning,
-                          Icons.attach_money,
-                          "Set Budget",
-                          pageSelected,
-                        ),
+                        navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
                         navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
                       ],
                     );
@@ -88,23 +76,13 @@ class _LandingPageViewState extends State<LandingPageView> {
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext dialogContext) {
-                                    return GestureDetector(
-                                      onTap: () {},
-                                      child: Scaffold(
-                                        backgroundColor: Colors.transparent,
-                                        body: MultiBlocProvider(
-                                          providers: [
-                                            BlocProvider<AddExpenseCategoryBtnsCubit>(
-                                              create: (context) => AddExpenseCategoryBtnsCubit("Groceries"),
-                                            ),
-                                            BlocProvider<DatesSelectedCubit>(create: (context) => DatesSelectedCubit()),
-                                            BlocProvider<IsIncomeToggleCubit>(
-                                              create: (context) => IsIncomeToggleCubit(),
-                                            ),
-                                          ],
-                                          child: AddExpenseDialog(),
-                                        ),
-                                      ),
+                                    return MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider<AddExpenseCategoryBtnsCubit>(create: (context) => AddExpenseCategoryBtnsCubit("Groceries")),
+                                        BlocProvider<DatesSelectedCubit>(create: (context) => DatesSelectedCubit()),
+                                        BlocProvider<IsIncomeToggleCubit>(create: (context) => IsIncomeToggleCubit()),
+                                      ],
+                                      child: AddExpenseDialog(),
                                     );
                                   },
                                 );
@@ -188,16 +166,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                 BlocProvider<CategoryBoxKeysCubit>(
                   create: (context) {
                     List<GlobalKey<CategoryBoxState>> newList = [];
-                    final List<String> categories = [
-                      "Groceries",
-                      "Entertainment",
-                      "House",
-                      "Gas",
-                      "Junk Food",
-                      "Ava",
-                      "Category 1",
-                      "Category 2",
-                    ];
+                    final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
                     for (int i = 0; i < categories.length; i++) {
                       newList.add(GlobalKey<CategoryBoxState>());
                     }
@@ -206,16 +175,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                 ),
                 BlocProvider<CategoryBoxTextsCubit>(
                   create: (context) {
-                    final List<String> categories = [
-                      "Groceries",
-                      "Entertainment",
-                      "House",
-                      "Gas",
-                      "Junk Food",
-                      "Ava",
-                      "Category 1",
-                      "Category 2",
-                    ];
+                    final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
 
                     Map<String, String> newMap = {};
                     for (int i = 0; i < categories.length; i++) {

@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class DialogInfoTextField extends StatefulWidget {
   // It's either name or amount
   final bool isName;
+  final bool autofocus;
   final TextEditingController controller;
-  const DialogInfoTextField({super.key, required this.isName, required this.controller});
+  const DialogInfoTextField({super.key, required this.isName, required this.controller, this.autofocus = false});
   @override
   State<DialogInfoTextField> createState() => DialogInfoTextFieldState();
 }
@@ -15,7 +16,7 @@ class DialogInfoTextFieldState extends State<DialogInfoTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      autofocus: widget.isName,
+      autofocus: widget.autofocus,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: (text) {
         if (text == null || text.isEmpty) {
@@ -29,9 +30,7 @@ class DialogInfoTextFieldState extends State<DialogInfoTextField> {
       keyboardType: widget.isName ? null : TextInputType.number,
 
       decoration: InputDecoration(
-        prefixIcon: widget.isName
-            ? null
-            : Text('\$ ', style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14)),
+        prefixIcon: widget.isName ? null : Text('\$ ', style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14)),
         prefixIconConstraints: widget.isName ? null : BoxConstraints(minWidth: 0, minHeight: 0),
         errorStyle: TextStyle(height: 0.5),
 

@@ -15,7 +15,9 @@ class EditTripEntryDialog extends StatelessWidget {
   final List<int> colors;
   final double amount;
   final List<DateTime?> dates;
-  EditTripEntryDialog({super.key, required this.name, required this.colors, required this.amount, required this.dates});
+  final bool isEntry;
+  EditTripEntryDialog.entry({super.key, required this.name, required this.colors, required this.amount, required this.dates}) : isEntry = true;
+  EditTripEntryDialog.title({super.key, required this.name}) : colors = [], amount = 0, dates = [], isEntry = false;
   final formKey = GlobalKey<FormState>();
   final TextEditingController amountController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -24,6 +26,9 @@ class EditTripEntryDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    nameController.text = name;
+    amountController.text = amount.toStringAsFixed(2);
+
     startDateResult.addListener(() {
       context.read<DatesSelectedCubit>().updateStart(date: startDateResult.value!);
     });
@@ -36,20 +41,26 @@ class EditTripEntryDialog extends StatelessWidget {
       backgroundColor: Centre.dialogBgColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       elevation: 1,
-
-      content: SizedBox(
-        width: 75.w,
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                child: Row(
-                  children: [
-                    DialogInfoTextField(isName: true, controller: nameController),
+      insetPadding: EdgeInsets.symmetric(horizontal: isEntry ? 0 : 15.w),
+      content: Form(
+        key: formKey,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 4.w),
+                      decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(7)),
+                      child: DialogInfoTextField(isName: true, controller: nameController),
+                    ),
+                  ),
+                  if (isEntry) ...[
+                    SizedBox(width: 3.w),
                     CustomIconButton(
                       onTap: () {
                         //TODO: delete the entry
@@ -57,124 +68,205 @@ class EditTripEntryDialog extends StatelessWidget {
                       child: Icon(Icons.delete, size: 6.w, color: Centre.primaryColor),
                     ),
                   ],
+                ],
+              ),
+            ),
+            SizedBox(height: 3.h),
+            if (isEntry) ...[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                child: Row(
+                  children: [
+                    Text("Colors:", style: Centre.semiTitleText),
+                    SizedBox(width: 3.w),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
+                      decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(7)),
+                      child: ChooseColorBtn(categoryName: null, inTripsPage: true, colorsToChooseFrom: (Centre.colors)),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: 3.h),
-              Row(
-                children: [
-                  Text("Colors", style: Centre.listText),
-                  SizedBox(width: 3.w),
-                  ChooseColorBtn(categoryName: null, inTripsPage: true, colorsToChooseFrom: (Centre.colors)),
-                ],
-              ),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      CustomIconButton(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (unUsedContext) =>
-                                CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
-                          ).then((date) {
-                            if (date != null) {
-                              startDateResult.value = date;
-                            }
-                          });
-                        },
-                        child: Icon(Icons.calendar_month, color: Centre.primaryColor),
-                      ),
-                      SizedBox(height: 1.h),
-                      BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                        builder: (unUsedcontext, dateChosen) {
-                          return Text(
-                            dateChosen.first != null ? DateFormat('MMM d').format(dateChosen.first!) : "",
-                            style: Centre.semiTitle2Text,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Icon(Icons.arrow_forward),
-                  Column(
-                    children: [
-                      CustomIconButton(
-                        onTap: () async {
-                          List<DateTime?>? results = await showCalendarDatePicker2Dialog(
-                            dialogBackgroundColor: Centre.dialogBgColor,
-                            barrierColor: Colors.transparent,
-                            borderRadius: BorderRadius.circular(40),
-                            context: context,
-                            config: CalendarDatePicker2WithActionButtonsConfig(
-                              weekdayLabelTextStyle: Centre.semiTitle2Text.copyWith(color: Centre.accentColor),
-                              controlsTextStyle: Centre.semiTitle2Text,
-                              gapBetweenCalendarAndButtons: 0,
-                              closeDialogOnCancelTapped: true,
-                              cancelButtonTextStyle: Centre.semiTitle2Text,
-                              okButton: Container(
-                                margin: EdgeInsets.only(right: 3.w),
-                                child: Text("OK", style: Centre.semiTitle2Text),
-                              ),
-                              dayTextStyle: Centre.listText,
-                              calendarType: CalendarDatePicker2Type.single,
-                              firstDate: DateTime.now().subtract(Duration(days: 365)),
-                              lastDate: DateTime.now().add(Duration(days: 365)),
-                              currentDate: DateTime.now(),
-                              selectedDayHighlightColor: Centre.secondaryColor,
-                            ),
-                            dialogSize: Size(85.w, 53.h),
-                            value: [context.read<DatesSelectedCubit>().state.last],
-                          );
-                          if (results != null) {
-                            endDateResult.value = results.first;
-                          }
-                        },
-                        child: Icon(Icons.calendar_month, color: Centre.primaryColor),
-                      ),
-                      SizedBox(height: 1.h),
-                      BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                        builder: (unUsedcontext, dateChosen) {
-                          return Text(
-                            dateChosen.last != null ? DateFormat('MMM d').format(dateChosen.last!) : "",
-                            style: Centre.semiTitle2Text,
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Text("Amount", style: Centre.semiTitleText),
-                      SizedBox(width: 3.w),
+              SizedBox(height: 1.h),
 
-                      SizedBox(
-                        width: 20.w,
-                        child: DialogInfoTextField(isName: false, controller: amountController),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 2.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      CustomIconButton(
-                        onTap: () {},
-                        child: Icon(Icons.check, color: Centre.primaryColor),
-                      ),
-                      SizedBox(width: 3.w),
-                      CustomIconButton(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Icon(Icons.close, color: Centre.primaryColor),
-                      ),
-                    ],
-                  ),
-                ],
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 5.w),
+                padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(7)),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      children: [
+                        Text("Start Date", style: Centre.semiTitleText),
+                        CustomIconButton(
+                          onTap: () async {
+                            // Stops focus from going back to text fields after dialog closes
+                            FocusManager.instance.primaryFocus?.unfocus();
+
+                            List<DateTime?>? results = await showCalendarDatePicker2Dialog(
+                              dialogBackgroundColor: Centre.dialogBgColor,
+                              barrierColor: Colors.transparent,
+                              borderRadius: BorderRadius.circular(40),
+                              context: context,
+                              config: CalendarDatePicker2WithActionButtonsConfig(
+                                weekdayLabelTextStyle: Centre.semiTitle2Text.copyWith(color: Centre.accentColor),
+                                controlsTextStyle: Centre.semiTitle2Text,
+                                gapBetweenCalendarAndButtons: 0,
+                                closeDialogOnCancelTapped: true,
+                                cancelButtonTextStyle: Centre.semiTitle2Text,
+                                okButton: Container(
+                                  margin: EdgeInsets.only(right: 3.w),
+                                  child: Text("OK", style: Centre.semiTitle2Text),
+                                ),
+                                dayTextStyle: Centre.listText,
+                                calendarType: CalendarDatePicker2Type.single,
+                                centerAlignModePicker: true,
+                                modePickerBuilder: ({required DateTime monthDate, required CalendarDatePicker2Mode viewMode, bool? isMonthPicker}) {
+                                  if (isMonthPicker ?? false) {
+                                    return Center(child: Text(DateFormat('   MMMM').format(monthDate), style: Centre.semiTitleText));
+                                  }
+
+                                  return const SizedBox.shrink();
+                                },
+                                firstDate: DateTime.now().subtract(Duration(days: 365)),
+                                lastDate: DateTime.now().add(Duration(days: 365)),
+                                currentDate: DateTime.now(),
+                                selectedDayTextStyle: Centre.listText.copyWith(color: Colors.black),
+                                selectedDayHighlightColor: Centre.primaryColor,
+                              ),
+                              dialogSize: Size(85.w, 53.h),
+                              value: [context.read<DatesSelectedCubit>().state.last],
+                            );
+                            if (results != null) {
+                              startDateResult.value = results.first;
+                            }
+                          },
+                          child: Icon(Icons.calendar_month, size: 6.w, color: Centre.primaryColor),
+                        ),
+                        SizedBox(height: 0.5.h),
+                        BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
+                          builder: (unUsedcontext, dateChosen) {
+                            return Text(
+                              dateChosen.first != null ? DateFormat('MMM d').format(dateChosen.first!) : "N/A",
+                              style: Centre.semiTitle2Text,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 2.w),
+                      child: Icon(Icons.chevron_right, size: 6.w, color: Centre.offWhite),
+                    ),
+                    Column(
+                      children: [
+                        Text("End Date", style: Centre.semiTitleText),
+                        CustomIconButton(
+                          onTap: () async {
+                            // Stops focus from going back to text fields after dialog closes
+                            FocusManager.instance.primaryFocus?.unfocus();
+
+                            List<DateTime?>? results = await showCalendarDatePicker2Dialog(
+                              dialogBackgroundColor: Centre.dialogBgColor,
+                              barrierColor: Colors.transparent,
+                              borderRadius: BorderRadius.circular(40),
+                              context: context,
+                              config: CalendarDatePicker2WithActionButtonsConfig(
+                                weekdayLabelTextStyle: Centre.semiTitle2Text.copyWith(color: Centre.accentColor),
+                                controlsTextStyle: Centre.semiTitle2Text,
+                                gapBetweenCalendarAndButtons: 0,
+                                closeDialogOnCancelTapped: true,
+                                cancelButtonTextStyle: Centre.semiTitle2Text,
+                                okButton: Container(
+                                  margin: EdgeInsets.only(right: 3.w),
+                                  child: Text("OK", style: Centre.semiTitle2Text),
+                                ),
+                                dayTextStyle: Centre.listText,
+                                calendarType: CalendarDatePicker2Type.single,
+                                centerAlignModePicker: true,
+                                modePickerBuilder: ({required DateTime monthDate, required CalendarDatePicker2Mode viewMode, bool? isMonthPicker}) {
+                                  if (isMonthPicker ?? false) {
+                                    return Center(child: Text(DateFormat('   MMMM').format(monthDate), style: Centre.semiTitleText));
+                                  }
+
+                                  return const SizedBox.shrink();
+                                },
+                                firstDate: DateTime.now().subtract(Duration(days: 365)),
+                                lastDate: DateTime.now().add(Duration(days: 365)),
+                                currentDate: DateTime.now(),
+                                selectedDayTextStyle: Centre.listText.copyWith(color: Colors.black),
+                                selectedDayHighlightColor: Centre.primaryColor,
+                              ),
+                              dialogSize: Size(85.w, 53.h),
+                              value: [context.read<DatesSelectedCubit>().state.last],
+                            );
+                            if (results != null) {
+                              endDateResult.value = results.first;
+                            }
+                          },
+                          child: Icon(Icons.calendar_month, size: 6.w, color: Centre.primaryColor),
+                        ),
+                        SizedBox(height: 0.5.h),
+                        BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
+                          builder: (unUsedcontext, dateChosen) {
+                            return Text(dateChosen.last != null ? DateFormat('MMM d').format(dateChosen.last!) : "N/A", style: Centre.semiTitle2Text);
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.5.h),
+                child: Row(
+                  children: [
+                    Text("Amount:", style: Centre.semiTitleText),
+                    SizedBox(width: 3.w),
+
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 3.w),
+                      decoration: BoxDecoration(color: const Color(0xFF232536), borderRadius: BorderRadius.circular(7)),
+                      width: 27.w,
+                      child: DialogInfoTextField(isName: false, controller: amountController),
+                    ),
+                  ],
+                ),
               ),
             ],
-          ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  if (!isEntry) ...[
+                    CustomIconButton(
+                      onTap: () {
+                        //TODO: delete the entry
+                      },
+                      child: Icon(Icons.delete, size: 6.w, color: Centre.primaryColor),
+                    ),
+                    Spacer(),
+                  ],
+                  CustomIconButton(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Icon(Icons.close, size: 6.w, color: Centre.primaryColor),
+                  ),
+                  SizedBox(width: 3.w),
+
+                  CustomIconButton(
+                    onTap: () {},
+                    child: Icon(Icons.check, size: 6.w, color: Centre.primaryColor),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

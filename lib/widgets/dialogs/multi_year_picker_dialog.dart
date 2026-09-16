@@ -9,13 +9,7 @@ class MultiYearPickerDialog extends StatefulWidget {
   final int endYear;
   final List<int> initialYears;
   final bool isPortrait;
-  const MultiYearPickerDialog({
-    super.key,
-    required this.endYear,
-    required this.startYear,
-    required this.initialYears,
-    required this.isPortrait,
-  });
+  const MultiYearPickerDialog({super.key, required this.endYear, required this.startYear, required this.initialYears, required this.isPortrait});
 
   @override
   State<MultiYearPickerDialog> createState() => _MultiYearPickerDialogState();
