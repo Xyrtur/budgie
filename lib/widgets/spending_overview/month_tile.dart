@@ -19,9 +19,7 @@ class MonthTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Centre.cardColor,
           borderRadius: BorderRadius.circular(8),
-          border: DateFormat("MMMM").format(DateTime.now()) == month
-              ? Border.all(color: Centre.colors[1], width: 0.5.w)
-              : null,
+          border: DateFormat("MMMM").format(DateTime.now()) == month ? Border.all(color: Centre.colors[1], width: 0.5.w) : null,
 
           // Outer depth
           boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
@@ -33,9 +31,7 @@ class MonthTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
 
           onTap: () async {
-            await Navigator.of(
-              context,
-            ).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
+            await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
 
             controller.reset();
             controller.forward();
@@ -78,12 +74,17 @@ class MonthTile extends StatelessWidget {
                 ),
                 SizedBox(height: 1.5.h),
 
-                SizeTransition(
-                  sizeFactor: animation,
-                  axis: Axis.horizontal,
-                  alignment: Alignment.topCenter,
+                AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: SizedBox(width: 85.w * animation.value, child: child),
+                    );
+                  },
                   child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: barGraphBoxes()),
                 ),
+
                 SizedBox(height: 1.h),
 
                 Align(

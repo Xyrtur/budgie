@@ -77,16 +77,9 @@ class BarGraphBoxes extends StatefulWidget {
   State<BarGraphBoxes> createState() => _BarGraphBoxesState();
 }
 
-class _BarGraphBoxesState extends State<BarGraphBoxes>
-    with TickerProviderStateMixin {
-  late final AnimationController controller = AnimationController(
-    duration: const Duration(milliseconds: 1300),
-    vsync: this,
-  );
-  late final Animation<double> animation = CurvedAnimation(
-    parent: controller,
-    curve: Curves.fastLinearToSlowEaseIn,
-  );
+class _BarGraphBoxesState extends State<BarGraphBoxes> with TickerProviderStateMixin {
+  late final AnimationController controller = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
+  late final Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastLinearToSlowEaseIn);
 
   @override
   void initState() {
@@ -102,14 +95,15 @@ class _BarGraphBoxesState extends State<BarGraphBoxes>
 
   @override
   Widget build(BuildContext context) {
-    return SizeTransition(
-      sizeFactor: animation,
-      axis: Axis.horizontal,
-      alignment: Alignment.topCenter,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: barGraphBoxes(),
-      ),
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: SizedBox(width: 85.w * animation.value, child: child),
+        );
+      },
+      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: barGraphBoxes()),
     );
   }
 }
@@ -117,46 +111,19 @@ class _BarGraphBoxesState extends State<BarGraphBoxes>
 List<Widget> barGraphBoxes() {
   List<Widget> boxes = [];
 
-  boxes.add(
-    Container(
-      height: 2.h,
-      width: 18.w,
-      color: Centre.colors[Random().nextInt(18)],
-    ),
-  );
-  boxes.add(
-    Container(
-      height: 2.h,
-      width: 15.w,
-      color: Centre.colors[Random().nextInt(18)],
-    ),
-  );
-  boxes.add(
-    Container(
-      height: 2.h,
-      width: 10.w,
-      color: Centre.colors[Random().nextInt(18)],
-    ),
-  );
+  boxes.add(Container(height: 2.h, width: 18.w, color: Centre.colors[Random().nextInt(18)]));
+  boxes.add(Container(height: 2.h, width: 15.w, color: Centre.colors[Random().nextInt(18)]));
+  boxes.add(Container(height: 2.h, width: 10.w, color: Centre.colors[Random().nextInt(18)]));
   boxes.add(
     Container(
       height: 2.h,
       width: 12.w,
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Centre.colors[Random().nextInt(18)],
-          width: 0.5.w,
-        ),
+        border: Border.all(color: Centre.colors[Random().nextInt(18)], width: 0.5.w),
       ),
     ),
   );
-  boxes.add(
-    Container(
-      height: 2.h,
-      width: 30.w,
-      color: Centre.colors[Random().nextInt(18)],
-    ),
-  );
+  boxes.add(Container(height: 2.h, width: 30.w, color: Centre.colors[Random().nextInt(18)]));
   return boxes;
 }
 
@@ -170,10 +137,7 @@ List<Widget> barGraphLegend() {
         Container(
           height: 0.6.h,
           width: 0.6.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(9),
-            color: Centre.colors[Random().nextInt(18)],
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(9), color: Centre.colors[Random().nextInt(18)]),
 
           margin: EdgeInsets.only(right: 1.w),
         ),
@@ -188,10 +152,7 @@ List<Widget> barGraphLegend() {
         Container(
           height: 0.6.h,
           width: 0.6.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(9),
-            color: Centre.colors[Random().nextInt(18)],
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(9), color: Centre.colors[Random().nextInt(18)]),
           margin: EdgeInsets.only(right: 1.w),
         ),
         Text("\$57.23"),
@@ -205,10 +166,7 @@ List<Widget> barGraphLegend() {
         Container(
           height: 0.6.h,
           width: 0.6.h,
-          decoration: BoxDecoration(
-            color: Centre.colors[Random().nextInt(18)],
-            borderRadius: BorderRadius.circular(9),
-          ),
+          decoration: BoxDecoration(color: Centre.colors[Random().nextInt(18)], borderRadius: BorderRadius.circular(9)),
           margin: EdgeInsets.only(right: 1.w),
         ),
         Text("\$657.23"),
@@ -222,10 +180,7 @@ List<Widget> barGraphLegend() {
         Container(
           height: 0.6.h,
           width: 0.6.h,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(9),
-            color: Centre.colors[Random().nextInt(18)],
-          ),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(9), color: Centre.colors[Random().nextInt(18)]),
           margin: EdgeInsets.only(right: 1.w),
         ),
         Text("\$357.23"),
@@ -239,10 +194,7 @@ List<Widget> barGraphLegend() {
         Container(
           height: 0.6.h,
           width: 0.6.h,
-          decoration: BoxDecoration(
-            color: Centre.colors[Random().nextInt(18)],
-            borderRadius: BorderRadius.circular(9),
-          ),
+          decoration: BoxDecoration(color: Centre.colors[Random().nextInt(18)], borderRadius: BorderRadius.circular(9)),
           margin: EdgeInsets.only(right: 1.w),
         ),
         Text("\$357.23"),

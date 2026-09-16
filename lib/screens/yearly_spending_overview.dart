@@ -15,20 +15,7 @@ class SpendingOverviewPage extends StatefulWidget {
 }
 
 class _SpendingOverviewPageState extends State<SpendingOverviewPage> with TickerProviderStateMixin {
-  List<String> months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+  List<String> months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
   final List<String> categories = [
     "Groceries",
@@ -58,10 +45,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
 
   final ScrollController scrollController = ScrollController();
 
-  late final AnimationController controller = AnimationController(
-    duration: const Duration(milliseconds: 1300),
-    vsync: this,
-  );
+  late final AnimationController controller = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this);
   late final Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastLinearToSlowEaseIn);
   bool isPortrait = true;
 
@@ -101,11 +85,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
           builder: (_, graphviewEnabled) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (scrollController.hasClients) {
-                scrollController.animateTo(
-                  0.0,
-                  duration: const Duration(milliseconds: 40),
-                  curve: Curves.fastOutSlowIn,
-                );
+                scrollController.animateTo(0.0, duration: const Duration(milliseconds: 40), curve: Curves.fastOutSlowIn);
               }
             });
             return Stack(
@@ -138,9 +118,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                             Text("Spending Graphview", style: Centre.titleText),
                                             Spacer(),
 
-                                            !isPortrait
-                                                ? Expanded(child: Container(color: Colors.transparent))
-                                                : ToggleGraphviewButton(),
+                                            !isPortrait ? Expanded(child: Container(color: Colors.transparent)) : ToggleGraphviewButton(),
                                           ],
                                         ),
                                       ),
@@ -164,11 +142,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                         padding: EdgeInsets.only(left: 2.w, top: 2.h),
                                         child: Text("Toggle Categories Shown", style: Centre.semiTitleText),
                                       ),
-                                      ToggleCategoryArea(
-                                        isPortrait: isPortrait,
-                                        categories: categories,
-                                        categoryColors: categoryColors,
-                                      ),
+                                      ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
                                     ],
                                   ),
                                 )
@@ -177,11 +151,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                   child: Row(
                                     children: [
                                       Expanded(
-                                        child: ToggleCategoryArea(
-                                          isPortrait: isPortrait,
-                                          categories: categories,
-                                          categoryColors: categoryColors,
-                                        ),
+                                        child: ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
                                       ),
 
                                       SizedBox(
