@@ -72,7 +72,7 @@ class AllTripPlanningPage extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (unUsedContext) => BlocProvider.value(
+                                    builder: (_) => BlocProvider.value(
                                       value: context.read<TempTripRecordsCubit>(),
                                       child: TripPlanningPage(tripName: i, recordList: trips[i]!),
                                     ),

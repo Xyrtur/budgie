@@ -46,7 +46,7 @@ class _ToggleCategoryAreaState extends State<ToggleCategoryArea> {
           padding: EdgeInsets.symmetric(vertical: 3.h),
           child: ScrollbarTheme(
             data: ScrollbarThemeData(
-              thumbColor: WidgetStateProperty.all(Centre.dialogBgColor),
+              thumbColor: WidgetStateProperty.all(Centre.graphLinesColor),
               trackBorderColor: WidgetStateProperty.all(Centre.scrollTrackColor),
               thickness: WidgetStateProperty.all(4.0),
               radius: const Radius.circular(8),

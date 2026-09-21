@@ -134,7 +134,18 @@ class SpendingGraphViewToggleCubit extends Cubit<bool> {
 
 class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
   SpendingCategoriesToggledCubit()
-    : super(["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2", "Category 3", "Category 4"]);
+    : super([
+        "Groceries",
+        "Entertainment",
+        "House",
+        "Gas",
+        "Junk Food",
+        "Ava",
+        "Category 1",
+        "Category 2",
+        "Category 3",
+        "Category 4",
+      ]);
 
   void toggleCategory(String category) {
     if (state.contains(category)) {
@@ -257,7 +268,8 @@ class DatesSelectedCubit extends Cubit<List<DateTime?>> {
 }
 
 class IsIncomeToggleCubit extends Cubit<bool> {
-  IsIncomeToggleCubit() : super(false);
+  final bool isIncome;
+  IsIncomeToggleCubit({this.isIncome = false}) : super(isIncome);
   void toggle() {
     emit(!state);
   }
@@ -265,7 +277,14 @@ class IsIncomeToggleCubit extends Cubit<bool> {
 
 enum RecordType { entry, total, title }
 
-typedef Record = ({String name, DateTime? startDate, DateTime? endDate, List<int> colors, double value, RecordType type});
+typedef Record = ({
+  String name,
+  DateTime? startDate,
+  DateTime? endDate,
+  List<int> colors,
+  double value,
+  RecordType type,
+});
 
 class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
   TempTripRecordsCubit()
@@ -377,8 +396,43 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
     if (type == RecordType.total) {
       // TODO: Finish this code during bloc implementation
     }
-    Record rec = (name: type == RecordType.total ? "Total" : "Placeholder Title", startDate: null, endDate: null, colors: [], value: 0, type: type);
+    Record rec = (
+      name: type == RecordType.total ? "Total" : "Placeholder Title",
+      startDate: null,
+      endDate: null,
+      colors: [],
+      value: 0,
+      type: type,
+    );
     newState[tripName]!.insert(index, rec);
     emit(newState);
+  }
+}
+
+enum ExpandLevel { collapsed, partial, expanded }
+
+class CategoryIsExpandedCubit extends Cubit<ExpandLevel> {
+  CategoryIsExpandedCubit() : super(ExpandLevel.collapsed);
+
+  void toggle() {
+    switch (state) {
+      case ExpandLevel.collapsed:
+        emit(ExpandLevel.partial);
+        break;
+      case ExpandLevel.partial:
+        emit(ExpandLevel.expanded);
+        break;
+      case ExpandLevel.expanded:
+        emit(ExpandLevel.collapsed);
+        break;
+    }
+  }
+}
+
+class CategoryIsDescendingCubit extends Cubit<bool> {
+  CategoryIsDescendingCubit() : super(true);
+
+  void toggle() {
+    emit(!state);
   }
 }

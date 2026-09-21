@@ -16,7 +16,13 @@ class EditTripEntryDialog extends StatelessWidget {
   final double amount;
   final List<DateTime?> dates;
   final bool isEntry;
-  EditTripEntryDialog.entry({super.key, required this.name, required this.colors, required this.amount, required this.dates}) : isEntry = true;
+  EditTripEntryDialog.entry({
+    super.key,
+    required this.name,
+    required this.colors,
+    required this.amount,
+    required this.dates,
+  }) : isEntry = true;
   EditTripEntryDialog.title({super.key, required this.name}) : colors = [], amount = 0, dates = [], isEntry = false;
   final formKey = GlobalKey<FormState>();
   final TextEditingController amountController = TextEditingController();
@@ -123,13 +129,23 @@ class EditTripEntryDialog extends StatelessWidget {
                                 dayTextStyle: Centre.listText,
                                 calendarType: CalendarDatePicker2Type.single,
                                 centerAlignModePicker: true,
-                                modePickerBuilder: ({required DateTime monthDate, required CalendarDatePicker2Mode viewMode, bool? isMonthPicker}) {
-                                  if (isMonthPicker ?? false) {
-                                    return Center(child: Text(DateFormat('   MMMM').format(monthDate), style: Centre.semiTitleText));
-                                  }
+                                modePickerBuilder:
+                                    ({
+                                      required DateTime monthDate,
+                                      required CalendarDatePicker2Mode viewMode,
+                                      bool? isMonthPicker,
+                                    }) {
+                                      if (isMonthPicker ?? false) {
+                                        return Center(
+                                          child: Text(
+                                            DateFormat('   MMMM').format(monthDate),
+                                            style: Centre.semiTitleText,
+                                          ),
+                                        );
+                                      }
 
-                                  return const SizedBox.shrink();
-                                },
+                                      return const SizedBox.shrink();
+                                    },
                                 firstDate: DateTime.now().subtract(Duration(days: 365)),
                                 lastDate: DateTime.now().add(Duration(days: 365)),
                                 currentDate: DateTime.now(),
@@ -147,7 +163,7 @@ class EditTripEntryDialog extends StatelessWidget {
                         ),
                         SizedBox(height: 0.5.h),
                         BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                          builder: (unUsedcontext, dateChosen) {
+                          builder: (_, dateChosen) {
                             return Text(
                               dateChosen.first != null ? DateFormat('MMM d').format(dateChosen.first!) : "N/A",
                               style: Centre.semiTitle2Text,
@@ -186,13 +202,23 @@ class EditTripEntryDialog extends StatelessWidget {
                                 dayTextStyle: Centre.listText,
                                 calendarType: CalendarDatePicker2Type.single,
                                 centerAlignModePicker: true,
-                                modePickerBuilder: ({required DateTime monthDate, required CalendarDatePicker2Mode viewMode, bool? isMonthPicker}) {
-                                  if (isMonthPicker ?? false) {
-                                    return Center(child: Text(DateFormat('   MMMM').format(monthDate), style: Centre.semiTitleText));
-                                  }
+                                modePickerBuilder:
+                                    ({
+                                      required DateTime monthDate,
+                                      required CalendarDatePicker2Mode viewMode,
+                                      bool? isMonthPicker,
+                                    }) {
+                                      if (isMonthPicker ?? false) {
+                                        return Center(
+                                          child: Text(
+                                            DateFormat('   MMMM').format(monthDate),
+                                            style: Centre.semiTitleText,
+                                          ),
+                                        );
+                                      }
 
-                                  return const SizedBox.shrink();
-                                },
+                                      return const SizedBox.shrink();
+                                    },
                                 firstDate: DateTime.now().subtract(Duration(days: 365)),
                                 lastDate: DateTime.now().add(Duration(days: 365)),
                                 currentDate: DateTime.now(),
@@ -210,8 +236,11 @@ class EditTripEntryDialog extends StatelessWidget {
                         ),
                         SizedBox(height: 0.5.h),
                         BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                          builder: (unUsedcontext, dateChosen) {
-                            return Text(dateChosen.last != null ? DateFormat('MMM d').format(dateChosen.last!) : "N/A", style: Centre.semiTitle2Text);
+                          builder: (_, dateChosen) {
+                            return Text(
+                              dateChosen.last != null ? DateFormat('MMM d').format(dateChosen.last!) : "N/A",
+                              style: Centre.semiTitle2Text,
+                            );
                           },
                         ),
                       ],

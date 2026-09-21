@@ -85,7 +85,7 @@ class MonthYearAddingRangeButton extends StatelessWidget {
         return newDates[isStartDate ? 0 : 1] == null
             ? IconButton.outlined(
                 onPressed: () {
-                  showDialog(context: context, builder: (unUsedContext) => CustomMonthPicker()).then((date) {
+                  showDialog(context: context, builder: (_) => CustomMonthPicker()).then((date) {
                     if (date != null) {
                       dialogResult.value = isStartDate ? [date, null] : [null, date];
                     }
@@ -99,7 +99,7 @@ class MonthYearAddingRangeButton extends StatelessWidget {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (unUsedContext) => CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
+                    builder: (_) => CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
                   ).then((date) {
                     if (date != null) {
                       dialogResult.value = isStartDate ? [date, null] : [null, date];
@@ -139,7 +139,7 @@ class MonthYearEditingRangeButton extends StatelessWidget {
           onTap: () {
             showDialog(
               context: context,
-              builder: (unUsedContext) => CustomMonthPicker(dateSelected: dateRangeMap[id]![isStartDate ? 0 : 1]),
+              builder: (_) => CustomMonthPicker(dateSelected: dateRangeMap[id]![isStartDate ? 0 : 1]),
             ).then((date) {
               if (date != null) {
                 dialogResult.value = [id, isStartDate ? 0 : 1, date];

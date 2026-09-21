@@ -10,10 +10,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
-class AddExpenseDialog extends StatelessWidget {
-  AddExpenseDialog({super.key});
+typedef Expense = ({String name, DateTime date, String category, bool isExpense, double value});
 
-  final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
+class AddEditExpenseDialog extends StatelessWidget {
+  final Expense? editingExpense;
+  AddEditExpenseDialog({super.key, required this.editingExpense});
+
+  final List<String> categories = [
+    "Groceries",
+    "Entertainment",
+    "House",
+    "Gas",
+    "Junk Food",
+    "Ava",
+    "Category 1",
+    "Category 2",
+  ];
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   late final TextEditingController amountController = TextEditingController();
@@ -22,6 +34,9 @@ class AddExpenseDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    nameController.text = editingExpense?.name ?? "";
+    amountController.text = editingExpense?.value.toStringAsFixed(2) ?? "";
+
     dateResult.addListener(() {
       context.read<DatesSelectedCubit>().updateSingle(date: dateResult.value!);
     });
@@ -39,8 +54,25 @@ class AddExpenseDialog extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w),
-              child: DialogInfoTextField(isName: true, controller: nameController, autofocus: true),
+              padding: EdgeInsets.symmetric(horizontal: 3.w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: DialogInfoTextField(
+                      isName: true,
+                      controller: nameController,
+                      autofocus: editingExpense == null ? true : false,
+                    ),
+                  ),
+                  SizedBox(width: editingExpense != null ? 5.w : 0),
+                  editingExpense != null
+                      ? CustomIconButton(
+                          onTap: () {},
+                          child: Icon(Icons.delete, size: 5.w, color: Centre.primaryColor),
+                        )
+                      : SizedBox(),
+                ],
+              ),
             ),
             SizedBox(height: 3.h),
             Container(
@@ -60,7 +92,7 @@ class AddExpenseDialog extends StatelessWidget {
                   controller: scrollController,
                   scrollDirection: Axis.horizontal,
                   child: BlocBuilder<AddExpenseCategoryBtnsCubit, String>(
-                    builder: (unUsedcontext, categorySelected) {
+                    builder: (_, categorySelected) {
                       return Row(
                         children: [
                           for (String category in categories)
@@ -74,12 +106,18 @@ class AddExpenseDialog extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8),
-                                  border: categorySelected == category ? Border.all(color: Centre.colors[Random(category.length).nextInt(54)]) : null,
+                                  border: categorySelected == category
+                                      ? Border.all(color: Centre.colors[Random(category.length).nextInt(54)])
+                                      : null,
                                 ),
                                 child: Column(
                                   children: [
                                     Text(category.toString()),
-                                    Icon(Icons.ac_unit_sharp, size: 5.w, color: Centre.colors[Random(category.length).nextInt(54)]),
+                                    Icon(
+                                      Icons.ac_unit_sharp,
+                                      size: 5.w,
+                                      color: Centre.colors[Random(category.length).nextInt(54)],
+                                    ),
                                   ],
                                 ),
                               ),
@@ -121,7 +159,7 @@ class AddExpenseDialog extends StatelessWidget {
                       padding: EdgeInsets.all(1.h),
                       margin: EdgeInsets.only(right: 1.w),
                       child: BlocBuilder<IsIncomeToggleCubit, bool>(
-                        builder: (unUsedcontext, isIncome) {
+                        builder: (_, isIncome) {
                           return Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -168,7 +206,8 @@ class AddExpenseDialog extends StatelessWidget {
 
                               showDialog(
                                 context: context,
-                                builder: (unUsedContext) => CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
+                                builder: (_) =>
+                                    CustomMonthPicker(dateSelected: context.read<DatesSelectedCubit>().state.first),
                               ).then((date) {
                                 if (date != null) {
                                   dateResult.value = date;
@@ -179,7 +218,7 @@ class AddExpenseDialog extends StatelessWidget {
                           ),
                           SizedBox(width: 2.w),
                           BlocBuilder<DatesSelectedCubit, List<DateTime?>>(
-                            builder: (unUsedcontext, dateChosen) {
+                            builder: (_, dateChosen) {
                               return Text(
                                 dateChosen.first != null ? DateFormat('MMM, y').format(dateChosen.first!) : "",
                                 style: Centre.semiTitle2Text,
