@@ -6,6 +6,7 @@ import 'package:budgie/widgets/icon_button.dart';
 import 'package:budgie/widgets/settings_page/category_textfields.dart';
 import 'package:budgie/widgets/settings_page/choose_color_button.dart';
 import 'package:budgie/widgets/settings_page/month_year_picker.dart';
+import 'package:budgie/widgets/settings_page/savings_balances_section.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,16 +39,12 @@ class SettingsPage extends StatelessWidget {
     2: [DateTime(2026, 1, 1), DateTime.now()],
   };
 
-  List<Widget> categoryEditingList({
-    required BuildContext context,
-    required Map<String, int> categories,
-    String? editingName,
-  }) {
+  List<Widget> categoryEditingList({required BuildContext context, required Map<String, int> categories, String? editingName}) {
     List<Widget> categoryList = [];
     categories.forEach((name, color) {
       categoryList.add(
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 0.6.h),
+          padding: EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 4.w),
           child: Row(
             children: [
               editingName == null || editingName != name
@@ -57,11 +54,7 @@ class SettingsPage extends StatelessWidget {
                       },
                       child: Text(name, style: Centre.listText),
                     )
-                  : CategoryTextField(
-                      existingCategories: categories.keys.toList(),
-                      formKey: formKey,
-                      controller: editingController..text = name,
-                    ),
+                  : CategoryTextField(existingCategories: categories.keys.toList(), formKey: formKey, controller: editingController..text = name),
               const Spacer(),
               BlocProvider<ChooseColorCubit>(
                 create: (context) => ChooseColorCubit([color]),
@@ -93,11 +86,7 @@ class SettingsPage extends StatelessWidget {
                           context.read<SettingsEditingTextCubit>().editing(name: "");
                         }
                       },
-                      child: Icon(
-                        editingName == null || editingName != name ? Icons.delete : Icons.close,
-                        size: 5.w,
-                        color: Centre.primaryColor,
-                      ),
+                      child: Icon(editingName == null || editingName != name ? Icons.delete : Icons.close, size: 5.w, color: Centre.primaryColor),
                     ),
             ],
           ),
@@ -173,28 +162,19 @@ class SettingsPage extends StatelessWidget {
     addingYearMonthResults.addListener(() {
       context.read<AddingDateRangeCubit>().updateDates(addingYearMonthResults.value);
     });
+
     return SafeArea(
       bottom: false,
       child: Scaffold(
         backgroundColor: Centre.bgColor,
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
             child: Column(
               children: [
-                Text("Manage Categories", style: Centre.semiTitleText),
-                SizedBox(height: 1.h),
-                Divider(color: Centre.colors[36]),
-                SizedBox(height: 2.h),
-                ...categoryEditingList(context: context, categories: categories),
-                SizedBox(height: 4.h),
-                Text("Budget Planning Date Ranges", style: Centre.semiTitleText),
-                SizedBox(height: 1.h),
-
-                Divider(color: Centre.colors[36]),
-                SizedBox(height: 2.h),
-                ...dateRangeList(context),
-
+                Text("Settings", style: Centre.titleText),
+                SizedBox(height: 0.5.h),
+                Divider(),
                 BlocBuilder<TempIncludeFixedCubit, bool>(
                   builder: (_, enabled) {
                     return GestureDetector(
@@ -202,11 +182,24 @@ class SettingsPage extends StatelessWidget {
                         context.read<TempIncludeFixedCubit>().toggle();
                       },
                       child: Padding(
-                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        padding: EdgeInsets.symmetric(vertical: 2.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(enabled ? Icons.check_box_sharp : Icons.check_box_outline_blank_sharp, size: 5.w),
+                            Transform.scale(
+                              scale: 0.8,
+                              child: Switch(
+                                thumbIcon: Centre.thumbIcon,
+                                thumbColor: Centre.thumbColor,
+                                trackColor: Centre.trackColor,
+                                trackOutlineColor: Centre.trackOutlineColor,
+
+                                value: enabled,
+                                onChanged: (bool value) {
+                                  context.read<TempIncludeFixedCubit>().toggle();
+                                },
+                              ),
+                            ),
                             SizedBox(width: 3.w),
                             Text("Include Fixed Costs in Bar Graphs", style: Centre.semiTitle2Text),
                           ],
@@ -215,6 +208,23 @@ class SettingsPage extends StatelessWidget {
                     );
                   },
                 ),
+
+                Text("Manage Categories", style: Centre.semiTitleText),
+                SizedBox(height: 0.5.h),
+                Divider(),
+                SizedBox(height: 2.h),
+                ...categoryEditingList(context: context, categories: categories),
+                SizedBox(height: 4.h),
+                Text("Budget Planning Date Ranges", style: Centre.semiTitleText),
+                SizedBox(height: 0.5.h),
+
+                Divider(),
+                SizedBox(height: 2.h),
+                ...dateRangeList(context),
+                SizedBox(height: 4.h),
+                SavingsBalancesSection(),
+
+                SizedBox(height: 15.h),
               ],
             ),
           ),

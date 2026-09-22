@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
+import 'package:budgie/widgets/dialogs/add_edit_expense_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -134,18 +135,7 @@ class SpendingGraphViewToggleCubit extends Cubit<bool> {
 
 class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
   SpendingCategoriesToggledCubit()
-    : super([
-        "Groceries",
-        "Entertainment",
-        "House",
-        "Gas",
-        "Junk Food",
-        "Ava",
-        "Category 1",
-        "Category 2",
-        "Category 3",
-        "Category 4",
-      ]);
+    : super(["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2", "Category 3", "Category 4"]);
 
   void toggleCategory(String category) {
     if (state.contains(category)) {
@@ -277,14 +267,7 @@ class IsIncomeToggleCubit extends Cubit<bool> {
 
 enum RecordType { entry, total, title }
 
-typedef Record = ({
-  String name,
-  DateTime? startDate,
-  DateTime? endDate,
-  List<int> colors,
-  double value,
-  RecordType type,
-});
+typedef Record = ({String name, DateTime? startDate, DateTime? endDate, List<int> colors, double value, RecordType type});
 
 class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
   TempTripRecordsCubit()
@@ -396,14 +379,7 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
     if (type == RecordType.total) {
       // TODO: Finish this code during bloc implementation
     }
-    Record rec = (
-      name: type == RecordType.total ? "Total" : "Placeholder Title",
-      startDate: null,
-      endDate: null,
-      colors: [],
-      value: 0,
-      type: type,
-    );
+    Record rec = (name: type == RecordType.total ? "Total" : "Placeholder Title", startDate: null, endDate: null, colors: [], value: 0, type: type);
     newState[tripName]!.insert(index, rec);
     emit(newState);
   }
@@ -434,5 +410,37 @@ class CategoryIsDescendingCubit extends Cubit<bool> {
 
   void toggle() {
     emit(!state);
+  }
+}
+
+class ToggleCubit extends Cubit<bool> {
+  ToggleCubit() : super(false);
+
+  void toggle() {
+    emit(!state);
+  }
+}
+
+class ExpenseAccountCubit extends Cubit<String> {
+  final String accountName;
+  ExpenseAccountCubit({required this.accountName}) : super(accountName);
+
+  void selectAccount(String name) {
+    if (state == name) {
+      emit("");
+    } else {
+      emit(name);
+    }
+  }
+}
+
+// TODO: Change this to bloc after
+typedef EditingState = ({String name, bool isEditingName});
+
+class EditingSavingsTextsCubit extends Cubit<EditingState> {
+  EditingSavingsTextsCubit() : super((name: "", isEditingName: false));
+
+  void selectText(String name, bool isEditingName) {
+    emit((name: name, isEditingName: isEditingName));
   }
 }

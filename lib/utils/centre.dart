@@ -83,4 +83,21 @@ class Centre {
   static final semiTitle2Text = TextStyle(color: offWhite, fontWeight: FontWeight.w400, fontSize: 16.sp, fontFamily: 'Raleway');
 
   static final listText = TextStyle(color: offWhite, fontWeight: FontWeight.w400, fontSize: 15.5.sp, fontFamily: 'Raleway');
+
+  static final WidgetStateProperty<Icon> thumbIcon = WidgetStateProperty<Icon>.fromMap(<WidgetStatesConstraint, Icon>{
+    WidgetState.selected: Icon(Icons.check, color: const Color(0xFF8F5278)),
+    WidgetState.any: Icon(Icons.close),
+  });
+  static final WidgetStateProperty<Color> thumbColor = WidgetStateProperty<Color>.fromMap(<WidgetStatesConstraint, Color>{
+    WidgetState.selected: const Color.fromARGB(255, 231, 204, 218),
+    WidgetState.any: const Color(0xFF777A8D),
+  });
+  static final WidgetStateProperty<Color> trackColor = WidgetStateProperty<Color>.fromMap(<WidgetStatesConstraint, Color>{
+    WidgetState.selected: const Color(0xFF8F5278),
+    WidgetState.any: const Color(0xFF2A2C3D),
+  });
+  static final WidgetStateProperty<Color> trackOutlineColor = WidgetStateProperty<Color>.fromMap(<WidgetStatesConstraint, Color>{
+    WidgetState.selected: const Color(0xFFB66F9A),
+    WidgetState.any: const Color(0xFF44475A),
+  });
 }

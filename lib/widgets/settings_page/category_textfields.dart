@@ -84,51 +84,54 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        SizedBox(
-          width: 60.w,
-          child: Form(
-            key: formKey,
-            child: TextFormField(
-              controller: controller,
-              autovalidateMode: AutovalidateMode.disabled,
-              validator: (text) {
-                if (text == null || text.isEmpty) {
-                  return 'Can\'t be empty';
-                } else if (text.length > 100) {
-                  return 'Too long';
-                } else if (widget.existingCategories.contains(text)) {
-                  return 'Category already exists';
-                } else if (context.read<ChooseColorCubit>().state == []) {
-                  return 'No color chosen';
-                }
-                return null;
-              },
-              style: Centre.listText,
-              decoration: InputDecoration(
-                errorStyle: const TextStyle(height: 0.5),
-                hintText: "Category name",
-                hintStyle: Centre.listText.copyWith(color: Colors.blueGrey),
-                isDense: true,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 60.w,
+            child: Form(
+              key: formKey,
+              child: TextFormField(
+                controller: controller,
+                autovalidateMode: AutovalidateMode.disabled,
+                validator: (text) {
+                  if (text == null || text.isEmpty) {
+                    return 'Can\'t be empty';
+                  } else if (text.length > 100) {
+                    return 'Too long';
+                  } else if (widget.existingCategories.contains(text)) {
+                    return 'Category already exists';
+                  } else if (context.read<ChooseColorCubit>().state == []) {
+                    return 'No color chosen';
+                  }
+                  return null;
+                },
+                style: Centre.listText,
+                decoration: InputDecoration(
+                  errorStyle: const TextStyle(height: 0.5),
+                  hintText: "Category name",
+                  hintStyle: Centre.listText.copyWith(color: Colors.blueGrey),
+                  isDense: true,
+                ),
               ),
             ),
           ),
-        ),
-        SizedBox(width: 4.w),
-        ChooseColorBtn(categoryName: null),
-        Spacer(),
-        CustomIconButton(
-          onTap: () {
-            if (formKey.currentState!.validate()) {
-              // Add category with controller.text, context.read<SettingsAddColorCubit>().state!,
-              controller.clear();
-              context.read<ChooseColorCubit>().selectColor(color: Colors.transparent.toARGB32(), inSettingsPage: true);
-            }
-          },
-          child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),
-        ),
-      ],
+          SizedBox(width: 4.w),
+          ChooseColorBtn(categoryName: null),
+          Spacer(),
+          CustomIconButton(
+            onTap: () {
+              if (formKey.currentState!.validate()) {
+                // Add category with controller.text, context.read<SettingsAddColorCubit>().state!,
+                controller.clear();
+                context.read<ChooseColorCubit>().selectColor(color: Colors.transparent.toARGB32(), inSettingsPage: true);
+              }
+            },
+            child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),
+          ),
+        ],
+      ),
     );
   }
 }

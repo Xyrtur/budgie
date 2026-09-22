@@ -90,85 +90,48 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
             });
             return Stack(
               children: [
-                ConditionalScrollView(
-                  controller: scrollController,
-                  enabled: isPortrait,
-                  child: !graphviewEnabled
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            SizedBox(height: 8.h),
-                            for (String i in months) MonthTile(month: i, controller: controller, animation: animation),
-                            SizedBox(height: 10.5.h),
-                          ],
-                        )
-                      : RotatedBox(
-                          quarterTurns: isPortrait ? 0 : 1,
-                          child: isPortrait
-                              ? Padding(
-                                  padding: EdgeInsets.only(left: 2.w, right: 4.w, bottom: 10.5.h),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 1.5.h),
-                                        child: Row(
-                                          children: [
-                                            SizedBox(width: 2.w),
-                                            Text("Spending Graphview", style: Centre.titleText),
-                                            Spacer(),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    graphviewEnabled ? SizedBox() : SpendingListviewHeader(),
 
-                                            !isPortrait ? Expanded(child: Container(color: Colors.transparent)) : ToggleGraphviewButton(),
-                                          ],
-                                        ),
-                                      ),
-                                      YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: false),
-                                      SizedBox(height: 2.h),
-                                      SizedBox(
-                                        height: 40.h,
-                                        child: SpendingGraph(
-                                          isPortrait: isPortrait,
-                                          categoriesData: categoriesData,
-                                          categoryColors: categoryColors,
-                                          categories: categories,
-                                          toggleLandscapeOnPressed: () {
-                                            setState(() {
-                                              isPortrait = !isPortrait;
-                                            });
-                                          },
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 2.w, top: 2.h),
-                                        child: Text("Toggle Categories Shown", style: Centre.semiTitleText),
-                                      ),
-                                      ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
-                                    ],
-                                  ),
-                                )
-                              : Padding(
-                                  padding: EdgeInsets.only(right: 13.h, left: 2.w),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
-                                      ),
-
-                                      SizedBox(
-                                        width: 60.h,
+                    Expanded(
+                      child: ConditionalScrollView(
+                        controller: scrollController,
+                        enabled: isPortrait,
+                        child: !graphviewEnabled
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  SizedBox(height: 2.h),
+                                  for (String i in months) MonthTile(month: i, controller: controller, animation: animation),
+                                  SizedBox(height: 10.5.h),
+                                ],
+                              )
+                            : RotatedBox(
+                                quarterTurns: isPortrait ? 0 : 1,
+                                child: isPortrait
+                                    ? Padding(
+                                        padding: EdgeInsets.only(left: 2.w, right: 4.w, bottom: 10.5.h),
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.stretch,
                                           children: [
-                                            Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(vertical: 1.5.h),
+                                              child: Row(
+                                                children: [
+                                                  SizedBox(width: 2.w),
+                                                  Text("Spending Graphview", style: Centre.titleText),
+                                                  Spacer(),
 
-                                              children: [
-                                                Text("Spending Graphview", style: Centre.titleText),
-                                                SizedBox(width: 10.w),
-                                                YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: true),
-                                              ],
+                                                  !isPortrait ? Expanded(child: Container(color: Colors.transparent)) : ToggleGraphviewButton(),
+                                                ],
+                                              ),
                                             ),
-                                            Expanded(
+                                            YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: false),
+                                            SizedBox(height: 2.h),
+                                            SizedBox(
+                                              height: 40.h,
                                               child: SpendingGraph(
                                                 isPortrait: isPortrait,
                                                 categoriesData: categoriesData,
@@ -181,15 +144,64 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                                 },
                                               ),
                                             ),
+                                            Padding(
+                                              padding: EdgeInsets.only(left: 2.w, top: 2.h),
+                                              child: Text("Toggle Categories Shown", style: Centre.semiTitleText),
+                                            ),
+                                            ToggleCategoryArea(isPortrait: isPortrait, categories: categories, categoryColors: categoryColors),
+                                          ],
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.only(right: 13.h, left: 2.w),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: ToggleCategoryArea(
+                                                isPortrait: isPortrait,
+                                                categories: categories,
+                                                categoryColors: categoryColors,
+                                              ),
+                                            ),
+
+                                            SizedBox(
+                                              width: 60.h,
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                                                    children: [
+                                                      Text("Spending Graphview", style: Centre.titleText),
+                                                      SizedBox(width: 10.w),
+                                                      YearMultiSelectArea(isPortrait: isPortrait, expandWithinRow: true),
+                                                    ],
+                                                  ),
+                                                  Expanded(
+                                                    child: SpendingGraph(
+                                                      isPortrait: isPortrait,
+                                                      categoriesData: categoriesData,
+                                                      categoryColors: categoryColors,
+                                                      categories: categories,
+                                                      toggleLandscapeOnPressed: () {
+                                                        setState(() {
+                                                          isPortrait = !isPortrait;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                        ),
+                              ),
+                      ),
+                    ),
+                  ],
                 ),
-                graphviewEnabled ? SizedBox() : SpendingListviewHeader(),
 
                 BlocBuilder<SpendingGraphViewToggleCubit, bool>(
                   builder: (_, graphviewEnabled) {
