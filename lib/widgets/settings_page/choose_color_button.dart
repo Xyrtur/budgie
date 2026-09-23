@@ -32,10 +32,10 @@ class ChooseColorBtn extends StatelessWidget {
                           child: ChooseColorDialog(colorsToChooseFrom: colorsToChooseFrom, inSettingsPage: true),
                         ),
                       ).then((_) {
-                        if (context.read<ChooseColorCubit>().state.isNotEmpty) {
-                          // TODO: update category color in db
-                          print(categoryName);
-                        }
+                        // if (context.read<ChooseColorCubit>().state.isNotEmpty) {
+                        //   // TODO: update category color in db
+                        //   print(categoryName);
+                        // }
                       });
                     },
                     child: Container(

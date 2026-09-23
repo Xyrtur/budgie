@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/icon_button.dart';
-import 'package:budgie/widgets/settings_page/category_textfields.dart';
-import 'package:budgie/widgets/settings_page/choose_color_button.dart';
+import 'package:budgie/widgets/settings_page/manage_categories_section.dart';
 import 'package:budgie/widgets/settings_page/month_year_picker.dart';
 import 'package:budgie/widgets/settings_page/savings_balances_section.dart';
 
@@ -14,9 +11,7 @@ import 'package:sizer/sizer.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({super.key});
-
-  final formKey = GlobalKey<FormState>();
-  final TextEditingController editingController = TextEditingController(text: "");
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   // Value notifiers to send events to their respective blocs when needed since shouldn't call context in async gaps
   final ValueNotifier<List<dynamic>?> editingYearMonthResults = // [dateRangeID, 0 / 1 {startDate OR endDate}, newDate ]
@@ -25,84 +20,12 @@ class SettingsPage extends StatelessWidget {
   ]);
   final ValueNotifier<List<DateTime?>> addingYearMonthResults = ValueNotifier<List<DateTime?>>([null, null]);
 
-  final Map<String, int> categories = {
-    "Entertainment": Centre.colors[Random().nextInt(54)].toARGB32(),
-    "Grocery": Centre.colors[Random().nextInt(54)].toARGB32(),
-    "Gas": Centre.colors[Random().nextInt(54)].toARGB32(),
-    "Ava - Cat Supplies": Centre.colors[Random().nextInt(54)].toARGB32(),
-  };
-
   // dateRangeID, [startDate, endDate]
   final Map<int, List<DateTime>> dateRanges = {
     0: [DateTime(2023, 1, 1), DateTime(2023, 12, 31)],
     1: [DateTime(2024, 1, 1), DateTime(2025, 12, 31)],
     2: [DateTime(2026, 1, 1), DateTime.now()],
   };
-
-  List<Widget> categoryEditingList({required BuildContext context, required Map<String, int> categories, String? editingName}) {
-    List<Widget> categoryList = [];
-    categories.forEach((name, color) {
-      categoryList.add(
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 4.w),
-          child: Row(
-            children: [
-              editingName == null || editingName != name
-                  ? GestureDetector(
-                      onTap: () {
-                        context.read<SettingsEditingTextCubit>().editing(name: name);
-                      },
-                      child: Text(name, style: Centre.listText),
-                    )
-                  : CategoryTextField(existingCategories: categories.keys.toList(), formKey: formKey, controller: editingController..text = name),
-              const Spacer(),
-              BlocProvider<ChooseColorCubit>(
-                create: (context) => ChooseColorCubit([color]),
-                child: ChooseColorBtn(categoryName: name),
-              ),
-              SizedBox(width: 3.w),
-              editingName == null || editingName != name
-                  ? const SizedBox()
-                  : GestureDetector(
-                      onTap: () {
-                        if (formKey.currentState!.validate()) {
-                          // TODO: Update category from old "name" to new "editingcontroller.text"
-                          editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(name: "");
-                        }
-                      },
-                      child: const SizedBox(child: Center(child: Icon(Icons.check))),
-                    ),
-              name == "Other"
-                  ? const SizedBox()
-                  : CustomIconButton(
-                      onTap: () {
-                        if (editingName == null || editingName != name) {
-                          // If not in editing mode, then delete button shows
-                          //TODO:  Delete category
-                        } else {
-                          // If in editing mode, just clear
-                          editingController.clear();
-                          context.read<SettingsEditingTextCubit>().editing(name: "");
-                        }
-                      },
-                      child: Icon(editingName == null || editingName != name ? Icons.delete : Icons.close, size: 5.w, color: Centre.primaryColor),
-                    ),
-            ],
-          ),
-        ),
-      );
-    });
-    return [
-      ...categoryList,
-      SizedBox(height: 0.6.h),
-
-      BlocProvider<ChooseColorCubit>(
-        create: (_) => ChooseColorCubit([]),
-        child: AddCategoryTextField(existingCategories: categories.keys.toList()),
-      ),
-    ];
-  }
 
   List<Widget> dateRangeList(BuildContext context) {
     List<Widget> rangeList = [];
@@ -148,6 +71,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('SettingsPage buildyzzys');
     // TODO: replace editing value notifiers with settings bloc updates when updating existing date ranges
     // editingYearMonthResults.addListener(() {
     //   context.read<SettingsBloc().update(editingYearMonthResults.value);
@@ -208,12 +132,8 @@ class SettingsPage extends StatelessWidget {
                     );
                   },
                 ),
+                ManageCategoriesSection(formKey: formKey),
 
-                Text("Manage Categories", style: Centre.semiTitleText),
-                SizedBox(height: 0.5.h),
-                Divider(),
-                SizedBox(height: 2.h),
-                ...categoryEditingList(context: context, categories: categories),
                 SizedBox(height: 4.h),
                 Text("Budget Planning Date Ranges", style: Centre.semiTitleText),
                 SizedBox(height: 0.5.h),

@@ -8,56 +8,63 @@ import 'package:sizer/sizer.dart';
 
 class CategoryTextField extends StatefulWidget {
   final List<String> existingCategories;
-  final TextEditingController controller;
-  final GlobalKey formKey;
-  // final FocusNode focusNode;
-  const CategoryTextField({
-    super.key,
-    required this.controller,
-    required this.formKey,
-    // required this.focusNode,
-    required this.existingCategories,
-  });
+  final String previousText;
+  const CategoryTextField({super.key, required this.previousText, required this.existingCategories});
 
   @override
   State<CategoryTextField> createState() => _CategoryTextFieldState();
 }
 
 class _CategoryTextFieldState extends State<CategoryTextField> {
+  final TextEditingController controller = TextEditingController();
+  final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.text = widget.previousText;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      focusNode.requestFocus();
+    });
+  }
+
   @override
   void dispose() {
-    widget.controller.dispose();
+    focusNode.dispose();
+    controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 60.w,
-      child: Form(
-        key: widget.formKey,
-        child: TextFormField(
-          autofocus: true,
-          // focusNode: widget.focusNode,
-          controller: widget.controller,
-          autovalidateMode: AutovalidateMode.disabled,
-          validator: (text) {
-            if (text == null || text.isEmpty) {
-              return 'Can\'t be empty';
-            } else if (text.length > 100) {
-              return 'Too long';
-            } else if (widget.existingCategories.contains(text)) {
-              return 'Category already exists';
-            }
-            return null;
-          },
-          style: Centre.listText,
-          decoration: InputDecoration(
-            errorStyle: const TextStyle(height: 0.5),
-            hintText: "Category name",
-            hintStyle: Centre.listText.copyWith(color: Colors.blueGrey),
-            isDense: true,
-          ),
+      width: 50.w,
+      child: TextFormField(
+        controller: controller,
+        focusNode: focusNode,
+        onTapOutside: (_) {
+          focusNode.unfocus();
+        },
+        autovalidateMode: AutovalidateMode.disabled,
+        validator: (text) {
+          if (text == null || text.isEmpty) {
+            return 'Can\'t be empty';
+          } else if (text.length > 100) {
+            return 'Too long';
+          } else if (widget.existingCategories.contains(text)) {
+            return 'Category already exists';
+          } else if (context.read<ChooseColorCubit>().state.isEmpty) {
+            return 'No color chosen';
+          }
+          return null;
+        },
+        style: Centre.listText,
+        decoration: InputDecoration(
+          errorStyle: const TextStyle(height: 0.5),
+          hintText: "Category name",
+          hintStyle: Centre.listText.copyWith(color: Colors.blueGrey),
+          isDense: true,
         ),
       ),
     );
@@ -89,7 +96,7 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
       child: Row(
         children: [
           SizedBox(
-            width: 60.w,
+            width: 50.w,
             child: Form(
               key: formKey,
               child: TextFormField(
@@ -102,7 +109,7 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
                     return 'Too long';
                   } else if (widget.existingCategories.contains(text)) {
                     return 'Category already exists';
-                  } else if (context.read<ChooseColorCubit>().state == []) {
+                  } else if (context.read<ChooseColorCubit>().state.isEmpty) {
                     return 'No color chosen';
                   }
                   return null;
@@ -117,9 +124,10 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
               ),
             ),
           ),
-          SizedBox(width: 4.w),
-          ChooseColorBtn(categoryName: null),
           Spacer(),
+
+          ChooseColorBtn(categoryName: null),
+          SizedBox(width: 3.w),
           CustomIconButton(
             onTap: () {
               if (formKey.currentState!.validate()) {

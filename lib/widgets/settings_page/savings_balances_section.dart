@@ -168,31 +168,34 @@ class _EditingSavingsTextFieldState extends State<EditingSavingsTextField> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TextFormField(
+      child: Form(
         key: widget.formKey,
+        child: TextFormField(
+          key: widget.formKey,
 
-        controller: controller,
-        style: Centre.listText,
-        validator: (text) {
-          if (text == null || text.isEmpty) {
-            return 'Can\'t be empty';
-          } else if (text.length > 100) {
-            return 'Too long';
-          } else if ((widget.existingAccountNames ?? []).contains(text)) {
-            return 'Account name already exists';
-          }
-          return null;
-        },
-        keyboardType: widget.existingAccountNames != null ? null : TextInputType.number,
-        decoration: InputDecoration(
-          hintText: widget.existingAccountNames != null ? 'Eg. Savings' : "123.45",
-          hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
-          prefixIcon: widget.existingAccountNames != null
-              ? null
-              : Text('\$ ', style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14)),
-          prefixIconConstraints: widget.existingAccountNames != null ? null : BoxConstraints(minWidth: 0, minHeight: 0),
-          errorStyle: TextStyle(height: 0.5),
-          isDense: true,
+          controller: controller,
+          style: Centre.listText,
+          validator: (text) {
+            if (text == null || text.isEmpty) {
+              return 'Can\'t be empty';
+            } else if (text.length > 100) {
+              return 'Too long';
+            } else if ((widget.existingAccountNames ?? []).contains(text)) {
+              return 'Account name already exists';
+            }
+            return null;
+          },
+          keyboardType: widget.existingAccountNames != null ? null : TextInputType.number,
+          decoration: InputDecoration(
+            hintText: widget.existingAccountNames != null ? 'Eg. Savings' : "123.45",
+            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.35)),
+            prefixIcon: widget.existingAccountNames != null
+                ? null
+                : Text('\$ ', style: TextStyle(color: Colors.white.withValues(alpha: 0.65), fontSize: 14)),
+            prefixIconConstraints: widget.existingAccountNames != null ? null : BoxConstraints(minWidth: 0, minHeight: 0),
+            errorStyle: TextStyle(height: 0.5),
+            isDense: true,
+          ),
         ),
       ),
     );
