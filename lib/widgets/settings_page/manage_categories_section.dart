@@ -23,8 +23,6 @@ class ManageCategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('ManageCategoriesSection buildyzzy');
-
     return BlocBuilder<SettingsEditingTextCubit, String>(
       builder: (_, editingName) {
         return Form(
@@ -37,44 +35,50 @@ class ManageCategoriesSection extends StatelessWidget {
               Divider(),
               SizedBox(height: 2.h),
               for (MapEntry<String, int> category in categories.entries)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 4.w),
-                  child: Row(
-                    children: [
-                      if (editingName != category.key)
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              context.read<SettingsEditingTextCubit>().editing(name: category.key);
-                            },
-                            child: Text(category.key, style: Centre.listText),
-                          ),
-                        )
-                      else ...[
-                        CategoryTextField(existingCategories: categories.keys.toList(), previousText: category.key),
-                        Spacer(),
-                      ],
-                      BlocProvider<ChooseColorCubit>(
-                        create: (context) => ChooseColorCubit([category.value]),
-                        child: ChooseColorBtn(categoryName: category.key),
-                      ),
-                      SizedBox(width: 3.w),
-                      category.key == "Other"
-                          ? SizedBox(width: 9.5.w)
-                          : editingName == category.key
-                          ? CustomIconButton(
+                BlocProvider<ChooseColorCubit>(
+                  create: (context) => ChooseColorCubit([category.value]),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 0.6.h, horizontal: 4.w),
+                    child: Row(
+                      children: [
+                        if (editingName != category.key)
+                          Expanded(
+                            child: GestureDetector(
                               onTap: () {
                                 if (formKey.currentState!.validate()) {
-                                  context.read<SettingsEditingTextCubit>().editing(name: "");
+                                  context.read<SettingsEditingTextCubit>().editing(name: category.key);
                                 }
                               },
-                              child: Icon(Icons.check, size: 5.w, color: Centre.primaryColor),
-                            )
-                          : CustomIconButton(
-                              onTap: () {},
-                              child: Icon(Icons.delete, size: 5.w, color: Centre.primaryColor),
+                              child: Text(category.key, style: Centre.listText),
                             ),
-                    ],
+                          )
+                        else ...[
+                          CategoryTextField(
+                            existingCategories: categories.keys.toList()..remove(category.key),
+                            previousText: category.key,
+                          ),
+                          Spacer(),
+                        ],
+                        ChooseColorBtn(categoryName: category.key),
+
+                        SizedBox(width: 3.w),
+                        category.key == "Other"
+                            ? SizedBox(width: 9.5.w)
+                            : editingName == category.key
+                            ? CustomIconButton(
+                                onTap: () {
+                                  if (formKey.currentState!.validate()) {
+                                    context.read<SettingsEditingTextCubit>().editing(name: "");
+                                  }
+                                },
+                                child: Icon(Icons.check, size: 5.w, color: Centre.primaryColor),
+                              )
+                            : CustomIconButton(
+                                onTap: () {},
+                                child: Icon(Icons.delete, size: 5.w, color: Centre.primaryColor),
+                              ),
+                      ],
+                    ),
                   ),
                 ),
 

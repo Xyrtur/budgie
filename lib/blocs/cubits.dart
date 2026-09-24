@@ -74,7 +74,7 @@ class ChooseColorCubit extends Cubit<List<int>> {
 class TempEditingDateRangesCubit extends Cubit<Map<int, List<DateTime>>> {
   TempEditingDateRangesCubit()
     : super({
-        0: [DateTime(2023, 1, 1), DateTime(2023, 12, 31)],
+        0: [DateTime(2025, 1, 1), DateTime(2025, 12, 31)],
         1: [DateTime(2024, 1, 1), DateTime(2025, 12, 31)],
         2: [DateTime(2026, 1, 1), DateTime.now()],
       });
@@ -135,7 +135,18 @@ class SpendingGraphViewToggleCubit extends Cubit<bool> {
 
 class SpendingCategoriesToggledCubit extends Cubit<List<String>> {
   SpendingCategoriesToggledCubit()
-    : super(["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2", "Category 3", "Category 4"]);
+    : super([
+        "Groceries",
+        "Entertainment",
+        "House",
+        "Gas",
+        "Junk Food",
+        "Ava",
+        "Category 1",
+        "Category 2",
+        "Category 3",
+        "Category 4",
+      ]);
 
   void toggleCategory(String category) {
     if (state.contains(category)) {
@@ -267,7 +278,14 @@ class IsIncomeToggleCubit extends Cubit<bool> {
 
 enum RecordType { entry, total, title }
 
-typedef Record = ({String name, DateTime? startDate, DateTime? endDate, List<int> colors, double value, RecordType type});
+typedef Record = ({
+  String name,
+  DateTime? startDate,
+  DateTime? endDate,
+  List<int> colors,
+  double value,
+  RecordType type,
+});
 
 class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
   TempTripRecordsCubit()
@@ -379,7 +397,14 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
     if (type == RecordType.total) {
       // TODO: Finish this code during bloc implementation
     }
-    Record rec = (name: type == RecordType.total ? "Total" : "Placeholder Title", startDate: null, endDate: null, colors: [], value: 0, type: type);
+    Record rec = (
+      name: type == RecordType.total ? "Total" : "Placeholder Title",
+      startDate: null,
+      endDate: null,
+      colors: [],
+      value: 0,
+      type: type,
+    );
     newState[tripName]!.insert(index, rec);
     emit(newState);
   }
@@ -435,12 +460,17 @@ class ExpenseAccountCubit extends Cubit<String> {
 }
 
 // TODO: Change this to bloc after
-typedef EditingState = ({String name, bool isEditingName});
+class EditingState {
+  final String name;
+  final bool isEditingName;
+
+  EditingState({required this.name, required this.isEditingName});
+}
 
 class EditingSavingsTextsCubit extends Cubit<EditingState> {
-  EditingSavingsTextsCubit() : super((name: "", isEditingName: false));
+  EditingSavingsTextsCubit() : super(EditingState(name: "", isEditingName: false));
 
   void selectText(String name, bool isEditingName) {
-    emit((name: name, isEditingName: isEditingName));
+    emit(EditingState(name: name, isEditingName: isEditingName));
   }
 }

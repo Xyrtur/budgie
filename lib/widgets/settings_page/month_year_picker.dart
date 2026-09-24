@@ -1,5 +1,6 @@
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_date_pickers/flutter_date_pickers.dart';
@@ -15,8 +16,6 @@ class CustomMonthPicker extends StatefulWidget {
 }
 
 class CustomMonthPickerState extends State<CustomMonthPicker> {
-  final DateTime firstDate = DateTime.now().subtract(Duration(days: 700));
-  final DateTime lastDate = DateTime.now().add(Duration(days: 700));
   DateTime dateChosen = DateTime.now();
 
   @override
@@ -54,8 +53,8 @@ class CustomMonthPickerState extends State<CustomMonthPicker> {
                   dateChosen = value;
                 });
               },
-              firstDate: firstDate,
-              lastDate: lastDate,
+              firstDate: DateTime.now().subtract(Duration(days: 700)),
+              lastDate: DateTime.now().add(Duration(days: 700)),
             ),
           ),
           TextButton(
@@ -83,17 +82,15 @@ class MonthYearAddingRangeButton extends StatelessWidget {
     return BlocBuilder<AddingDateRangeCubit, List<DateTime?>>(
       builder: (_, newDates) {
         return newDates[isStartDate ? 0 : 1] == null
-            ? IconButton.outlined(
-                onPressed: () {
+            ? CustomIconButton(
+                onTap: () {
                   showDialog(context: context, builder: (_) => CustomMonthPicker()).then((date) {
                     if (date != null) {
                       dialogResult.value = isStartDate ? [date, null] : [null, date];
                     }
                   });
                 },
-                iconSize: 8.w,
-                color: Colors.white,
-                icon: Icon(Icons.calendar_month),
+                child: Icon(Icons.calendar_month, size: 6.w, color: Centre.primaryColor),
               )
             : GestureDetector(
                 onTap: () {
@@ -109,8 +106,7 @@ class MonthYearAddingRangeButton extends StatelessWidget {
                 child: Container(
                   padding: EdgeInsets.all(2.w),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white, width: 1.5),
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    border: Border(bottom: BorderSide(color: Centre.offWhite, width: 1)),
                   ),
                   child: Text(DateFormat('yMMM').format(newDates[isStartDate ? 0 : 1]!), style: Centre.listText),
                 ),
@@ -147,12 +143,26 @@ class MonthYearEditingRangeButton extends StatelessWidget {
             });
           },
           child: Container(
-            padding: EdgeInsets.all(2.w),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.white, width: 1.5),
-              borderRadius: const BorderRadius.all(Radius.circular(8)),
+            padding: isStartDate ? EdgeInsets.only(left: 12.w) : EdgeInsets.only(right: 12.w),
+            color: Colors.transparent,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isStartDate ? "Start" : "End",
+                  style: Centre.listText.copyWith(fontSize: 13.5.sp),
+                  textAlign: TextAlign.start,
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 2.w),
+                  child: Text(
+                    DateFormat('yMMM').format(dateRangeMap[id]![isStartDate ? 0 : 1]),
+                    style: Centre.listText,
+                  ),
+                ),
+              ],
             ),
-            child: Text(DateFormat('yMMM').format(dateRangeMap[id]![isStartDate ? 0 : 1]), style: Centre.listText),
           ),
         );
       },

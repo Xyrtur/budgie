@@ -43,10 +43,8 @@ class _CategoryTextFieldState extends State<CategoryTextField> {
       child: TextFormField(
         controller: controller,
         focusNode: focusNode,
-        onTapOutside: (_) {
-          focusNode.unfocus();
-        },
-        autovalidateMode: AutovalidateMode.disabled,
+
+        autovalidateMode: AutovalidateMode.onUnfocus,
         validator: (text) {
           if (text == null || text.isEmpty) {
             return 'Can\'t be empty';
@@ -133,7 +131,10 @@ class _AddCategoryTextFieldState extends State<AddCategoryTextField> {
               if (formKey.currentState!.validate()) {
                 // Add category with controller.text, context.read<SettingsAddColorCubit>().state!,
                 controller.clear();
-                context.read<ChooseColorCubit>().selectColor(color: Colors.transparent.toARGB32(), inSettingsPage: true);
+                context.read<ChooseColorCubit>().selectColor(
+                  color: Colors.transparent.toARGB32(),
+                  inSettingsPage: true,
+                );
               }
             },
             child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),
