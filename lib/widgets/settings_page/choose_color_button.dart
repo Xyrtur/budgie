@@ -10,7 +10,12 @@ class ChooseColorBtn extends StatelessWidget {
   final String? categoryName;
   final bool inTripsPage;
   final List<Color> colorsToChooseFrom;
-  const ChooseColorBtn({super.key, required this.categoryName, this.inTripsPage = false, this.colorsToChooseFrom = Centre.colors});
+  const ChooseColorBtn({
+    super.key,
+    required this.categoryName,
+    this.inTripsPage = false,
+    this.colorsToChooseFrom = Centre.colors,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +32,15 @@ class ChooseColorBtn extends StatelessWidget {
                         barrierColor: Colors.transparent,
                         offset: Offset(0, 1.h),
                         context: context,
-                        builder: (BuildContext dialogContext) => BlocProvider<ChooseColorCubit>.value(
-                          value: context.read<ChooseColorCubit>(),
-                          child: ChooseColorDialog(colorsToChooseFrom: colorsToChooseFrom, inSettingsPage: true),
-                        ),
+                        builder: (BuildContext dialogContext) {
+                          return MultiBlocProvider(
+                            providers: [
+                              BlocProvider<ChooseColorCubit>.value(value: context.read<ChooseColorCubit>()),
+                              BlocProvider<WarmModeToggleCubit>.value(value: context.read<WarmModeToggleCubit>()),
+                            ],
+                            child: ChooseColorDialog(colorsToChooseFrom: colorsToChooseFrom, inSettingsPage: true),
+                          );
+                        },
                       ).then((_) {
                         // if (context.read<ChooseColorCubit>().state.isNotEmpty) {
                         //   // TODO: update category color in db
@@ -60,8 +70,11 @@ class ChooseColorBtn extends StatelessWidget {
                         barrierColor: Colors.transparent,
                         offset: Offset(0, 1.h),
                         context: context,
-                        builder: (BuildContext dialogContext) => BlocProvider<ChooseColorCubit>.value(
-                          value: context.read<ChooseColorCubit>(),
+                        builder: (BuildContext dialogContext) => MultiBlocProvider(
+                          providers: [
+                            BlocProvider<ChooseColorCubit>.value(value: context.read<ChooseColorCubit>()),
+                            BlocProvider<WarmModeToggleCubit>.value(value: context.read<WarmModeToggleCubit>()),
+                          ],
                           child: ChooseColorDialog(colorsToChooseFrom: colorsToChooseFrom, inSettingsPage: false),
                         ),
                       ).then((_) {

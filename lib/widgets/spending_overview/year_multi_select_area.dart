@@ -36,8 +36,11 @@ class _YearMultiSelectAreaState extends State<YearMultiSelectArea> {
             onTap: () {
               showDialog(
                 context: context,
-                builder: (_) => BlocProvider.value(
-                  value: context.read<YearsSelectedCubit>(),
+                builder: (_) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: context.read<YearsSelectedCubit>()),
+                    BlocProvider.value(value: context.read<WarmModeToggleCubit>()),
+                  ],
                   child: MultiYearPickerDialog(
                     startYear: 2025,
                     endYear: 2035,

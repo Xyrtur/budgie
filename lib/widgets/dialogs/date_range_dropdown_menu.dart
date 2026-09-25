@@ -1,6 +1,9 @@
 import 'package:aligned_dialog/aligned_dialog.dart';
+import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 class DateRangeDropDownMenu extends StatefulWidget {
@@ -56,41 +59,47 @@ class _DateRangeDropDownMenuState extends State<DateRangeDropDownMenu> with Sing
                 barrierColor: Colors.transparent,
                 offset: Offset(0, 4),
                 context: context,
-                builder: (BuildContext ycontext) {
+                builder: (BuildContext _) {
                   return SizeTransition(
                     sizeFactor: heightAnimation,
                     alignment: Alignment.bottomCenter,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Centre.cardColor,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: ConditionalWarmFilter(
+                        enabled: context.read<WarmModeToggleCubit>().state,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Centre.cardColor,
 
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.30),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.30),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: options.map((item) {
-                          return GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                selectedRole = item;
-                                //TODO: reload all values for FixedCostFieldKeysCubit, LiveBudgetTotalTrackerCubit, FixedLabelsAndCostsCubit, CategoryBoxKeysCubit, CategoryBoxTextsCubit
-                              });
-                              controller.reset();
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
-                              child: Text(item, style: Centre.semiTitle2Text),
-                            ),
-                          );
-                        }).toList(),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: options.map((item) {
+                              return GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedRole = item;
+                                    //TODO: reload all values for FixedCostFieldKeysCubit, LiveBudgetTotalTrackerCubit, FixedLabelsAndCostsCubit, CategoryBoxKeysCubit, CategoryBoxTextsCubit
+                                  });
+                                  controller.reset();
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.5.h),
+                                  child: Text(item, style: Centre.semiTitle2Text),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ),
                     ),
                   );

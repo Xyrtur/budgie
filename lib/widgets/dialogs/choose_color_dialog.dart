@@ -1,4 +1,5 @@
 import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,69 +39,82 @@ class ChooseColorDialog extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Centre.dialogBgColor,
-        boxShadow: [
-          BoxShadow(
-            color: Centre.shadowbgColor, // Shadow color
-            spreadRadius: 1, // Extends the shadow past the box shape
-            blurRadius: 2, // Softens the shadow edges
-            offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
-          ),
-        ],
-      ),
+    return BlocBuilder<WarmModeToggleCubit, bool>(
+      builder: (_, warmModeToggled) {
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: ConditionalWarmFilter(
+            enabled: warmModeToggled,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Centre.dialogBgColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Centre.shadowbgColor, // Shadow color
+                    spreadRadius: 1, // Extends the shadow past the box shape
+                    blurRadius: 2, // Softens the shadow edges
+                    offset: const Offset(-1, 4), // Positions shadow (x-axis, y-axis)
+                  ),
+                ],
+              ),
 
-      width: 67.w,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          inSettingsPage
-              ? SizedBox(height: 0)
-              : BlocBuilder<ChooseColorCubit, List<int>>(
-                  builder: (context, colorList) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 1.5.h),
-                        child: Ink(
-                          decoration: colorList.isEmpty
-                              ? null
-                              : BoxDecoration(borderRadius: BorderRadius.circular(4), color: Centre.bgSplashColor),
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(4),
-                            onTap: () {
-                              context.read<ChooseColorCubit>().selectColor(
-                                color: Colors.transparent.toARGB32(),
-                                inSettingsPage: inSettingsPage,
-                              );
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 0.5.h),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.format_color_reset),
-                                  SizedBox(width: 1.w),
-                                  Text("Transparent"),
-                                ],
+              width: 67.w,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  inSettingsPage
+                      ? SizedBox(height: 0)
+                      : BlocBuilder<ChooseColorCubit, List<int>>(
+                          builder: (context, colorList) {
+                            return Material(
+                              color: Colors.transparent,
+                              child: Padding(
+                                padding: EdgeInsets.only(bottom: 1.5.h),
+                                child: Ink(
+                                  decoration: colorList.isEmpty
+                                      ? null
+                                      : BoxDecoration(
+                                          borderRadius: BorderRadius.circular(4),
+                                          color: Centre.bgSplashColor,
+                                        ),
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(4),
+                                    onTap: () {
+                                      context.read<ChooseColorCubit>().selectColor(
+                                        color: Colors.transparent.toARGB32(),
+                                        inSettingsPage: inSettingsPage,
+                                      );
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 0.5.h),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.format_color_reset),
+                                          SizedBox(width: 1.w),
+                                          Text("Transparent"),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
-                      ),
-                    );
-                  },
-                ),
-          Wrap(
-            spacing: 4.w,
-            runSpacing: 1.5.h,
-            children: [for (int i = 0; i < colorsToChooseFrom.length; i++) colourBtn(i)],
+                  Wrap(
+                    spacing: 4.w,
+                    runSpacing: 1.5.h,
+                    children: [for (int i = 0; i < colorsToChooseFrom.length; i++) colourBtn(i)],
+                  ),
+                ],
+              ),
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

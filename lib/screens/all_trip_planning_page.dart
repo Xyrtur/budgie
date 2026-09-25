@@ -1,4 +1,5 @@
 import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/screens/trip_planning_page.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/icon_button.dart';
@@ -11,95 +12,111 @@ class AllTripPlanningPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
+    return BlocBuilder<WarmModeToggleCubit, bool>(
+      builder: (_, warmModeToggled) {
+        return ConditionalWarmFilter(
+          enabled: warmModeToggled,
+          child: SafeArea(
+            bottom: false,
 
-      child: Scaffold(
-        backgroundColor: Centre.bgColor,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(height: 2.h),
+            child: Scaffold(
+              backgroundColor: Centre.bgColor,
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 2.h),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Spacer(),
-                Text("Trip Planning", textAlign: TextAlign.center, style: Centre.titleText),
-
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsetsGeometry.only(left: 3.w),
-                    child: Align(alignment: AlignmentGeometry.bottomLeft, child: SortButton()),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
-              child: Divider(),
-            ),
-            BlocBuilder<TempTripRecordsCubit, Map<String, List<Record>>>(
-              builder: (_, trips) {
-                return Expanded(
-                  child: ListView(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for (String i in trips.keys)
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
-                          child: Ink(
-                            decoration: BoxDecoration(
-                              color: Centre.cardColor,
-                              borderRadius: BorderRadius.circular(8),
+                      Spacer(),
+                      Text("Trip Planning", textAlign: TextAlign.center, style: Centre.titleText),
 
-                              // Outer depth
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Centre.shadowbgColor,
-                                  offset: Offset(0, 2),
-                                  blurRadius: 6,
-                                  spreadRadius: 0,
-                                ),
-                              ],
-                            ),
-
-                            child: InkWell(
-                              splashColor: Centre.bgSplashColor,
-                              highlightColor: Centre.bgSplashColor,
-                              borderRadius: BorderRadius.circular(8),
-
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => BlocProvider.value(
-                                      value: context.read<TempTripRecordsCubit>(),
-                                      child: TripPlanningPage(tripName: i, recordList: trips[i]!),
-                                    ),
-                                  ),
-                                );
-                              },
-
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-                                child: Column(
-                                  children: [
-                                    Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
-                                    Text("Jul 2024 - Aug 2024", style: Centre.listText.copyWith(color: Colors.grey)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.only(left: 3.w),
+                          child: Align(alignment: AlignmentGeometry.bottomLeft, child: SortButton()),
                         ),
+                      ),
                     ],
                   ),
-                );
-              },
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                    child: Divider(),
+                  ),
+                  BlocBuilder<TempTripRecordsCubit, Map<String, List<Record>>>(
+                    builder: (_, trips) {
+                      return Expanded(
+                        child: ListView(
+                          children: [
+                            for (String i in trips.keys)
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
+                                child: Ink(
+                                  decoration: BoxDecoration(
+                                    color: Centre.cardColor,
+                                    borderRadius: BorderRadius.circular(8),
+
+                                    // Outer depth
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Centre.shadowbgColor,
+                                        offset: Offset(0, 2),
+                                        blurRadius: 6,
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
+                                  ),
+
+                                  child: InkWell(
+                                    splashColor: Centre.bgSplashColor,
+                                    highlightColor: Centre.bgSplashColor,
+                                    borderRadius: BorderRadius.circular(8),
+
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider.value(value: context.read<TempTripRecordsCubit>()),
+                                              BlocProvider.value(value: context.read<WarmModeToggleCubit>()),
+                                            ],
+                                            child: ConditionalWarmFilter(
+                                              enabled: context.read<WarmModeToggleCubit>().state,
+                                              child: TripPlanningPage(tripName: i, recordList: trips[i]!),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                                      child: Column(
+                                        children: [
+                                          Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
+                                          Text(
+                                            "Jul 2024 - Aug 2024",
+                                            style: Centre.listText.copyWith(color: Colors.grey),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

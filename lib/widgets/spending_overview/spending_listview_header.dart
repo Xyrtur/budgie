@@ -42,7 +42,10 @@ class SpendingListviewHeader extends StatelessWidget {
                     children: [
                       Text("Spending Overview : ", style: Centre.titleText),
 
-                      YearPickerMenu(startYear: 2025, endYear: 2029, initialYear: 2026),
+                      BlocProvider.value(
+                        value: context.read<WarmModeToggleCubit>(),
+                        child: YearPickerMenu(startYear: 2025, endYear: 2029, initialYear: 2026),
+                      ),
                       Spacer(),
                       ToggleGraphviewButton(),
                     ],
@@ -65,11 +68,18 @@ class SpendingListviewHeader extends StatelessWidget {
                                     Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("${e.key} ", style: Centre.semiTitle2Text.copyWith(fontWeight: FontWeight.bold)),
+                                        Text(
+                                          "${e.key} ",
+                                          style: Centre.semiTitle2Text.copyWith(fontWeight: FontWeight.bold),
+                                        ),
 
                                         Text(
                                           "\$${numberFormat.format(e.value)}",
-                                          style: Centre.titleText.copyWith(fontWeight: FontWeight.w400, color: Centre.offWhite, letterSpacing: 1),
+                                          style: Centre.titleText.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            color: Centre.offWhite,
+                                            letterSpacing: 1,
+                                          ),
                                         ),
                                       ],
                                     ),

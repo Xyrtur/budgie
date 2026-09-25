@@ -17,7 +17,7 @@ Widget navBarBtn(
       customBorder: BeveledRectangleBorder(),
       highlightColor: Centre.dialogBgColor,
       onTap: () {
-        controller.animateToPage(page.index, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        controller.jumpToPage(page.index);
       },
       child: Container(
         width: 20.w,

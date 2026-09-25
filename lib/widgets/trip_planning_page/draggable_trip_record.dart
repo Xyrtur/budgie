@@ -40,7 +40,7 @@ class DraggableTripRecord extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: record.type == RecordType.entry ? 3.w : 0),
               decoration: record.type == RecordType.entry
                   ? BoxDecoration(
-                      border: BoxBorder.all(color: Color(record.colors[0])),
+                      border: record.colors.isNotEmpty ? BoxBorder.all(color: Color(record.colors[0])) : null,
                       borderRadius: BorderRadius.circular(8),
                     )
                   : null,
@@ -50,7 +50,7 @@ class DraggableTripRecord extends StatelessWidget {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      for (int colorInt in record.colors.sublist(1))
+                      for (int colorInt in record.colors.sublist(record.colors.length > 1 ? 1 : 0))
                         Container(
                           margin: EdgeInsets.only(top: record.startDate == null ? 0.8.h : 1.3.h, right: 2.w),
                           decoration: BoxDecoration(color: Color(colorInt), borderRadius: BorderRadius.circular(4)),

@@ -37,26 +37,48 @@ class _LandingPageViewState extends State<LandingPageView> {
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: MediaQuery.of(context).viewInsets.bottom > 0
             ? null
-            : BottomAppBar(
-                height: 9.9.h,
-                color: Centre.navBarColor,
-                shape: CircularNotchedRectangle(),
-                notchMargin: 0.8.h,
-                child: BlocBuilder<NavbarCubit, PageSelected>(
-                  builder: (_, pageSelected) {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        navBarBtn(controller, PageSelected.Overview, Icons.auto_graph_sharp, "Overview", pageSelected),
-                        navBarBtn(controller, PageSelected.TripPlanning, Icons.checklist, "Trip Planning", pageSelected),
-                        SizedBox(width: 9.w),
-                        navBarBtn(controller, PageSelected.BudgetPlanning, Icons.attach_money, "Set Budget", pageSelected),
-                        navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
-                      ],
-                    );
-                  },
-                ),
+            : BlocBuilder<WarmModeToggleCubit, bool>(
+                builder: (_, warmModeToggled) {
+                  return BottomAppBar(
+                    height: 9.9.h,
+                    color: warmModeToggled ? Color.fromARGB(255, 51, 46, 65) : Centre.navBarColor,
+                    shape: CircularNotchedRectangle(),
+                    notchMargin: 0.8.h,
+                    child: BlocBuilder<NavbarCubit, PageSelected>(
+                      builder: (_, pageSelected) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            navBarBtn(
+                              controller,
+                              PageSelected.Overview,
+                              Icons.auto_graph_sharp,
+                              "Overview",
+                              pageSelected,
+                            ),
+                            navBarBtn(
+                              controller,
+                              PageSelected.TripPlanning,
+                              Icons.checklist,
+                              "Trip Planning",
+                              pageSelected,
+                            ),
+                            SizedBox(width: 9.w),
+                            navBarBtn(
+                              controller,
+                              PageSelected.BudgetPlanning,
+                              Icons.attach_money,
+                              "Set Budget",
+                              pageSelected,
+                            ),
+                            navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                },
               ),
         floatingActionButton: MediaQuery.of(context).viewInsets.bottom > 0
             ? null
@@ -67,44 +89,57 @@ class _LandingPageViewState extends State<LandingPageView> {
                     width: 15.w,
                     child: Builder(
                       builder: (context) {
-                        return FloatingActionButton(
-                          shape: const CircleBorder(),
-                          onPressed: () {
-                            switch (page) {
-                              // Case: Spending overview page
-                              case PageSelected.Overview:
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext dialogContext) {
-                                    return MultiBlocProvider(
-                                      providers: [
-                                        BlocProvider<AddExpenseCategoryBtnsCubit>(create: (context) => AddExpenseCategoryBtnsCubit("Groceries")),
-                                        BlocProvider<DatesSelectedCubit>(create: (context) => DatesSelectedCubit()),
-                                        BlocProvider<IsIncomeToggleCubit>(create: (context) => IsIncomeToggleCubit()),
-                                      ],
-                                      child: AddEditExpenseDialog(editingExpense: null),
+                        return BlocBuilder<WarmModeToggleCubit, bool>(
+                          builder: (_, warmModeToggled) {
+                            return FloatingActionButton(
+                              shape: const CircleBorder(),
+                              onPressed: () {
+                                switch (page) {
+                                  // Case: Spending overview page
+                                  case PageSelected.Overview:
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return MultiBlocProvider(
+                                          providers: [
+                                            BlocProvider<AddExpenseCategoryBtnsCubit>(
+                                              create: (context) => AddExpenseCategoryBtnsCubit("Groceries"),
+                                            ),
+                                            BlocProvider<DatesSelectedCubit>(create: (context) => DatesSelectedCubit()),
+                                            BlocProvider<IsIncomeToggleCubit>(
+                                              create: (context) => IsIncomeToggleCubit(),
+                                            ),
+                                            BlocProvider<WarmModeToggleCubit>.value(
+                                              value: context.read<WarmModeToggleCubit>(),
+                                            ),
+                                          ],
+                                          child: AddEditExpenseDialog(editingExpense: null),
+                                        );
+                                      },
                                     );
-                                  },
-                                );
-                              case PageSelected.TripPlanning:
-                              case PageSelected.BudgetPlanning:
-                              case PageSelected.UserSettings:
-                            }
-                          },
-                          backgroundColor: Centre.secondaryColor,
-                          elevation: 5,
+                                  case PageSelected.TripPlanning:
+                                  case PageSelected.BudgetPlanning:
+                                  case PageSelected.UserSettings:
+                                }
+                              },
+                              backgroundColor: warmModeToggled
+                                  ? Color.fromARGB(255, 106, 71, 94)
+                                  : Centre.secondaryColor,
+                              elevation: 5,
 
-                          child: Icon(
-                            page == PageSelected.Overview || page == PageSelected.TripPlanning
-                                ? Icons.add
-                                : page == PageSelected.BudgetPlanning
-                                ? Icons.check
-                                : page == PageSelected.UserSettings
-                                ? Icons.import_export
-                                : null,
-                            color: Centre.offWhite,
-                            size: 6.w,
-                          ),
+                              child: Icon(
+                                page == PageSelected.Overview || page == PageSelected.TripPlanning
+                                    ? Icons.add
+                                    : page == PageSelected.BudgetPlanning
+                                    ? Icons.check
+                                    : page == PageSelected.UserSettings
+                                    ? Icons.import_export
+                                    : null,
+                                color: Centre.offWhite,
+                                size: 6.w,
+                              ),
+                            );
+                          },
                         );
                       },
                     ),
@@ -166,7 +201,16 @@ class _LandingPageViewState extends State<LandingPageView> {
                 BlocProvider<CategoryBoxKeysCubit>(
                   create: (context) {
                     List<GlobalKey<CategoryBoxState>> newList = [];
-                    final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
+                    final List<String> categories = [
+                      "Groceries",
+                      "Entertainment",
+                      "House",
+                      "Gas",
+                      "Junk Food",
+                      "Ava",
+                      "Category 1",
+                      "Category 2",
+                    ];
                     for (int i = 0; i < categories.length; i++) {
                       newList.add(GlobalKey<CategoryBoxState>());
                     }
@@ -175,7 +219,16 @@ class _LandingPageViewState extends State<LandingPageView> {
                 ),
                 BlocProvider<CategoryBoxTextsCubit>(
                   create: (context) {
-                    final List<String> categories = ["Groceries", "Entertainment", "House", "Gas", "Junk Food", "Ava", "Category 1", "Category 2"];
+                    final List<String> categories = [
+                      "Groceries",
+                      "Entertainment",
+                      "House",
+                      "Gas",
+                      "Junk Food",
+                      "Ava",
+                      "Category 1",
+                      "Category 2",
+                    ];
 
                     Map<String, String> newMap = {};
                     for (int i = 0; i < categories.length; i++) {
@@ -218,5 +271,48 @@ class MyBehavior extends ScrollBehavior {
   @override
   Widget buildOverscrollIndicator(BuildContext context, Widget child, ScrollableDetails details) {
     return child;
+  }
+}
+
+class ConditionalWarmFilter extends StatelessWidget {
+  final bool enabled;
+  final Widget child;
+
+  const ConditionalWarmFilter({super.key, required this.enabled, required this.child});
+  @override
+  Widget build(BuildContext context) {
+    if (!enabled) return child;
+
+    return ColorFiltered(
+      colorFilter: const ColorFilter.matrix([
+        0.432,
+        0.374,
+        0.038,
+        0,
+        0,
+        0.111,
+        0.657,
+        0.031,
+        0,
+        0,
+        0.023,
+        0.076,
+        0.711,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+      ]),
+      child: ColorFiltered(
+        colorFilter: ColorFilter.mode(
+          const Color.fromARGB(255, 187, 159, 168).withValues(alpha: enabled ? 0.8 : 0),
+          BlendMode.softLight,
+        ),
+        child: child,
+      ),
+    );
   }
 }

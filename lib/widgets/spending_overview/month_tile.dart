@@ -1,7 +1,10 @@
+import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/screens/monthly_spending_overview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/spending_overview/bar_graphs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,7 +22,9 @@ class MonthTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: Centre.cardColor,
           borderRadius: BorderRadius.circular(8),
-          border: DateFormat("MMMM").format(DateTime.now()) == month ? Border.all(color: Centre.colors[1], width: 0.5.w) : null,
+          border: DateFormat("MMMM").format(DateTime.now()) == month
+              ? Border.all(color: Centre.colors[1], width: 0.5.w)
+              : null,
 
           // Outer depth
           boxShadow: [BoxShadow(color: Centre.shadowbgColor, offset: Offset(0, 2), blurRadius: 6, spreadRadius: 0)],
@@ -31,7 +36,14 @@ class MonthTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
 
           onTap: () async {
-            await Navigator.of(context).push(MaterialPageRoute(builder: (context) => MonthlySpendingOverview(month: month)));
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => ConditionalWarmFilter(
+                  enabled: context.read<WarmModeToggleCubit>().state,
+                  child: MonthlySpendingOverview(month: month),
+                ),
+              ),
+            );
 
             controller.reset();
             controller.forward();

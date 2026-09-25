@@ -1,6 +1,9 @@
 import 'package:aligned_dialog/aligned_dialog.dart';
+import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 class YearPickerMenu extends StatefulWidget {
@@ -43,7 +46,7 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
   @override
   Widget build(BuildContext context) {
     return Builder(
-      builder: (context) {
+      builder: (_) {
         return Material(
           color: Colors.transparent,
           child: Ink(
@@ -69,7 +72,7 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                   barrierColor: Colors.transparent,
                   offset: Offset(0, 1),
                   context: context,
-                  builder: (BuildContext ycontext) {
+                  builder: (_) {
                     return SizeTransition(
                       sizeFactor: heightAnimation,
                       alignment: Alignment.bottomCenter,
@@ -79,12 +82,12 @@ class YearPickerMenuState extends State<YearPickerMenu> with SingleTickerProvide
                         height: 15.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          gradient: const LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [Color(0xff242943), Color(0xff1B1F33)],
-                          ),
-                          border: Border.all(color: const Color(0xff363B56)),
+                          color: context.read<WarmModeToggleCubit>().state
+                              ? Color.fromARGB(255, 37, 36, 45)
+                              : Centre.dialogBgColor,
+                          border: context.read<WarmModeToggleCubit>().state
+                              ? Border.all(color: Color.fromARGB(255, 25, 25, 30))
+                              : Border.all(color: const Color(0xff363B56)),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.30),

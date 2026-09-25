@@ -1,6 +1,8 @@
 import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
 class TripRecordBucket extends StatelessWidget {
@@ -15,19 +17,29 @@ class TripRecordBucket extends StatelessWidget {
       data: type,
       feedback: Transform.translate(
         offset: Offset(-15.w, 0),
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: 90.w,
-            margin: EdgeInsets.symmetric(vertical: 1.h, horizontal: 2.w),
-            padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
-            decoration: BoxDecoration(
-              color: Centre.cardColor,
-              border: bucketName == "Entries" ? BoxBorder.all(color: Centre.graphLinesColor) : null,
+        child: BlocBuilder<WarmModeToggleCubit, bool>(
+          bloc: context.read<WarmModeToggleCubit>(),
+          builder: (_, warmModeToggled) {
+            return ClipRRect(
               borderRadius: BorderRadius.circular(8),
-            ),
-            child: feedback,
-          ),
+              child: ConditionalWarmFilter(
+                enabled: warmModeToggled,
+                child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    width: 90.w,
+                    padding: EdgeInsets.symmetric(vertical: 1.5.h, horizontal: 3.w),
+                    decoration: BoxDecoration(
+                      color: Centre.cardColor,
+                      border: bucketName == "Entries" ? BoxBorder.all(color: Centre.graphLinesColor) : null,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: feedback,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
       ),
       child: Container(

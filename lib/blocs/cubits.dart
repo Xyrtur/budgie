@@ -108,6 +108,13 @@ class TempIncludeFixedCubit extends Cubit<bool> {
   }
 }
 
+class WarmModeToggleCubit extends Cubit<bool> {
+  WarmModeToggleCubit() : super(false);
+  void toggle() {
+    emit(!state);
+  }
+}
+
 class FABIconCubit extends Cubit<PageSelected> {
   FABIconCubit() : super(PageSelected.Overview);
 

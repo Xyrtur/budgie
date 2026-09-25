@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/dialogs/edit_trip_entry_dialog.dart';
 import 'package:budgie/widgets/icon_button.dart';
@@ -51,7 +52,7 @@ class TripPlanningPage extends StatelessWidget {
                         ),
                         SizedBox(height: 4.h),
                         BlocBuilder<TempTripRecordsCubit, Map<String, List<Record>>>(
-                          builder: (context, recordsMap) {
+                          builder: (_, recordsMap) {
                             return ReorderableListView.builder(
                               itemCount: recordList.length,
                               shrinkWrap: true,
@@ -80,7 +81,7 @@ class TripPlanningPage extends StatelessWidget {
                                 recordList.insert(newIndex, movedItem);
                                 context.read<TempTripRecordsCubit>().reOrder(tripName, recordList);
                               },
-                              itemBuilder: (BuildContext context, int index) {
+                              itemBuilder: (BuildContext _, int index) {
                                 return recordList[index].type == RecordType.total
                                     ? DraggableTripRecord(
                                         key: ValueKey(index),
@@ -91,8 +92,11 @@ class TripPlanningPage extends StatelessWidget {
                                         onTap: () {
                                           showDialog(
                                             context: context,
-                                            builder: (BuildContext dialogContext) {
-                                              return EditTripEntryDialog.title(name: recordList[index].name);
+                                            builder: (_) {
+                                              return BlocProvider.value(
+                                                value: context.read<WarmModeToggleCubit>(),
+                                                child: EditTripEntryDialog.title(name: recordList[index].name),
+                                              );
                                             },
                                           );
                                         },
@@ -132,7 +136,7 @@ class TripPlanningPage extends StatelessWidget {
                                         onTap: () {
                                           showDialog(
                                             context: context,
-                                            builder: (BuildContext dialogContext) {
+                                            builder: (BuildContext _) {
                                               return MultiBlocProvider(
                                                 providers: [
                                                   BlocProvider<ChooseColorCubit>(
@@ -143,6 +147,8 @@ class TripPlanningPage extends StatelessWidget {
                                                       dates: [recordList[index].startDate, recordList[index].endDate],
                                                     ),
                                                   ),
+
+                                                  BlocProvider.value(value: context.read<WarmModeToggleCubit>()),
                                                 ],
                                                 child: EditTripEntryDialog.entry(
                                                   name: recordList[index].name,
@@ -187,8 +193,11 @@ class TripPlanningPage extends StatelessWidget {
                                         onTap: () {
                                           showDialog(
                                             context: context,
-                                            builder: (BuildContext dialogContext) {
-                                              return EditTripEntryDialog.title(name: recordList[index].name);
+                                            builder: (_) {
+                                              return BlocProvider.value(
+                                                value: context.read<WarmModeToggleCubit>(),
+                                                child: EditTripEntryDialog.title(name: recordList[index].name),
+                                              );
                                             },
                                           );
                                         },

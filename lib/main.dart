@@ -35,7 +35,9 @@ class BudgieApp extends StatelessWidget {
               BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
               BlocProvider<FABIconCubit>(create: (context) => FABIconCubit()),
               BlocProvider<SpendingGraphViewToggleCubit>(create: (context) => SpendingGraphViewToggleCubit()),
+              BlocProvider<WarmModeToggleCubit>(create: (context) => WarmModeToggleCubit()),
             ],
+
             child: const LandingPageView(),
           ),
         ),
