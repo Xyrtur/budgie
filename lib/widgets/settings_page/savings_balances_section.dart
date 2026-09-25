@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/icon_button.dart';
@@ -15,7 +17,14 @@ class SavingsBalancesSection extends StatefulWidget {
 }
 
 class _SavingsBalancesSectionState extends State<SavingsBalancesSection> {
+  List<MapEntry<String, double>> savingsList = [];
   final Map<String, double> savings = {"Emerg": 12345, "Savings": 15647.56};
+
+  @override
+  void initState() {
+    super.initState();
+    savingsList = savings.entries.toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,90 +42,135 @@ class _SavingsBalancesSectionState extends State<SavingsBalancesSection> {
                 "Select account to take future expenses from",
                 style: Centre.listText.copyWith(fontSize: 15.sp, fontStyle: FontStyle.italic),
               ),
-              for (MapEntry<String, double> e in savings.entries) ...[
-                Padding(
-                  padding: EdgeInsets.only(top: 1.5.h, left: 10.w, right: 10.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            context.read<ExpenseAccountCubit>().selectAccount(e.key);
-                          },
+              SizedBox(height: 1.h),
 
-                          child: Ink(
-                            height: 5.w,
-                            width: 5.w,
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Centre.offWhite),
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: BlocBuilder<ExpenseAccountCubit, String>(
-                              builder: (_, selectedAccount) {
-                                return selectedAccount == e.key
-                                    ? Icon(Icons.check, color: Centre.offWhite, size: 4.w)
-                                    : SizedBox();
+              ReorderableListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: savingsList.length,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                onReorderStart: (_) {
+                  // Unfocus the textfield when dragging starts
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
+                buildDefaultDragHandles: false,
+                proxyDecorator: (child, index, animation) {
+                  return AnimatedBuilder(
+                    animation: animation,
+                    builder: (_, Widget? child) {
+                      final double animValue = Curves.easeInOut.transform(animation.value);
+                      final double elevation = lerpDouble(1, 6, animValue)!;
+                      final double scale = lerpDouble(1, 1.02, animValue)!;
+                      return Transform.scale(
+                        scale: scale,
+                        // Create a Card based on the color and the content of the dragged one
+                        // and set its elevation to the animated value.
+                        child: Card(elevation: elevation, color: Centre.dialogBgColor, child: child),
+                      );
+                    },
+                    child: child,
+                  );
+                },
+                itemBuilder: (_, index) {
+                  final account = savingsList[index];
+                  return ReorderableDragStartListener(
+                    index: index,
+                    key: ValueKey(account),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 7.w),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.drag_handle, size: 4.w, color: Centre.offWhite),
+                          SizedBox(width: 7.w),
+
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                context.read<ExpenseAccountCubit>().selectAccount(account.key);
                               },
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 5.w),
-                      editingState.name == e.key && editingState.isEditingName == true
-                          ? EditingSavingsTextField(
-                              previousText: e.key,
-                              existingAccountNames: savings.keys.toList()..remove(e.key),
-                            )
-                          : Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (widget.formKey.currentState!.validate()) {
-                                    context.read<EditingSavingsTextsCubit>().selectText(e.key, true);
-                                  }
-                                },
-                                child: Text(e.key, style: Centre.listText),
-                              ),
-                            ),
-                      SizedBox(width: 2.w),
-                      editingState.name == e.key && editingState.isEditingName == false
-                          ? EditingSavingsTextField(previousText: e.value.toStringAsFixed(2))
-                          : Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (widget.formKey.currentState!.validate()) {
-                                    context.read<EditingSavingsTextsCubit>().selectText(e.key, false);
-                                  }
-                                },
-                                child: Text(
-                                  "\$ ${e.value.toStringAsFixed(2)}",
-                                  style: Centre.listText,
-                                  textAlign: TextAlign.end,
+
+                              child: Ink(
+                                height: 5.w,
+                                width: 5.w,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Centre.offWhite),
+                                  borderRadius: BorderRadius.circular(3),
+                                ),
+                                child: BlocBuilder<ExpenseAccountCubit, String>(
+                                  bloc: context.read<ExpenseAccountCubit>(),
+                                  builder: (_, selectedAccount) {
+                                    return selectedAccount == account.key
+                                        ? Icon(Icons.check, color: Centre.offWhite, size: 4.w)
+                                        : SizedBox();
+                                  },
                                 ),
                               ),
                             ),
-                      SizedBox(width: 5.w),
-                      editingState.name == e.key
-                          ? CustomIconButton(
-                              onTap: () {
-                                if (widget.formKey.currentState!.validate()) {
-                                  context.read<EditingSavingsTextsCubit>().selectText("", false);
-                                }
-                              },
-                              child: Icon(Icons.check, size: 5.w, color: Centre.primaryColor),
-                            )
-                          : CustomIconButton(
-                              onTap: () {},
-                              child: Icon(Icons.delete, size: 5.w, color: Centre.primaryColor),
-                            ),
-                    ],
-                  ),
-                ),
-              ],
+                          ),
+                          SizedBox(width: 5.w),
+                          editingState.name == account.key && editingState.isEditingName == true
+                              ? EditingSavingsTextField(
+                                  previousText: account.key,
+                                  existingAccountNames: savings.keys.toList()..remove(account.key),
+                                )
+                              : Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (widget.formKey.currentState!.validate()) {
+                                        context.read<EditingSavingsTextsCubit>().selectText(account.key, true);
+                                      }
+                                    },
+                                    child: Text(account.key, style: Centre.listText),
+                                  ),
+                                ),
+                          SizedBox(width: 2.w),
+                          editingState.name == account.key && editingState.isEditingName == false
+                              ? EditingSavingsTextField(previousText: account.value.toStringAsFixed(2))
+                              : Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (widget.formKey.currentState!.validate()) {
+                                        context.read<EditingSavingsTextsCubit>().selectText(account.key, false);
+                                      }
+                                    },
+                                    child: Text(
+                                      "\$ ${account.value.toStringAsFixed(2)}",
+                                      style: Centre.listText,
+                                      textAlign: TextAlign.end,
+                                    ),
+                                  ),
+                                ),
+                          SizedBox(width: 5.w),
+                          editingState.name == account.key
+                              ? CustomIconButton(
+                                  onTap: () {
+                                    if (widget.formKey.currentState!.validate()) {
+                                      context.read<EditingSavingsTextsCubit>().selectText("", false);
+                                    }
+                                  },
+                                  child: Icon(Icons.check, size: 5.w, color: Centre.primaryColor),
+                                )
+                              : CustomIconButton(
+                                  onTap: () {},
+                                  child: Icon(Icons.delete, size: 5.w, color: Centre.primaryColor),
+                                ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                onReorderItem: (oldIndex, newIndex) {
+                  // TODO:do when implement db + bloc
+                  final movedItem = savingsList.removeAt(oldIndex);
+                  savingsList.insert(newIndex, movedItem);
+                },
+              ),
+
               CustomIconButton(
                 onTap: () {
-                  savings.addAll({"": 0.00});
+                  savingsList.add(MapEntry("", 0.00));
                   context.read<EditingSavingsTextsCubit>().selectText("", true);
                 },
                 child: Icon(Icons.add, size: 5.w, color: Centre.primaryColor),

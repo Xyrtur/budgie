@@ -53,6 +53,10 @@ class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSect
         SizedBox(height: 0.5.h),
 
         Divider(),
+        Text(
+          "Tap to change start and end dates of each period",
+          style: Centre.listText.copyWith(fontSize: 15.sp, fontStyle: FontStyle.italic),
+        ),
         SizedBox(height: 2.h),
         for (MapEntry<int, List<DateTime>> range in context.read<TempEditingDateRangesCubit>().state.entries)
           Container(
