@@ -327,18 +327,26 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
 
         "Japan": [
           (
-            name: "Osaka Stay",
+            name: "Osaka",
             startDate: DateTime(2025, 11, 05),
             endDate: DateTime(2025, 11, 15),
-            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            colors: [
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+            ],
             value: 1234.65,
             type: RecordType.entry,
           ),
           (
             name: "Tokyo Transport",
-            startDate: null,
-            endDate: null,
-            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            startDate: DateTime(2025, 11, 05),
+            endDate: DateTime(2025, 11, 15),
+            colors: [
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+              Centre.colors[Random().nextInt(54)].toARGB32(),
+            ],
             value: 546.67,
             type: RecordType.entry,
           ),
@@ -346,7 +354,7 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
             name: "Tokyo Stay",
             startDate: null,
             endDate: null,
-            colors: [Centre.colors[Random().nextInt(54)].toARGB32()],
+            colors: [Centre.colors[Random().nextInt(54)].toARGB32(), Centre.colors[Random().nextInt(54)].toARGB32()],
             value: 546.67,
             type: RecordType.entry,
           ),
