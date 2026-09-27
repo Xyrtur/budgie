@@ -9,6 +9,7 @@ import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
 import 'package:budgie/widgets/dialogs/add_edit_expense_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
@@ -41,7 +42,9 @@ class _LandingPageViewState extends State<LandingPageView> {
                 builder: (_, warmModeToggled) {
                   return BottomAppBar(
                     height: 9.9.h,
-                    color: warmModeToggled ? Color.fromARGB(255, 51, 46, 65) : Centre.navBarColor,
+                    color: warmModeToggled
+                        ? Color.lerp(Color.fromARGB(255, 65, 58, 85), Colors.black, 0.35)
+                        : Centre.navBarColor,
                     shape: CircularNotchedRectangle(),
                     notchMargin: 0.8.h,
                     child: BlocBuilder<NavbarCubit, PageSelected>(
@@ -56,6 +59,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                               Icons.auto_graph_sharp,
                               "Overview",
                               pageSelected,
+                              warmModeToggled,
                             ),
                             navBarBtn(
                               controller,
@@ -63,6 +67,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                               Icons.checklist,
                               "Trip Planning",
                               pageSelected,
+                              warmModeToggled,
                             ),
                             SizedBox(width: 9.w),
                             navBarBtn(
@@ -71,8 +76,16 @@ class _LandingPageViewState extends State<LandingPageView> {
                               Icons.attach_money,
                               "Set Budget",
                               pageSelected,
+                              warmModeToggled,
                             ),
-                            navBarBtn(controller, PageSelected.UserSettings, Icons.settings, "Settings", pageSelected),
+                            navBarBtn(
+                              controller,
+                              PageSelected.UserSettings,
+                              Icons.settings,
+                              "Settings",
+                              pageSelected,
+                              warmModeToggled,
+                            ),
                           ],
                         );
                       },
@@ -119,11 +132,12 @@ class _LandingPageViewState extends State<LandingPageView> {
                                     );
                                   case PageSelected.TripPlanning:
                                   case PageSelected.BudgetPlanning:
+                                  //  TODO:  Save budget to selected planning period
                                   case PageSelected.UserSettings:
                                 }
                               },
                               backgroundColor: warmModeToggled
-                                  ? Color.fromARGB(255, 106, 71, 94)
+                                  ? Color.lerp(Color.fromARGB(255, 156, 101, 137), Colors.black, 0.35)
                                   : Centre.secondaryColor,
                               elevation: 5,
 
@@ -285,19 +299,19 @@ class ConditionalWarmFilter extends StatelessWidget {
 
     return ColorFiltered(
       colorFilter: const ColorFilter.matrix([
-        0.432,
-        0.374,
-        0.038,
+        0.79089,
+        -0.05244,
+        -0.00530,
         0,
         0,
-        0.111,
-        0.657,
-        0.031,
+        -0.01559,
+        0.75404,
+        -0.00530,
         0,
         0,
-        0.023,
-        0.076,
-        0.711,
+        -0.01559,
+        -0.05243,
+        0.80119,
         0,
         0,
         0,
@@ -308,7 +322,7 @@ class ConditionalWarmFilter extends StatelessWidget {
       ]),
       child: ColorFiltered(
         colorFilter: ColorFilter.mode(
-          const Color.fromARGB(255, 187, 159, 168).withValues(alpha: enabled ? 0.8 : 0),
+          const Color.fromARGB(255, 187, 159, 168).withValues(alpha: enabled ? 0.95 : 0),
           BlendMode.softLight,
         ),
         child: child,

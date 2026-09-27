@@ -9,6 +9,7 @@ Widget navBarBtn(
   IconData iconData,
   String text,
   PageSelected currentPage,
+  bool warmModeToggled,
 ) {
   return Material(
     shape: BeveledRectangleBorder(),
@@ -26,12 +27,15 @@ Widget navBarBtn(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(iconData, color: Centre.offWhite, size: 5.w),
+            Icon(iconData, color: Color.lerp(Centre.offWhite, Colors.black, warmModeToggled ? 0.2 : 0), size: 5.w),
             Text(
               text,
               softWrap: false,
               overflow: TextOverflow.visible,
-              style: TextStyle(color: Centre.offWhite, fontSize: 15.sp),
+              style: TextStyle(
+                color: Color.lerp(Centre.offWhite, Colors.black, warmModeToggled ? 0.2 : 0),
+                fontSize: 15.sp,
+              ),
             ),
             currentPage == page
                 ? Container(

@@ -1,4 +1,5 @@
 import 'package:budgie/blocs/cubits.dart';
+import 'package:budgie/screens/landing_pageview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
@@ -28,45 +29,62 @@ class CustomMonthPickerState extends State<CustomMonthPicker> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      contentPadding: EdgeInsets.zero,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       backgroundColor: Centre.dialogBgColor,
       elevation: 1,
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 30.h,
-            child: MonthPicker.single(
-              datePickerStyles: DatePickerStyles(
-                selectedDateStyle: Centre.semiTitle2Text,
-                selectedSingleDateDecoration: BoxDecoration(
-                  color: Colors.transparent,
-                  border: Border.all(color: Centre.accentColor),
-                  borderRadius: BorderRadius.circular(30),
+      content: BlocBuilder<WarmModeToggleCubit, bool>(
+        builder: (_, warmModeToggled) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(30),
+            child: ConditionalWarmFilter(
+              enabled: warmModeToggled,
+              child: Material(
+                borderRadius: BorderRadius.circular(30),
+                color: Centre.dialogBgColor,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SizedBox(
+                        height: 30.h,
+                        child: MonthPicker.single(
+                          datePickerStyles: DatePickerStyles(
+                            selectedDateStyle: Centre.semiTitle2Text,
+                            selectedSingleDateDecoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(color: Centre.accentColor),
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          selectedDate: dateChosen,
+
+                          onChanged: (value) {
+                            setState(() {
+                              dateChosen = value;
+                            });
+                          },
+                          firstDate: DateTime.now().subtract(Duration(days: 700)),
+                          lastDate: DateTime.now().add(Duration(days: 700)),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context, dateChosen);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3.w),
+                          child: Text("OK"),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-              selectedDate: dateChosen,
-
-              onChanged: (value) {
-                setState(() {
-                  dateChosen = value;
-                });
-              },
-              firstDate: DateTime.now().subtract(Duration(days: 700)),
-              lastDate: DateTime.now().add(Duration(days: 700)),
             ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, dateChosen);
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.w),
-              child: Text("OK"),
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
@@ -84,7 +102,13 @@ class MonthYearAddingRangeButton extends StatelessWidget {
         return newDates[isStartDate ? 0 : 1] == null
             ? CustomIconButton(
                 onTap: () {
-                  showDialog(context: context, builder: (_) => CustomMonthPicker()).then((date) {
+                  showDialog(
+                    context: context,
+                    builder: (_) => BlocProvider<WarmModeToggleCubit>.value(
+                      value: context.read<WarmModeToggleCubit>(),
+                      child: CustomMonthPicker(),
+                    ),
+                  ).then((date) {
                     if (date != null) {
                       dialogResult.value = isStartDate ? [date, null] : [null, date];
                     }
@@ -96,7 +120,10 @@ class MonthYearAddingRangeButton extends StatelessWidget {
                 onTap: () {
                   showDialog(
                     context: context,
-                    builder: (_) => CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
+                    builder: (_) => BlocProvider<WarmModeToggleCubit>.value(
+                      value: context.read<WarmModeToggleCubit>(),
+                      child: CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
+                    ),
                   ).then((date) {
                     if (date != null) {
                       dialogResult.value = isStartDate ? [date, null] : [null, date];
@@ -135,7 +162,10 @@ class MonthYearEditingRangeButton extends StatelessWidget {
           onTap: () {
             showDialog(
               context: context,
-              builder: (_) => CustomMonthPicker(dateSelected: dateRangeMap[id]![isStartDate ? 0 : 1]),
+              builder: (_) => BlocProvider<WarmModeToggleCubit>.value(
+                value: context.read<WarmModeToggleCubit>(),
+                child: CustomMonthPicker(dateSelected: dateRangeMap[id]![isStartDate ? 0 : 1]),
+              ),
             ).then((date) {
               if (date != null) {
                 dialogResult.value = [id, isStartDate ? 0 : 1, date];

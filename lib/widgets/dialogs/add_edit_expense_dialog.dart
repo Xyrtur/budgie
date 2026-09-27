@@ -226,8 +226,11 @@ class AddEditExpenseDialog extends StatelessWidget {
 
                                           showDialog(
                                             context: context,
-                                            builder: (_) => CustomMonthPicker(
-                                              dateSelected: context.read<DatesSelectedCubit>().state.first,
+                                            builder: (_) => BlocProvider<WarmModeToggleCubit>.value(
+                                              value: context.read<WarmModeToggleCubit>(),
+                                              child: CustomMonthPicker(
+                                                dateSelected: context.read<DatesSelectedCubit>().state.first,
+                                              ),
                                             ),
                                           ).then((date) {
                                             if (date != null) {
