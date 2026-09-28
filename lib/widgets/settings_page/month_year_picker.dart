@@ -69,14 +69,27 @@ class CustomMonthPickerState extends State<CustomMonthPicker> {
                           lastDate: DateTime.now().add(Duration(days: 700)),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context, dateChosen);
-                        },
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 3.w),
-                          child: Text("OK"),
-                        ),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, null);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              child: Text("CLEAR DATE"),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, dateChosen);
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3.w),
+                              child: Text("OK"),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -109,9 +122,7 @@ class MonthYearAddingRangeButton extends StatelessWidget {
                       child: CustomMonthPicker(),
                     ),
                   ).then((date) {
-                    if (date != null) {
-                      dialogResult.value = isStartDate ? [date, null] : [null, date];
-                    }
+                    dialogResult.value = isStartDate ? [date, DateTime.now()] : [date, null];
                   });
                 },
                 child: Icon(Icons.calendar_month, size: 6.w, color: Centre.primaryColor),
@@ -125,17 +136,27 @@ class MonthYearAddingRangeButton extends StatelessWidget {
                       child: CustomMonthPicker(dateSelected: newDates[isStartDate ? 0 : 1]),
                     ),
                   ).then((date) {
-                    if (date != null) {
-                      dialogResult.value = isStartDate ? [date, null] : [null, date];
-                    }
+                    dialogResult.value = isStartDate ? [date, DateTime.now()] : [date, null];
                   });
                 },
-                child: Container(
-                  padding: EdgeInsets.all(2.w),
-                  decoration: BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Centre.offWhite, width: 1)),
-                  ),
-                  child: Text(DateFormat('yMMM').format(newDates[isStartDate ? 0 : 1]!), style: Centre.listText),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      isStartDate ? "Start" : "End",
+                      style: Centre.listText.copyWith(fontSize: 13.5.sp),
+                      textAlign: TextAlign.start,
+                    ),
+
+                    Container(
+                      padding: EdgeInsets.only(left: 2.w, right: 2.w, bottom: 2.w),
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Centre.offWhite, width: 1)),
+                      ),
+                      child: Text(DateFormat('yMMM').format(newDates[isStartDate ? 0 : 1]!), style: Centre.listText),
+                    ),
+                  ],
                 ),
               );
       },

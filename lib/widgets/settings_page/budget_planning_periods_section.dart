@@ -22,6 +22,9 @@ class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSect
     null,
   ]);
 
+  // Really jank, maybe change later
+  // first date is result, can be null
+  // second date is a bool, whether or not dateResult is start or end, DateTime.now() or null
   final ValueNotifier<List<DateTime?>> addingYearMonthResults = ValueNotifier<List<DateTime?>>([null, null]);
 
   @override
@@ -35,7 +38,10 @@ class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSect
       );
     });
     addingYearMonthResults.addListener(() {
-      context.read<AddingDateRangeCubit>().updateDates(addingYearMonthResults.value);
+      context.read<AddingDateRangeCubit>().updateDate(
+        addingYearMonthResults.value.first,
+        addingYearMonthResults.value.last != null,
+      );
     });
   }
 
@@ -87,7 +93,10 @@ class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSect
             Spacer(),
 
             MonthYearAddingRangeButton(isStartDate: true, dialogResult: addingYearMonthResults),
-            Text(" - ", style: Centre.semiTitleText),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 2.w),
+              child: Icon(Icons.chevron_right, size: 5.w, color: Centre.offWhite),
+            ),
             MonthYearAddingRangeButton(isStartDate: false, dialogResult: addingYearMonthResults),
             Expanded(
               child: Align(

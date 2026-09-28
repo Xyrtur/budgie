@@ -9,7 +9,8 @@ import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/barrels/spending_overview_barrel.dart';
 
 class SpendingOverviewPage extends StatefulWidget {
-  const SpendingOverviewPage({super.key});
+  final PageController pageController;
+  const SpendingOverviewPage({super.key, required this.pageController});
 
   @override
   State<SpendingOverviewPage> createState() => _SpendingOverviewPageState();
@@ -161,6 +162,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                                   SizedBox(
                                                     height: 40.h,
                                                     child: SpendingGraph(
+                                                      pageController: widget.pageController,
                                                       isPortrait: isPortrait,
                                                       categoriesData: categoriesData,
                                                       categoryColors: categoryColors,
@@ -215,6 +217,7 @@ class _SpendingOverviewPageState extends State<SpendingOverviewPage> with Ticker
                                                         ),
                                                         Expanded(
                                                           child: SpendingGraph(
+                                                            pageController: widget.pageController,
                                                             isPortrait: isPortrait,
                                                             categoriesData: categoriesData,
                                                             categoryColors: categoryColors,

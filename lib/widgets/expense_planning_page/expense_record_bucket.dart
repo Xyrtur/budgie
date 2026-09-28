@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
-class TripRecordBucket extends StatelessWidget {
+class RecordBucket extends StatelessWidget {
   final Widget feedback;
   final RecordType type;
   final String bucketName;
-  const TripRecordBucket({super.key, required this.feedback, required this.bucketName, required this.type});
+  const RecordBucket({super.key, required this.feedback, required this.bucketName, required this.type});
 
   @override
   Widget build(BuildContext context) {

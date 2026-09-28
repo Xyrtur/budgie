@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/utils/custom_delayed_drag_listener.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:budgie/widgets/settings_page/category_textfields.dart';
 import 'package:budgie/widgets/settings_page/choose_color_button.dart';
@@ -76,7 +77,7 @@ class _ManageCategoriesSectionState extends State<ManageCategoriesSection> {
                 },
                 itemBuilder: (context, index) {
                   final category = categoriesList[index];
-                  return ReorderableDragStartListener(
+                  return CustomDelayedDragStartListener(
                     index: index,
                     key: ValueKey(category),
                     child: BlocProvider<ChooseColorCubit>(

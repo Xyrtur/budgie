@@ -1,14 +1,16 @@
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/screens/landing_pageview.dart';
-import 'package:budgie/screens/trip_planning_page.dart';
+import 'package:budgie/screens/expense_planning_page.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/utils/datetime_ext.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
-class AllTripPlanningPage extends StatelessWidget {
-  const AllTripPlanningPage({super.key});
+class AllExpensePlanningPage extends StatelessWidget {
+  const AllExpensePlanningPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class AllTripPlanningPage extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Spacer(),
-                      Text("Trip Planning", textAlign: TextAlign.center, style: Centre.titleText),
+                      Text("Expense Planning", textAlign: TextAlign.center, style: Centre.titleText),
 
                       Expanded(
                         child: Padding(
@@ -46,11 +48,11 @@ class AllTripPlanningPage extends StatelessWidget {
                     child: Divider(),
                   ),
                   BlocBuilder<TempTripRecordsCubit, Map<String, List<Record>>>(
-                    builder: (_, trips) {
+                    builder: (_, plans) {
                       return Expanded(
                         child: ListView(
                           children: [
-                            for (String i in trips.keys)
+                            for (String i in plans.keys)
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 1.h),
                                 child: Ink(
@@ -84,7 +86,12 @@ class AllTripPlanningPage extends StatelessWidget {
                                             ],
                                             child: ConditionalWarmFilter(
                                               enabled: context.read<WarmModeToggleCubit>().state,
-                                              child: TripPlanningPage(tripName: i, recordList: trips[i]!),
+                                              child: ExpensePlanningPage(
+                                                planName: i,
+                                                recordList: plans[i]!,
+                                                startDate: DateTime.now(),
+                                                endDate: DateTime.now(),
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -97,7 +104,9 @@ class AllTripPlanningPage extends StatelessWidget {
                                         children: [
                                           Text(i, style: Centre.semiTitle2Text, textAlign: TextAlign.start),
                                           Text(
-                                            "Jul 2024 - Aug 2024",
+                                            DateTime.now().add(Duration(days: 60)).isSameDate(other: DateTime.now())
+                                                ? DateFormat('MMM, y').format(DateTime.now())
+                                                : "${DateFormat('MMM, y').format(DateTime.now())} - ${DateFormat('MMM, y').format(DateTime.now().add(Duration(days: 60)))}",
                                             style: Centre.listText.copyWith(color: Colors.grey),
                                           ),
                                         ],

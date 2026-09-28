@@ -36,6 +36,7 @@ class BudgieApp extends StatelessWidget {
               BlocProvider<FABIconCubit>(create: (context) => FABIconCubit()),
               BlocProvider<SpendingGraphViewToggleCubit>(create: (context) => SpendingGraphViewToggleCubit()),
               BlocProvider<WarmModeToggleCubit>(create: (context) => WarmModeToggleCubit()),
+              BlocProvider<TempTripRecordsCubit>(create: (context) => TempTripRecordsCubit()),
             ],
 
             child: const LandingPageView(),

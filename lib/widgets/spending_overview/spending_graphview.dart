@@ -10,6 +10,7 @@ class SpendingGraph extends StatelessWidget {
   final Map<String, List<double>> categoriesData;
   final List<Color> categoryColors;
   final List<String> categories;
+  final PageController pageController;
   final void Function() toggleLandscapeOnPressed;
 
   const SpendingGraph({
@@ -19,6 +20,7 @@ class SpendingGraph extends StatelessWidget {
     required this.categoryColors,
     required this.categories,
     required this.toggleLandscapeOnPressed,
+    required this.pageController,
   });
 
   double getChartInterval(double maxValue) {

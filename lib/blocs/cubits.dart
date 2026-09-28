@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
-import 'package:budgie/widgets/dialogs/add_edit_expense_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
  * SpendingViewSwapCubit
  */
 
-enum PageSelected { Overview, TripPlanning, BudgetPlanning, UserSettings }
+enum PageSelected { Overview, ExpensePlanning, BudgetSettings, UserSettings }
 
 class NavbarCubit extends Cubit<PageSelected> {
   final PageSelected page;
@@ -92,11 +91,11 @@ class AddingDateRangeCubit extends Cubit<List<DateTime?>> {
   AddingDateRangeCubit() : super([null, null]);
   // state
 
-  void updateDates(List<DateTime?> newDates) {
-    if (newDates[0] == null) {
-      emit([state[0], newDates[1]]);
+  void updateDate(DateTime? newDate, bool isStartDate) {
+    if (isStartDate) {
+      emit([newDate, state[1]]);
     } else {
-      emit([newDates[0], state[1]]);
+      emit([state[0], newDate]);
     }
   }
 }
@@ -266,11 +265,11 @@ class DatesSelectedCubit extends Cubit<List<DateTime?>> {
     emit([date]);
   }
 
-  void updateStart({required DateTime date}) {
+  void updateStart({required DateTime? date}) {
     emit([date, state.last]);
   }
 
-  void updateEnd({required DateTime date}) {
+  void updateEnd({required DateTime? date}) {
     emit([state.first, date]);
   }
 }
@@ -384,43 +383,63 @@ class TempTripRecordsCubit extends Cubit<Map<String, List<Record>>> {
         ],
       });
 
-  void changeColor(String tripName, int index, List<int> newColors) {
+  void changeColor(String planName, int index, List<int> newColors) {
     final newState = {...state};
     Record rec = (
-      name: newState[tripName]![index].name,
-      startDate: newState[tripName]![index].startDate,
-      endDate: newState[tripName]![index].endDate,
+      name: newState[planName]![index].name,
+      startDate: newState[planName]![index].startDate,
+      endDate: newState[planName]![index].endDate,
       colors: newColors,
-      value: newState[tripName]![index].value,
-      type: newState[tripName]![index].type,
+      value: newState[planName]![index].value,
+      type: newState[planName]![index].type,
     );
-    newState[tripName]!.removeAt(index);
+    newState[planName]!.removeAt(index);
 
-    newState[tripName]!.insert(index, rec);
+    newState[planName]!.insert(index, rec);
     emit(newState);
   }
 
-  void reOrder(String tripName, List<Record> recordList) {
+  void delete(String planName) {
     final newState = {...state};
-    newState[tripName] = recordList;
+    newState.remove(planName);
     emit(newState);
   }
 
-  void insertAt(String tripName, int index, RecordType type) {
+  void add(String planName, DateTime startDate, DateTime endDate) {
+    final newState = {...state};
+    newState[planName] = [];
+    emit(newState);
+  }
+
+  void reOrder(String planName, List<Record> recordList) {
+    final newState = {...state};
+    newState[planName] = recordList;
+    emit(newState);
+  }
+
+  void insertAt({required String planName, int? index, required RecordType type}) {
     final newState = {...state};
     int newValue = 0;
     if (type == RecordType.total) {
       // TODO: Finish this code during bloc implementation
     }
     Record rec = (
-      name: type == RecordType.total ? "Total" : "Placeholder Title",
+      name: type == RecordType.total
+          ? "Total"
+          : type == RecordType.entry
+          ? "Placeholder Entry"
+          : "Placeholder Section",
       startDate: null,
       endDate: null,
       colors: [],
       value: 0,
       type: type,
     );
-    newState[tripName]!.insert(index, rec);
+    if (index == null) {
+      newState[planName]!.add(rec);
+    } else {
+      newState[planName]!.insert(index, rec);
+    }
     emit(newState);
   }
 }

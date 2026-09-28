@@ -1,7 +1,8 @@
 import 'package:budgie/blocs/cubits.dart';
-import 'package:budgie/screens/all_trip_planning_page.dart';
-import 'package:budgie/screens/budget_planning.dart';
+import 'package:budgie/screens/all_expense_planning_page.dart';
+import 'package:budgie/screens/budget_settings.dart';
 import 'package:budgie/screens/settings_page.dart';
+import 'package:budgie/screens/expense_planning_page.dart';
 import 'package:budgie/screens/yearly_spending_overview.dart';
 import 'package:budgie/utils/centre.dart';
 import 'package:budgie/widgets/bottom_nav_bar.dart';
@@ -63,7 +64,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                             ),
                             navBarBtn(
                               controller,
-                              PageSelected.TripPlanning,
+                              PageSelected.ExpensePlanning,
                               Icons.checklist,
                               "Trip Planning",
                               pageSelected,
@@ -72,7 +73,7 @@ class _LandingPageViewState extends State<LandingPageView> {
                             SizedBox(width: 9.w),
                             navBarBtn(
                               controller,
-                              PageSelected.BudgetPlanning,
+                              PageSelected.BudgetSettings,
                               Icons.attach_money,
                               "Set Budget",
                               pageSelected,
@@ -130,8 +131,34 @@ class _LandingPageViewState extends State<LandingPageView> {
                                         );
                                       },
                                     );
-                                  case PageSelected.TripPlanning:
-                                  case PageSelected.BudgetPlanning:
+                                  case PageSelected.ExpensePlanning:
+                                    {
+                                      context.read<TempTripRecordsCubit>().add(
+                                        "Plan A",
+                                        DateTime.now(),
+                                        DateTime.now(),
+                                      );
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (_) => MultiBlocProvider(
+                                            providers: [
+                                              BlocProvider.value(value: context.read<TempTripRecordsCubit>()),
+                                              BlocProvider.value(value: context.read<WarmModeToggleCubit>()),
+                                            ],
+                                            child: ConditionalWarmFilter(
+                                              enabled: context.read<WarmModeToggleCubit>().state,
+                                              child: ExpensePlanningPage(
+                                                planName: "Plan A",
+                                                recordList: [],
+                                                startDate: DateTime.now(),
+                                                endDate: DateTime.now(),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  case PageSelected.BudgetSettings:
                                   //  TODO:  Save budget to selected planning period
                                   case PageSelected.UserSettings:
                                 }
@@ -142,9 +169,9 @@ class _LandingPageViewState extends State<LandingPageView> {
                               elevation: 5,
 
                               child: Icon(
-                                page == PageSelected.Overview || page == PageSelected.TripPlanning
+                                page == PageSelected.Overview || page == PageSelected.ExpensePlanning
                                     ? Icons.add
-                                    : page == PageSelected.BudgetPlanning
+                                    : page == PageSelected.BudgetSettings
                                     ? Icons.check
                                     : page == PageSelected.UserSettings
                                     ? Icons.import_export
@@ -162,6 +189,7 @@ class _LandingPageViewState extends State<LandingPageView> {
               ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         body: PageView(
+          physics: NeverScrollableScrollPhysics(),
           onPageChanged: (index) {
             context.read<NavbarCubit>().changePage(page: PageSelected.values[index]);
             context.read<FABIconCubit>().changeIcon(page: PageSelected.values[index]);
@@ -174,11 +202,11 @@ class _LandingPageViewState extends State<LandingPageView> {
                 BlocProvider<YearsSelectedCubit>(create: (context) => YearsSelectedCubit()),
                 BlocProvider<ToggleCubit>(create: (context) => ToggleCubit()),
               ],
-              child: const SpendingOverviewPage(),
+              child: SpendingOverviewPage(pageController: controller),
             ),
             MultiBlocProvider(
               providers: [BlocProvider<TempTripRecordsCubit>(create: (context) => TempTripRecordsCubit())],
-              child: const AllTripPlanningPage(),
+              child: const AllExpensePlanningPage(),
             ),
 
             MultiBlocProvider(

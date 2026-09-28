@@ -8,12 +8,12 @@ import 'package:sizer/sizer.dart';
 
 class ChooseColorBtn extends StatelessWidget {
   final String? categoryName;
-  final bool inTripsPage;
+  final bool inExpensePlansPage;
   final List<Color> colorsToChooseFrom;
   const ChooseColorBtn({
     super.key,
     required this.categoryName,
-    this.inTripsPage = false,
+    this.inExpensePlansPage = false,
     this.colorsToChooseFrom = Centre.colors,
   });
 
@@ -23,7 +23,7 @@ class ChooseColorBtn extends StatelessWidget {
       builder: (_, colorList) {
         return Builder(
           builder: (context) {
-            return !inTripsPage
+            return !inExpensePlansPage
                 ? GestureDetector(
                     onTap: () {
                       showAlignedDialog(

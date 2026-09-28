@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:budgie/blocs/cubits.dart';
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/utils/custom_delayed_drag_listener.dart';
 import 'package:budgie/widgets/icon_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +74,7 @@ class _SavingsBalancesSectionState extends State<SavingsBalancesSection> {
                 },
                 itemBuilder: (_, index) {
                   final account = savingsList[index];
-                  return ReorderableDragStartListener(
+                  return CustomDelayedDragStartListener(
                     index: index,
                     key: ValueKey(account),
                     child: Padding(
