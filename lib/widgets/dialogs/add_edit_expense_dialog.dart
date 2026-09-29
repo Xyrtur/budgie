@@ -17,7 +17,7 @@ class AddEditExpenseDialog extends StatelessWidget {
   final Expense? editingExpense;
   AddEditExpenseDialog({super.key, required this.editingExpense});
 
-  final List<String> categories = [
+  final List<String> expenseCategories = [
     "Groceries",
     "Entertainment",
     "House",
@@ -27,6 +27,7 @@ class AddEditExpenseDialog extends StatelessWidget {
     "Category 1",
     "Category 2",
   ];
+  final List<String> incomeCategories = ["Income", "Extra job", "Other"];
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   late final TextEditingController amountController = TextEditingController();
@@ -106,40 +107,44 @@ class AddEditExpenseDialog extends StatelessWidget {
                             child: SingleChildScrollView(
                               controller: scrollController,
                               scrollDirection: Axis.horizontal,
-                              child: BlocBuilder<AddExpenseCategoryBtnsCubit, String>(
-                                builder: (_, categorySelected) {
-                                  return Row(
-                                    children: [
-                                      for (String category in categories)
-                                        GestureDetector(
-                                          onTap: () {
-                                            context.read<AddExpenseCategoryBtnsCubit>().update(category: category);
-                                          },
-                                          child: Container(
-                                            constraints: BoxConstraints(minWidth: 18.w),
-                                            margin: EdgeInsets.only(bottom: 1.5.h),
-                                            padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(8),
-                                              border: categorySelected == category
-                                                  ? Border.all(
-                                                      color: Centre.colors[Random(category.length).nextInt(54)],
-                                                    )
-                                                  : null,
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Text(category.toString()),
-                                                Icon(
-                                                  Icons.ac_unit_sharp,
-                                                  size: 5.w,
-                                                  color: Centre.colors[Random(category.length).nextInt(54)],
+                              child: BlocBuilder<IsIncomeToggleCubit, bool>(
+                                builder: (_, isIncome) {
+                                  return BlocBuilder<AddExpenseCategoryBtnsCubit, String>(
+                                    builder: (_, categorySelected) {
+                                      return Row(
+                                        children: [
+                                          for (String category in isIncome ? incomeCategories : expenseCategories)
+                                            GestureDetector(
+                                              onTap: () {
+                                                context.read<AddExpenseCategoryBtnsCubit>().update(category: category);
+                                              },
+                                              child: Container(
+                                                constraints: BoxConstraints(minWidth: 18.w),
+                                                margin: EdgeInsets.only(bottom: 1.5.h),
+                                                padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  border: categorySelected == category
+                                                      ? Border.all(
+                                                          color: Centre.colors[Random(category.length).nextInt(54)],
+                                                        )
+                                                      : null,
                                                 ),
-                                              ],
+                                                child: Column(
+                                                  children: [
+                                                    Text(category.toString()),
+                                                    Icon(
+                                                      Icons.ac_unit_sharp,
+                                                      size: 5.w,
+                                                      color: Centre.colors[Random(category.length).nextInt(54)],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                    ],
+                                        ],
+                                      );
+                                    },
                                   );
                                 },
                               ),

@@ -110,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ManageCategoriesSection(formKey: categoriesFormKey),
                           SizedBox(height: 4.h),
 
-                          BudgetPlanningPeriodsSection(),
+                          BudgetPeriodsSection(),
                           SizedBox(height: 4.h),
 
                           SavingsBalancesSection(formKey: savingsFormKey),

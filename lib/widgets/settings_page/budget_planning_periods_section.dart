@@ -6,14 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:sizer/sizer.dart';
 
-class BudgetPlanningPeriodsSection extends StatefulWidget {
-  const BudgetPlanningPeriodsSection({super.key});
+class BudgetPeriodsSection extends StatefulWidget {
+  const BudgetPeriodsSection({super.key});
 
   @override
-  State<BudgetPlanningPeriodsSection> createState() => _BudgetPlanningPeriodsSectionState();
+  State<BudgetPeriodsSection> createState() => _BudgetPeriodsSectionState();
 }
 
-class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSection> {
+class _BudgetPeriodsSectionState extends State<BudgetPeriodsSection> {
   // dateRangeID, [startDate, endDate]
 
   // Value notifiers to send events to their respective blocs when needed since shouldn't call context in async gaps
@@ -55,7 +55,7 @@ class _BudgetPlanningPeriodsSectionState extends State<BudgetPlanningPeriodsSect
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Edit Budget Planning Periods", style: Centre.semiTitleText),
+        Text("Edit Budget Periods", style: Centre.semiTitleText),
         SizedBox(height: 0.5.h),
 
         Divider(),

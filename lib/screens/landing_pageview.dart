@@ -295,13 +295,6 @@ class _LandingPageViewState extends State<LandingPageView> {
               ],
               child: SettingsPage(),
             ),
-
-            // MultiBlocProvider(providers: [], child: SpendingOverviewPage()),
-            // MultiBlocProvider(providers: [], child: const AllTripPlanningPage()),
-
-            //
-
-            // MultiBlocProvider(providers: [], child: const SettingsPage())
           ],
         ),
       ),

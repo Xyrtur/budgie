@@ -3,289 +3,5266 @@
 part of 'repository.dart';
 
 // ignore_for_file: type=lint
-class $TransactionsTable extends Transactions with TableInfo<$TransactionsTable, Transaction>{
-@override final GeneratedDatabase attachedDatabase;
-final String? _alias;
-$TransactionsTable(this.attachedDatabase, [this._alias]);
-static const VerificationMeta _idMeta = const VerificationMeta('id');
-@override
-late final GeneratedColumn<int> id = GeneratedColumn<int>('id', aliasedName, false, hasAutoIncrement: true, type: DriftSqlType.int, requiredDuringInsert: false, defaultConstraints: GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-static const VerificationMeta _titleMeta = const VerificationMeta('title');
-@override
-late final GeneratedColumn<String> title = GeneratedColumn<String>('title', aliasedName, false, additionalChecks: GeneratedColumn.checkTextLength(minTextLength: 6,maxTextLength: 32), type: DriftSqlType.string, requiredDuringInsert: true);
-static const VerificationMeta _valueMeta = const VerificationMeta('value');
-@override
-late final GeneratedColumn<double> value = GeneratedColumn<double>('value', aliasedName, false, type: DriftSqlType.double, requiredDuringInsert: true);
-static const VerificationMeta _createdAtMeta = const VerificationMeta('createdAt');
-@override
-late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>('created_at', aliasedName, false, type: DriftSqlType.dateTime, requiredDuringInsert: true);
-static const VerificationMeta _isExpenseMeta = const VerificationMeta('isExpense');
-@override
-late final GeneratedColumn<bool> isExpense = GeneratedColumn<bool>('is_expense', aliasedName, false, type: DriftSqlType.bool, requiredDuringInsert: true, defaultConstraints: GeneratedColumn.constraintIsAlways('CHECK ("is_expense" IN (0, 1))'));
-@override
-List<GeneratedColumn> get $columns => [id, title, value, createdAt, isExpense];
-@override
-String get aliasedName => _alias ?? actualTableName;
-@override
-String get actualTableName => $name;
-static const String $name = 'transactions';
-@override
-VerificationContext validateIntegrity(Insertable<Transaction> instance, {bool isInserting = false}) {
-final context = VerificationContext();
-final data = instance.toColumns(true);
-if (data.containsKey('id')) {
-context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));}if (data.containsKey('title')) {
-context.handle(_titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));} else if (isInserting) {
-context.missing(_titleMeta);
+class $CategoriesTable extends Categories
+    with TableInfo<$CategoriesTable, Category> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CategoriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<int> color = GeneratedColumn<int>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isExpenseMeta = const VerificationMeta(
+    'isExpense',
+  );
+  @override
+  late final GeneratedColumn<bool> isExpense = GeneratedColumn<bool>(
+    'is_expense',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_expense" IN (0, 1))',
+    ),
+  );
+  static const VerificationMeta _isArchivedMeta = const VerificationMeta(
+    'isArchived',
+  );
+  @override
+  late final GeneratedColumn<bool> isArchived = GeneratedColumn<bool>(
+    'is_archived',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_archived" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    name,
+    color,
+    isExpense,
+    isArchived,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'categories';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Category> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    if (data.containsKey('is_expense')) {
+      context.handle(
+        _isExpenseMeta,
+        isExpense.isAcceptableOrUnknown(data['is_expense']!, _isExpenseMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_isExpenseMeta);
+    }
+    if (data.containsKey('is_archived')) {
+      context.handle(
+        _isArchivedMeta,
+        isArchived.isAcceptableOrUnknown(data['is_archived']!, _isArchivedMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Category(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color'],
+      )!,
+      isExpense: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_expense'],
+      )!,
+      isArchived: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_archived'],
+      )!,
+    );
+  }
+
+  @override
+  $CategoriesTable createAlias(String alias) {
+    return $CategoriesTable(attachedDatabase, alias);
+  }
 }
-if (data.containsKey('value')) {
-context.handle(_valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));} else if (isInserting) {
-context.missing(_valueMeta);
+
+class Category extends DataClass implements Insertable<Category> {
+  final int id;
+  final String name;
+  final int color;
+  final bool isExpense;
+  final bool isArchived;
+  const Category({
+    required this.id,
+    required this.name,
+    required this.color,
+    required this.isExpense,
+    required this.isArchived,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['color'] = Variable<int>(color);
+    map['is_expense'] = Variable<bool>(isExpense);
+    map['is_archived'] = Variable<bool>(isArchived);
+    return map;
+  }
+
+  CategoriesCompanion toCompanion(bool nullToAbsent) {
+    return CategoriesCompanion(
+      id: Value(id),
+      name: Value(name),
+      color: Value(color),
+      isExpense: Value(isExpense),
+      isArchived: Value(isArchived),
+    );
+  }
+
+  factory Category.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Category(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      color: serializer.fromJson<int>(json['color']),
+      isExpense: serializer.fromJson<bool>(json['isExpense']),
+      isArchived: serializer.fromJson<bool>(json['isArchived']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'color': serializer.toJson<int>(color),
+      'isExpense': serializer.toJson<bool>(isExpense),
+      'isArchived': serializer.toJson<bool>(isArchived),
+    };
+  }
+
+  Category copyWith({
+    int? id,
+    String? name,
+    int? color,
+    bool? isExpense,
+    bool? isArchived,
+  }) => Category(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    color: color ?? this.color,
+    isExpense: isExpense ?? this.isExpense,
+    isArchived: isArchived ?? this.isArchived,
+  );
+  Category copyWithCompanion(CategoriesCompanion data) {
+    return Category(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      color: data.color.present ? data.color.value : this.color,
+      isExpense: data.isExpense.present ? data.isExpense.value : this.isExpense,
+      isArchived: data.isArchived.present
+          ? data.isArchived.value
+          : this.isArchived,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Category(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('isArchived: $isArchived')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, color, isExpense, isArchived);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Category &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.color == this.color &&
+          other.isExpense == this.isExpense &&
+          other.isArchived == this.isArchived);
 }
-if (data.containsKey('created_at')) {
-context.handle(_createdAtMeta, createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));} else if (isInserting) {
-context.missing(_createdAtMeta);
+
+class CategoriesCompanion extends UpdateCompanion<Category> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<int> color;
+  final Value<bool> isExpense;
+  final Value<bool> isArchived;
+  const CategoriesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.color = const Value.absent(),
+    this.isExpense = const Value.absent(),
+    this.isArchived = const Value.absent(),
+  });
+  CategoriesCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required int color,
+    required bool isExpense,
+    this.isArchived = const Value.absent(),
+  }) : name = Value(name),
+       color = Value(color),
+       isExpense = Value(isExpense);
+  static Insertable<Category> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? color,
+    Expression<bool>? isExpense,
+    Expression<bool>? isArchived,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (color != null) 'color': color,
+      if (isExpense != null) 'is_expense': isExpense,
+      if (isArchived != null) 'is_archived': isArchived,
+    });
+  }
+
+  CategoriesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<int>? color,
+    Value<bool>? isExpense,
+    Value<bool>? isArchived,
+  }) {
+    return CategoriesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      isExpense: isExpense ?? this.isExpense,
+      isArchived: isArchived ?? this.isArchived,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<int>(color.value);
+    }
+    if (isExpense.present) {
+      map['is_expense'] = Variable<bool>(isExpense.value);
+    }
+    if (isArchived.present) {
+      map['is_archived'] = Variable<bool>(isArchived.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoriesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('color: $color, ')
+          ..write('isExpense: $isExpense, ')
+          ..write('isArchived: $isArchived')
+          ..write(')'))
+        .toString();
+  }
 }
-if (data.containsKey('is_expense')) {
-context.handle(_isExpenseMeta, isExpense.isAcceptableOrUnknown(data['is_expense']!, _isExpenseMeta));} else if (isInserting) {
-context.missing(_isExpenseMeta);
+
+class $TransactionsTable extends Transactions
+    with TableInfo<$TransactionsTable, Transaction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TransactionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    additionalChecks: GeneratedColumn.checkTextLength(
+      minTextLength: 2,
+      maxTextLength: 32,
+    ),
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<int> value = GeneratedColumn<int>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id) ON DELETE RESTRICT',
+    ),
+  );
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+    'date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, title, value, categoryId, date];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'transactions';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Transaction> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+        _dateMeta,
+        date.isAcceptableOrUnknown(data['date']!, _dateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Transaction(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}value'],
+      )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+      date: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}date'],
+      )!,
+    );
+  }
+
+  @override
+  $TransactionsTable createAlias(String alias) {
+    return $TransactionsTable(attachedDatabase, alias);
+  }
 }
-return context;
+
+class Transaction extends DataClass implements Insertable<Transaction> {
+  final int id;
+  final String title;
+  final int value;
+  final int categoryId;
+  final DateTime date;
+  const Transaction({
+    required this.id,
+    required this.title,
+    required this.value,
+    required this.categoryId,
+    required this.date,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['title'] = Variable<String>(title);
+    map['value'] = Variable<int>(value);
+    map['category_id'] = Variable<int>(categoryId);
+    map['date'] = Variable<DateTime>(date);
+    return map;
+  }
+
+  TransactionsCompanion toCompanion(bool nullToAbsent) {
+    return TransactionsCompanion(
+      id: Value(id),
+      title: Value(title),
+      value: Value(value),
+      categoryId: Value(categoryId),
+      date: Value(date),
+    );
+  }
+
+  factory Transaction.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Transaction(
+      id: serializer.fromJson<int>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      value: serializer.fromJson<int>(json['value']),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'title': serializer.toJson<String>(title),
+      'value': serializer.toJson<int>(value),
+      'categoryId': serializer.toJson<int>(categoryId),
+      'date': serializer.toJson<DateTime>(date),
+    };
+  }
+
+  Transaction copyWith({
+    int? id,
+    String? title,
+    int? value,
+    int? categoryId,
+    DateTime? date,
+  }) => Transaction(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    value: value ?? this.value,
+    categoryId: categoryId ?? this.categoryId,
+    date: date ?? this.date,
+  );
+  Transaction copyWithCompanion(TransactionsCompanion data) {
+    return Transaction(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      value: data.value.present ? data.value.value : this.value,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      date: data.date.present ? data.date.value : this.date,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Transaction(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('value: $value, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, title, value, categoryId, date);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Transaction &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.value == this.value &&
+          other.categoryId == this.categoryId &&
+          other.date == this.date);
 }
-@override
-Set<GeneratedColumn> get $primaryKey => {id};
-@override Transaction map(Map<String, dynamic> data, {String? tablePrefix})  {
-final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';return Transaction(id: attachedDatabase.typeMapping.read(DriftSqlType.int, data['${effectivePrefix}id'])!, title: attachedDatabase.typeMapping.read(DriftSqlType.string, data['${effectivePrefix}title'])!, value: attachedDatabase.typeMapping.read(DriftSqlType.double, data['${effectivePrefix}value'])!, createdAt: attachedDatabase.typeMapping.read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!, isExpense: attachedDatabase.typeMapping.read(DriftSqlType.bool, data['${effectivePrefix}is_expense'])!, );
+
+class TransactionsCompanion extends UpdateCompanion<Transaction> {
+  final Value<int> id;
+  final Value<String> title;
+  final Value<int> value;
+  final Value<int> categoryId;
+  final Value<DateTime> date;
+  const TransactionsCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.value = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.date = const Value.absent(),
+  });
+  TransactionsCompanion.insert({
+    this.id = const Value.absent(),
+    required String title,
+    required int value,
+    required int categoryId,
+    required DateTime date,
+  }) : title = Value(title),
+       value = Value(value),
+       categoryId = Value(categoryId),
+       date = Value(date);
+  static Insertable<Transaction> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<int>? value,
+    Expression<int>? categoryId,
+    Expression<DateTime>? date,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (value != null) 'value': value,
+      if (categoryId != null) 'category_id': categoryId,
+      if (date != null) 'date': date,
+    });
+  }
+
+  TransactionsCompanion copyWith({
+    Value<int>? id,
+    Value<String>? title,
+    Value<int>? value,
+    Value<int>? categoryId,
+    Value<DateTime>? date,
+  }) {
+    return TransactionsCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      value: value ?? this.value,
+      categoryId: categoryId ?? this.categoryId,
+      date: date ?? this.date,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<int>(value.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TransactionsCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('value: $value, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('date: $date')
+          ..write(')'))
+        .toString();
+  }
 }
-@override
-$TransactionsTable createAlias(String alias) {
-return $TransactionsTable(attachedDatabase, alias);}
-}class Transaction extends DataClass implements Insertable<Transaction> 
-{
-final int id;
-final String title;
-final double value;
-final DateTime createdAt;
-final bool isExpense;
-const Transaction({required this.id, required this.title, required this.value, required this.createdAt, required this.isExpense});@override
-Map<String, Expression> toColumns(bool nullToAbsent) {
-final map = <String, Expression> {};map['id'] = Variable<int>(id);
-map['title'] = Variable<String>(title);
-map['value'] = Variable<double>(value);
-map['created_at'] = Variable<DateTime>(createdAt);
-map['is_expense'] = Variable<bool>(isExpense);
-return map; 
+
+class $FixedCostsTable extends FixedCosts
+    with TableInfo<$FixedCostsTable, FixedCost> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FixedCostsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'fixed_costs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FixedCost> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FixedCost map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FixedCost(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+    );
+  }
+
+  @override
+  $FixedCostsTable createAlias(String alias) {
+    return $FixedCostsTable(attachedDatabase, alias);
+  }
 }
-TransactionsCompanion toCompanion(bool nullToAbsent) {
-return TransactionsCompanion(id: Value(id),title: Value(title),value: Value(value),createdAt: Value(createdAt),isExpense: Value(isExpense),);
+
+class FixedCost extends DataClass implements Insertable<FixedCost> {
+  final int id;
+  final String name;
+  const FixedCost({required this.id, required this.name});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    return map;
+  }
+
+  FixedCostsCompanion toCompanion(bool nullToAbsent) {
+    return FixedCostsCompanion(id: Value(id), name: Value(name));
+  }
+
+  factory FixedCost.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FixedCost(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+    };
+  }
+
+  FixedCost copyWith({int? id, String? name}) =>
+      FixedCost(id: id ?? this.id, name: name ?? this.name);
+  FixedCost copyWithCompanion(FixedCostsCompanion data) {
+    return FixedCost(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCost(')
+          ..write('id: $id, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FixedCost && other.id == this.id && other.name == this.name);
 }
-factory Transaction.fromJson(Map<String, dynamic> json, {ValueSerializer? serializer}) {
-serializer ??= driftRuntimeOptions.defaultSerializer;
-return Transaction(id: serializer.fromJson<int>(json['id']),title: serializer.fromJson<String>(json['title']),value: serializer.fromJson<double>(json['value']),createdAt: serializer.fromJson<DateTime>(json['createdAt']),isExpense: serializer.fromJson<bool>(json['isExpense']),);}
-@override Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-serializer ??= driftRuntimeOptions.defaultSerializer;
-return <String, dynamic>{
-'id': serializer.toJson<int>(id),'title': serializer.toJson<String>(title),'value': serializer.toJson<double>(value),'createdAt': serializer.toJson<DateTime>(createdAt),'isExpense': serializer.toJson<bool>(isExpense),};}Transaction copyWith({int? id,String? title,double? value,DateTime? createdAt,bool? isExpense}) => Transaction(id: id ?? this.id,title: title ?? this.title,value: value ?? this.value,createdAt: createdAt ?? this.createdAt,isExpense: isExpense ?? this.isExpense,);Transaction copyWithCompanion(TransactionsCompanion data) {
-return Transaction(
-id: data.id.present ? data.id.value : this.id,title: data.title.present ? data.title.value : this.title,value: data.value.present ? data.value.value : this.value,createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,isExpense: data.isExpense.present ? data.isExpense.value : this.isExpense,);
+
+class FixedCostsCompanion extends UpdateCompanion<FixedCost> {
+  final Value<int> id;
+  final Value<String> name;
+  const FixedCostsCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+  });
+  FixedCostsCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+  }) : name = Value(name);
+  static Insertable<FixedCost> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+    });
+  }
+
+  FixedCostsCompanion copyWith({Value<int>? id, Value<String>? name}) {
+    return FixedCostsCompanion(id: id ?? this.id, name: name ?? this.name);
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCostsCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name')
+          ..write(')'))
+        .toString();
+  }
 }
-@override
-String toString() {return (StringBuffer('Transaction(')..write('id: $id, ')..write('title: $title, ')..write('value: $value, ')..write('createdAt: $createdAt, ')..write('isExpense: $isExpense')..write(')')).toString();}
-@override
- int get hashCode => Object.hash(id, title, value, createdAt, isExpense);@override
-bool operator ==(Object other) => identical(this, other) || (other is Transaction && other.id == this.id && other.title == this.title && other.value == this.value && other.createdAt == this.createdAt && other.isExpense == this.isExpense);
-}class TransactionsCompanion extends UpdateCompanion<Transaction> {
-final Value<int> id;
-final Value<String> title;
-final Value<double> value;
-final Value<DateTime> createdAt;
-final Value<bool> isExpense;
-const TransactionsCompanion({this.id = const Value.absent(),this.title = const Value.absent(),this.value = const Value.absent(),this.createdAt = const Value.absent(),this.isExpense = const Value.absent(),});
-TransactionsCompanion.insert({this.id = const Value.absent(),required String title,required double value,required DateTime createdAt,required bool isExpense,}): title = Value(title), value = Value(value), createdAt = Value(createdAt), isExpense = Value(isExpense);
-static Insertable<Transaction> custom({Expression<int>? id, 
-Expression<String>? title, 
-Expression<double>? value, 
-Expression<DateTime>? createdAt, 
-Expression<bool>? isExpense, 
-}) {
-return RawValuesInsertable({if (id != null)'id': id,if (title != null)'title': title,if (value != null)'value': value,if (createdAt != null)'created_at': createdAt,if (isExpense != null)'is_expense': isExpense,});
-}TransactionsCompanion copyWith({Value<int>? id, Value<String>? title, Value<double>? value, Value<DateTime>? createdAt, Value<bool>? isExpense}) {
-return TransactionsCompanion(id: id ?? this.id,title: title ?? this.title,value: value ?? this.value,createdAt: createdAt ?? this.createdAt,isExpense: isExpense ?? this.isExpense,);
+
+class $BudgetPeriodsTable extends BudgetPeriods
+    with TableInfo<$BudgetPeriodsTable, BudgetPeriod> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BudgetPeriodsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(endDate).isBiggerThan(startDate),
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, startDate, endDate];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'budget_periods';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<BudgetPeriod> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  BudgetPeriod map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return BudgetPeriod(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+    );
+  }
+
+  @override
+  $BudgetPeriodsTable createAlias(String alias) {
+    return $BudgetPeriodsTable(attachedDatabase, alias);
+  }
 }
-@override
-Map<String, Expression> toColumns(bool nullToAbsent) {
-final map = <String, Expression> {};if (id.present) {
-map['id'] = Variable<int>(id.value);}
-if (title.present) {
-map['title'] = Variable<String>(title.value);}
-if (value.present) {
-map['value'] = Variable<double>(value.value);}
-if (createdAt.present) {
-map['created_at'] = Variable<DateTime>(createdAt.value);}
-if (isExpense.present) {
-map['is_expense'] = Variable<bool>(isExpense.value);}
-return map; 
+
+class BudgetPeriod extends DataClass implements Insertable<BudgetPeriod> {
+  final int id;
+  final DateTime startDate;
+  final DateTime endDate;
+  const BudgetPeriod({
+    required this.id,
+    required this.startDate,
+    required this.endDate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    return map;
+  }
+
+  BudgetPeriodsCompanion toCompanion(bool nullToAbsent) {
+    return BudgetPeriodsCompanion(
+      id: Value(id),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+    );
+  }
+
+  factory BudgetPeriod.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return BudgetPeriod(
+      id: serializer.fromJson<int>(json['id']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+    };
+  }
+
+  BudgetPeriod copyWith({int? id, DateTime? startDate, DateTime? endDate}) =>
+      BudgetPeriod(
+        id: id ?? this.id,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+      );
+  BudgetPeriod copyWithCompanion(BudgetPeriodsCompanion data) {
+    return BudgetPeriod(
+      id: data.id.present ? data.id.value : this.id,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetPeriod(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, startDate, endDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is BudgetPeriod &&
+          other.id == this.id &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
 }
-@override
-String toString() {return (StringBuffer('TransactionsCompanion(')..write('id: $id, ')..write('title: $title, ')..write('value: $value, ')..write('createdAt: $createdAt, ')..write('isExpense: $isExpense')..write(')')).toString();}
+
+class BudgetPeriodsCompanion extends UpdateCompanion<BudgetPeriod> {
+  final Value<int> id;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  const BudgetPeriodsCompanion({
+    this.id = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  });
+  BudgetPeriodsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+  }) : startDate = Value(startDate),
+       endDate = Value(endDate);
+  static Insertable<BudgetPeriod> custom({
+    Expression<int>? id,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+    });
+  }
+
+  BudgetPeriodsCompanion copyWith({
+    Value<int>? id,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+  }) {
+    return BudgetPeriodsCompanion(
+      id: id ?? this.id,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BudgetPeriodsCompanion(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
 }
-abstract class _$BudgieDatabase extends GeneratedDatabase{
-_$BudgieDatabase(QueryExecutor e): super(e);
-$BudgieDatabaseManager get managers => $BudgieDatabaseManager(this);
-late final $TransactionsTable transactions = $TransactionsTable(this);
-@override
-Iterable<TableInfo<Table, Object?>> get allTables => allSchemaEntities.whereType<TableInfo<Table, Object?>>();
-@override
-List<DatabaseSchemaEntity> get allSchemaEntities => [transactions];
+
+class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
+    with TableInfo<$CategoryBudgetLimitsTable, CategoryBudgetLimit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CategoryBudgetLimitsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'category_budget_limits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CategoryBudgetLimit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CategoryBudgetLimit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CategoryBudgetLimit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $CategoryBudgetLimitsTable createAlias(String alias) {
+    return $CategoryBudgetLimitsTable(attachedDatabase, alias);
+  }
 }
-typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion Function({Value<int> id,required String title,required double value,required DateTime createdAt,required bool isExpense,});
-typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion Function({Value<int> id,Value<String> title,Value<double> value,Value<DateTime> createdAt,Value<bool> isExpense,});
-class $$TransactionsTableFilterComposer extends Composer<
-        _$BudgieDatabase,
-        $TransactionsTable> {
-        $$TransactionsTableFilterComposer({
+
+class CategoryBudgetLimit extends DataClass
+    implements Insertable<CategoryBudgetLimit> {
+  final int id;
+  final int amount;
+  const CategoryBudgetLimit({required this.id, required this.amount});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  CategoryBudgetLimitsCompanion toCompanion(bool nullToAbsent) {
+    return CategoryBudgetLimitsCompanion(id: Value(id), amount: Value(amount));
+  }
+
+  factory CategoryBudgetLimit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CategoryBudgetLimit(
+      id: serializer.fromJson<int>(json['id']),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  CategoryBudgetLimit copyWith({int? id, int? amount}) =>
+      CategoryBudgetLimit(id: id ?? this.id, amount: amount ?? this.amount);
+  CategoryBudgetLimit copyWithCompanion(CategoryBudgetLimitsCompanion data) {
+    return CategoryBudgetLimit(
+      id: data.id.present ? data.id.value : this.id,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoryBudgetLimit(')
+          ..write('id: $id, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CategoryBudgetLimit &&
+          other.id == this.id &&
+          other.amount == this.amount);
+}
+
+class CategoryBudgetLimitsCompanion
+    extends UpdateCompanion<CategoryBudgetLimit> {
+  final Value<int> id;
+  final Value<int> amount;
+  const CategoryBudgetLimitsCompanion({
+    this.id = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  CategoryBudgetLimitsCompanion.insert({
+    this.id = const Value.absent(),
+    required int amount,
+  }) : amount = Value(amount);
+  static Insertable<CategoryBudgetLimit> custom({
+    Expression<int>? id,
+    Expression<int>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  CategoryBudgetLimitsCompanion copyWith({Value<int>? id, Value<int>? amount}) {
+    return CategoryBudgetLimitsCompanion(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CategoryBudgetLimitsCompanion(')
+          ..write('id: $id, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
+    with TableInfo<$FixedCostBudgetLimitsTable, FixedCostBudgetLimit> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FixedCostBudgetLimitsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'fixed_cost_budget_limits';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FixedCostBudgetLimit> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  FixedCostBudgetLimit map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FixedCostBudgetLimit(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $FixedCostBudgetLimitsTable createAlias(String alias) {
+    return $FixedCostBudgetLimitsTable(attachedDatabase, alias);
+  }
+}
+
+class FixedCostBudgetLimit extends DataClass
+    implements Insertable<FixedCostBudgetLimit> {
+  final int id;
+  final int amount;
+  const FixedCostBudgetLimit({required this.id, required this.amount});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  FixedCostBudgetLimitsCompanion toCompanion(bool nullToAbsent) {
+    return FixedCostBudgetLimitsCompanion(id: Value(id), amount: Value(amount));
+  }
+
+  factory FixedCostBudgetLimit.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FixedCostBudgetLimit(
+      id: serializer.fromJson<int>(json['id']),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  FixedCostBudgetLimit copyWith({int? id, int? amount}) =>
+      FixedCostBudgetLimit(id: id ?? this.id, amount: amount ?? this.amount);
+  FixedCostBudgetLimit copyWithCompanion(FixedCostBudgetLimitsCompanion data) {
+    return FixedCostBudgetLimit(
+      id: data.id.present ? data.id.value : this.id,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCostBudgetLimit(')
+          ..write('id: $id, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FixedCostBudgetLimit &&
+          other.id == this.id &&
+          other.amount == this.amount);
+}
+
+class FixedCostBudgetLimitsCompanion
+    extends UpdateCompanion<FixedCostBudgetLimit> {
+  final Value<int> id;
+  final Value<int> amount;
+  const FixedCostBudgetLimitsCompanion({
+    this.id = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  FixedCostBudgetLimitsCompanion.insert({
+    this.id = const Value.absent(),
+    required int amount,
+  }) : amount = Value(amount);
+  static Insertable<FixedCostBudgetLimit> custom({
+    Expression<int>? id,
+    Expression<int>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  FixedCostBudgetLimitsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? amount,
+  }) {
+    return FixedCostBudgetLimitsCompanion(
+      id: id ?? this.id,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCostBudgetLimitsCompanion(')
+          ..write('id: $id, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PlansTable extends Plans with TableInfo<$PlansTable, Plan> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlansTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    check: () => ComparableExpr(endDate).isBiggerThan(startDate),
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, startDate, endDate];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'plans';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Plan> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Plan map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Plan(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+    );
+  }
+
+  @override
+  $PlansTable createAlias(String alias) {
+    return $PlansTable(attachedDatabase, alias);
+  }
+}
+
+class Plan extends DataClass implements Insertable<Plan> {
+  final int id;
+  final String name;
+  final DateTime startDate;
+  final DateTime endDate;
+  const Plan({
+    required this.id,
+    required this.name,
+    required this.startDate,
+    required this.endDate,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    return map;
+  }
+
+  PlansCompanion toCompanion(bool nullToAbsent) {
+    return PlansCompanion(
+      id: Value(id),
+      name: Value(name),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+    );
+  }
+
+  factory Plan.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Plan(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+    };
+  }
+
+  Plan copyWith({
+    int? id,
+    String? name,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) => Plan(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+  );
+  Plan copyWithCompanion(PlansCompanion data) {
+    return Plan(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Plan(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, startDate, endDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Plan &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
+}
+
+class PlansCompanion extends UpdateCompanion<Plan> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  const PlansCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+  });
+  PlansCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) : name = Value(name),
+       startDate = Value(startDate),
+       endDate = Value(endDate);
+  static Insertable<Plan> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+    });
+  }
+
+  PlansCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+  }) {
+    return PlansCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlansCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PlanEntriesTable extends PlanEntries
+    with TableInfo<$PlanEntriesTable, PlanEntry> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlanEntriesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _tripIdMeta = const VerificationMeta('tripId');
+  @override
+  late final GeneratedColumn<int> tripId = GeneratedColumn<int>(
+    'trip_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES plans (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startDateMeta = const VerificationMeta(
+    'startDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+    'start_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _endDateMeta = const VerificationMeta(
+    'endDate',
+  );
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+    'end_date',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    tripId,
+    position,
+    startDate,
+    endDate,
+    amount,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'plan_entries';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlanEntry> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('trip_id')) {
+      context.handle(
+        _tripIdMeta,
+        tripId.isAcceptableOrUnknown(data['trip_id']!, _tripIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_tripIdMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(
+        _startDateMeta,
+        startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(
+        _endDateMeta,
+        endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {tripId, position},
+  ];
+  @override
+  PlanEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlanEntry(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      tripId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}trip_id'],
+      )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
+      startDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_date'],
+      )!,
+      endDate: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}end_date'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $PlanEntriesTable createAlias(String alias) {
+    return $PlanEntriesTable(attachedDatabase, alias);
+  }
+}
+
+class PlanEntry extends DataClass implements Insertable<PlanEntry> {
+  final int id;
+  final int tripId;
+  final int position;
+  final DateTime startDate;
+  final DateTime endDate;
+  final int amount;
+  const PlanEntry({
+    required this.id,
+    required this.tripId,
+    required this.position,
+    required this.startDate,
+    required this.endDate,
+    required this.amount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['trip_id'] = Variable<int>(tripId);
+    map['position'] = Variable<int>(position);
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  PlanEntriesCompanion toCompanion(bool nullToAbsent) {
+    return PlanEntriesCompanion(
+      id: Value(id),
+      tripId: Value(tripId),
+      position: Value(position),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      amount: Value(amount),
+    );
+  }
+
+  factory PlanEntry.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlanEntry(
+      id: serializer.fromJson<int>(json['id']),
+      tripId: serializer.fromJson<int>(json['tripId']),
+      position: serializer.fromJson<int>(json['position']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'tripId': serializer.toJson<int>(tripId),
+      'position': serializer.toJson<int>(position),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  PlanEntry copyWith({
+    int? id,
+    int? tripId,
+    int? position,
+    DateTime? startDate,
+    DateTime? endDate,
+    int? amount,
+  }) => PlanEntry(
+    id: id ?? this.id,
+    tripId: tripId ?? this.tripId,
+    position: position ?? this.position,
+    startDate: startDate ?? this.startDate,
+    endDate: endDate ?? this.endDate,
+    amount: amount ?? this.amount,
+  );
+  PlanEntry copyWithCompanion(PlanEntriesCompanion data) {
+    return PlanEntry(
+      id: data.id.present ? data.id.value : this.id,
+      tripId: data.tripId.present ? data.tripId.value : this.tripId,
+      position: data.position.present ? data.position.value : this.position,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanEntry(')
+          ..write('id: $id, ')
+          ..write('tripId: $tripId, ')
+          ..write('position: $position, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, tripId, position, startDate, endDate, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlanEntry &&
+          other.id == this.id &&
+          other.tripId == this.tripId &&
+          other.position == this.position &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.amount == this.amount);
+}
+
+class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
+  final Value<int> id;
+  final Value<int> tripId;
+  final Value<int> position;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<int> amount;
+  const PlanEntriesCompanion({
+    this.id = const Value.absent(),
+    this.tripId = const Value.absent(),
+    this.position = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.amount = const Value.absent(),
+  });
+  PlanEntriesCompanion.insert({
+    this.id = const Value.absent(),
+    required int tripId,
+    required int position,
+    required DateTime startDate,
+    required DateTime endDate,
+    required int amount,
+  }) : tripId = Value(tripId),
+       position = Value(position),
+       startDate = Value(startDate),
+       endDate = Value(endDate),
+       amount = Value(amount);
+  static Insertable<PlanEntry> custom({
+    Expression<int>? id,
+    Expression<int>? tripId,
+    Expression<int>? position,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<int>? amount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tripId != null) 'trip_id': tripId,
+      if (position != null) 'position': position,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (amount != null) 'amount': amount,
+    });
+  }
+
+  PlanEntriesCompanion copyWith({
+    Value<int>? id,
+    Value<int>? tripId,
+    Value<int>? position,
+    Value<DateTime>? startDate,
+    Value<DateTime>? endDate,
+    Value<int>? amount,
+  }) {
+    return PlanEntriesCompanion(
+      id: id ?? this.id,
+      tripId: tripId ?? this.tripId,
+      position: position ?? this.position,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      amount: amount ?? this.amount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (tripId.present) {
+      map['trip_id'] = Variable<int>(tripId.value);
+    }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanEntriesCompanion(')
+          ..write('id: $id, ')
+          ..write('tripId: $tripId, ')
+          ..write('position: $position, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PlanEntryColorsTable extends PlanEntryColors
+    with TableInfo<$PlanEntryColorsTable, PlanEntryColor> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlanEntryColorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _entryIdMeta = const VerificationMeta(
+    'entryId',
+  );
+  @override
+  late final GeneratedColumn<int> entryId = GeneratedColumn<int>(
+    'entry_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES plan_entries (id) ON DELETE CASCADE',
+    ),
+  );
+  static const VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<int> color = GeneratedColumn<int>(
+    'color',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, entryId, color];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'plan_entry_colors';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlanEntryColor> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('entry_id')) {
+      context.handle(
+        _entryIdMeta,
+        entryId.isAcceptableOrUnknown(data['entry_id']!, _entryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_entryIdMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+        _colorMeta,
+        color.isAcceptableOrUnknown(data['color']!, _colorMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlanEntryColor map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlanEntryColor(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      entryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}entry_id'],
+      )!,
+      color: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}color'],
+      )!,
+    );
+  }
+
+  @override
+  $PlanEntryColorsTable createAlias(String alias) {
+    return $PlanEntryColorsTable(attachedDatabase, alias);
+  }
+}
+
+class PlanEntryColor extends DataClass implements Insertable<PlanEntryColor> {
+  final int id;
+  final int entryId;
+  final int color;
+  const PlanEntryColor({
+    required this.id,
+    required this.entryId,
+    required this.color,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['entry_id'] = Variable<int>(entryId);
+    map['color'] = Variable<int>(color);
+    return map;
+  }
+
+  PlanEntryColorsCompanion toCompanion(bool nullToAbsent) {
+    return PlanEntryColorsCompanion(
+      id: Value(id),
+      entryId: Value(entryId),
+      color: Value(color),
+    );
+  }
+
+  factory PlanEntryColor.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlanEntryColor(
+      id: serializer.fromJson<int>(json['id']),
+      entryId: serializer.fromJson<int>(json['entryId']),
+      color: serializer.fromJson<int>(json['color']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'entryId': serializer.toJson<int>(entryId),
+      'color': serializer.toJson<int>(color),
+    };
+  }
+
+  PlanEntryColor copyWith({int? id, int? entryId, int? color}) =>
+      PlanEntryColor(
+        id: id ?? this.id,
+        entryId: entryId ?? this.entryId,
+        color: color ?? this.color,
+      );
+  PlanEntryColor copyWithCompanion(PlanEntryColorsCompanion data) {
+    return PlanEntryColor(
+      id: data.id.present ? data.id.value : this.id,
+      entryId: data.entryId.present ? data.entryId.value : this.entryId,
+      color: data.color.present ? data.color.value : this.color,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanEntryColor(')
+          ..write('id: $id, ')
+          ..write('entryId: $entryId, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, entryId, color);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlanEntryColor &&
+          other.id == this.id &&
+          other.entryId == this.entryId &&
+          other.color == this.color);
+}
+
+class PlanEntryColorsCompanion extends UpdateCompanion<PlanEntryColor> {
+  final Value<int> id;
+  final Value<int> entryId;
+  final Value<int> color;
+  const PlanEntryColorsCompanion({
+    this.id = const Value.absent(),
+    this.entryId = const Value.absent(),
+    this.color = const Value.absent(),
+  });
+  PlanEntryColorsCompanion.insert({
+    this.id = const Value.absent(),
+    required int entryId,
+    required int color,
+  }) : entryId = Value(entryId),
+       color = Value(color);
+  static Insertable<PlanEntryColor> custom({
+    Expression<int>? id,
+    Expression<int>? entryId,
+    Expression<int>? color,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (entryId != null) 'entry_id': entryId,
+      if (color != null) 'color': color,
+    });
+  }
+
+  PlanEntryColorsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? entryId,
+    Value<int>? color,
+  }) {
+    return PlanEntryColorsCompanion(
+      id: id ?? this.id,
+      entryId: entryId ?? this.entryId,
+      color: color ?? this.color,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (entryId.present) {
+      map['entry_id'] = Variable<int>(entryId.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<int>(color.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlanEntryColorsCompanion(')
+          ..write('id: $id, ')
+          ..write('entryId: $entryId, ')
+          ..write('color: $color')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $AccountBalancesTable extends AccountBalances
+    with TableInfo<$AccountBalancesTable, AccountBalance> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AccountBalancesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _totalMeta = const VerificationMeta('total');
+  @override
+  late final GeneratedColumn<int> total = GeneratedColumn<int>(
+    'total',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _isExpenseAccountMeta = const VerificationMeta(
+    'isExpenseAccount',
+  );
+  @override
+  late final GeneratedColumn<bool> isExpenseAccount = GeneratedColumn<bool>(
+    'is_expense_account',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_expense_account" IN (0, 1))',
+    ),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, name, total, isExpenseAccount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'account_balances';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AccountBalance> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('total')) {
+      context.handle(
+        _totalMeta,
+        total.isAcceptableOrUnknown(data['total']!, _totalMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_totalMeta);
+    }
+    if (data.containsKey('is_expense_account')) {
+      context.handle(
+        _isExpenseAccountMeta,
+        isExpenseAccount.isAcceptableOrUnknown(
+          data['is_expense_account']!,
+          _isExpenseAccountMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_isExpenseAccountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AccountBalance map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AccountBalance(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      total: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}total'],
+      )!,
+      isExpenseAccount: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_expense_account'],
+      )!,
+    );
+  }
+
+  @override
+  $AccountBalancesTable createAlias(String alias) {
+    return $AccountBalancesTable(attachedDatabase, alias);
+  }
+}
+
+class AccountBalance extends DataClass implements Insertable<AccountBalance> {
+  final int id;
+  final String name;
+  final int total;
+  final bool isExpenseAccount;
+  const AccountBalance({
+    required this.id,
+    required this.name,
+    required this.total,
+    required this.isExpenseAccount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['name'] = Variable<String>(name);
+    map['total'] = Variable<int>(total);
+    map['is_expense_account'] = Variable<bool>(isExpenseAccount);
+    return map;
+  }
+
+  AccountBalancesCompanion toCompanion(bool nullToAbsent) {
+    return AccountBalancesCompanion(
+      id: Value(id),
+      name: Value(name),
+      total: Value(total),
+      isExpenseAccount: Value(isExpenseAccount),
+    );
+  }
+
+  factory AccountBalance.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AccountBalance(
+      id: serializer.fromJson<int>(json['id']),
+      name: serializer.fromJson<String>(json['name']),
+      total: serializer.fromJson<int>(json['total']),
+      isExpenseAccount: serializer.fromJson<bool>(json['isExpenseAccount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'name': serializer.toJson<String>(name),
+      'total': serializer.toJson<int>(total),
+      'isExpenseAccount': serializer.toJson<bool>(isExpenseAccount),
+    };
+  }
+
+  AccountBalance copyWith({
+    int? id,
+    String? name,
+    int? total,
+    bool? isExpenseAccount,
+  }) => AccountBalance(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    total: total ?? this.total,
+    isExpenseAccount: isExpenseAccount ?? this.isExpenseAccount,
+  );
+  AccountBalance copyWithCompanion(AccountBalancesCompanion data) {
+    return AccountBalance(
+      id: data.id.present ? data.id.value : this.id,
+      name: data.name.present ? data.name.value : this.name,
+      total: data.total.present ? data.total.value : this.total,
+      isExpenseAccount: data.isExpenseAccount.present
+          ? data.isExpenseAccount.value
+          : this.isExpenseAccount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AccountBalance(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('total: $total, ')
+          ..write('isExpenseAccount: $isExpenseAccount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, name, total, isExpenseAccount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AccountBalance &&
+          other.id == this.id &&
+          other.name == this.name &&
+          other.total == this.total &&
+          other.isExpenseAccount == this.isExpenseAccount);
+}
+
+class AccountBalancesCompanion extends UpdateCompanion<AccountBalance> {
+  final Value<int> id;
+  final Value<String> name;
+  final Value<int> total;
+  final Value<bool> isExpenseAccount;
+  const AccountBalancesCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.total = const Value.absent(),
+    this.isExpenseAccount = const Value.absent(),
+  });
+  AccountBalancesCompanion.insert({
+    this.id = const Value.absent(),
+    required String name,
+    required int total,
+    required bool isExpenseAccount,
+  }) : name = Value(name),
+       total = Value(total),
+       isExpenseAccount = Value(isExpenseAccount);
+  static Insertable<AccountBalance> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<int>? total,
+    Expression<bool>? isExpenseAccount,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (total != null) 'total': total,
+      if (isExpenseAccount != null) 'is_expense_account': isExpenseAccount,
+    });
+  }
+
+  AccountBalancesCompanion copyWith({
+    Value<int>? id,
+    Value<String>? name,
+    Value<int>? total,
+    Value<bool>? isExpenseAccount,
+  }) {
+    return AccountBalancesCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      total: total ?? this.total,
+      isExpenseAccount: isExpenseAccount ?? this.isExpenseAccount,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (total.present) {
+      map['total'] = Variable<int>(total.value);
+    }
+    if (isExpenseAccount.present) {
+      map['is_expense_account'] = Variable<bool>(isExpenseAccount.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AccountBalancesCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('total: $total, ')
+          ..write('isExpenseAccount: $isExpenseAccount')
+          ..write(')'))
+        .toString();
+  }
+}
+
+abstract class _$BudgieDatabase extends GeneratedDatabase {
+  _$BudgieDatabase(QueryExecutor e) : super(e);
+  $BudgieDatabaseManager get managers => $BudgieDatabaseManager(this);
+  late final $CategoriesTable categories = $CategoriesTable(this);
+  late final $TransactionsTable transactions = $TransactionsTable(this);
+  late final $FixedCostsTable fixedCosts = $FixedCostsTable(this);
+  late final $BudgetPeriodsTable budgetPeriods = $BudgetPeriodsTable(this);
+  late final $CategoryBudgetLimitsTable categoryBudgetLimits =
+      $CategoryBudgetLimitsTable(this);
+  late final $FixedCostBudgetLimitsTable fixedCostBudgetLimits =
+      $FixedCostBudgetLimitsTable(this);
+  late final $PlansTable plans = $PlansTable(this);
+  late final $PlanEntriesTable planEntries = $PlanEntriesTable(this);
+  late final $PlanEntryColorsTable planEntryColors = $PlanEntryColorsTable(
+    this,
+  );
+  late final $AccountBalancesTable accountBalances = $AccountBalancesTable(
+    this,
+  );
+  @override
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+    categories,
+    transactions,
+    fixedCosts,
+    budgetPeriods,
+    categoryBudgetLimits,
+    fixedCostBudgetLimits,
+    plans,
+    planEntries,
+    planEntryColors,
+    accountBalances,
+  ];
+  @override
+  StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'plans',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('plan_entries', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'plan_entries',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('plan_entry_colors', kind: UpdateKind.delete)],
+    ),
+  ]);
+}
+
+typedef $$CategoriesTableCreateCompanionBuilder =
+    CategoriesCompanion Function({
+      Value<int> id,
+      required String name,
+      required int color,
+      required bool isExpense,
+      Value<bool> isArchived,
+    });
+typedef $$CategoriesTableUpdateCompanionBuilder =
+    CategoriesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<int> color,
+      Value<bool> isExpense,
+      Value<bool> isArchived,
+    });
+
+final class $$CategoriesTableReferences
+    extends BaseReferences<_$BudgieDatabase, $CategoriesTable, Category> {
+  $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
+  _transactionsRefsTable(_$BudgieDatabase db) => MultiTypedResultKey.fromTable(
+    db.transactions,
+    aliasName: 'categories__id__transactions__category_id',
+  );
+
+  $$TransactionsTableProcessedTableManager get transactionsRefs {
+    final manager = $$TransactionsTableTableManager(
+      $_db,
+      $_db.transactions,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_transactionsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$CategoriesTableFilterComposer
+    extends Composer<_$BudgieDatabase, $CategoriesTable> {
+  $$CategoriesTableFilterComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-          ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id,
-      builder: (column) =>
-      ColumnFilters(column));
-      
-ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title,
-      builder: (column) =>
-      ColumnFilters(column));
-      
-ColumnFilters<double> get value => $composableBuilder(
-      column: $table.value,
-      builder: (column) =>
-      ColumnFilters(column));
-      
-ColumnFilters<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
-      builder: (column) =>
-      ColumnFilters(column));
-      
-ColumnFilters<bool> get isExpense => $composableBuilder(
-      column: $table.isExpense,
-      builder: (column) =>
-      ColumnFilters(column));
-      
-        }
-      class $$TransactionsTableOrderingComposer extends Composer<
-        _$BudgieDatabase,
-        $TransactionsTable> {
-        $$TransactionsTableOrderingComposer({
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isExpense => $composableBuilder(
+    column: $table.isExpense,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> transactionsRefs(
+    Expression<bool> Function($$TransactionsTableFilterComposer f) f,
+  ) {
+    final $$TransactionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableFilterComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $CategoriesTable> {
+  $$CategoriesTableOrderingComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-          ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id,
-      builder: (column) =>
-      ColumnOrderings(column));
-      
-ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title,
-      builder: (column) =>
-      ColumnOrderings(column));
-      
-ColumnOrderings<double> get value => $composableBuilder(
-      column: $table.value,
-      builder: (column) =>
-      ColumnOrderings(column));
-      
-ColumnOrderings<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
-      builder: (column) =>
-      ColumnOrderings(column));
-      
-ColumnOrderings<bool> get isExpense => $composableBuilder(
-      column: $table.isExpense,
-      builder: (column) =>
-      ColumnOrderings(column));
-      
-        }
-      class $$TransactionsTableAnnotationComposer extends Composer<
-        _$BudgieDatabase,
-        $TransactionsTable> {
-        $$TransactionsTableAnnotationComposer({
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isExpense => $composableBuilder(
+    column: $table.isExpense,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CategoriesTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $CategoriesTable> {
+  $$CategoriesTableAnnotationComposer({
     required super.$db,
     required super.$table,
     super.joinBuilder,
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-          GeneratedColumn<int> get id => $composableBuilder(
-      column: $table.id,
-      builder: (column) => column);
-      
-GeneratedColumn<String> get title => $composableBuilder(
-      column: $table.title,
-      builder: (column) => column);
-      
-GeneratedColumn<double> get value => $composableBuilder(
-      column: $table.value,
-      builder: (column) => column);
-      
-GeneratedColumn<DateTime> get createdAt => $composableBuilder(
-      column: $table.createdAt,
-      builder: (column) => column);
-      
-GeneratedColumn<bool> get isExpense => $composableBuilder(
-      column: $table.isExpense,
-      builder: (column) => column);
-      
-        }
-      class $$TransactionsTableTableManager extends RootTableManager    <_$BudgieDatabase,
-    $TransactionsTable,
-    Transaction,
-    $$TransactionsTableFilterComposer,
-    $$TransactionsTableOrderingComposer,
-    $$TransactionsTableAnnotationComposer,
-    $$TransactionsTableCreateCompanionBuilder,
-    $$TransactionsTableUpdateCompanionBuilder,
-    (Transaction,BaseReferences<_$BudgieDatabase,$TransactionsTable,Transaction>),
-    Transaction,
-    PrefetchHooks Function()
-    > {
-    $$TransactionsTableTableManager(_$BudgieDatabase db, $TransactionsTable table) : super(
-      TableManagerState(
-        db: db,
-        table: table,
-        createFilteringComposer: () => $$TransactionsTableFilterComposer($db: db,$table:table),
-        createOrderingComposer: () => $$TransactionsTableOrderingComposer($db: db,$table:table),
-        createComputedFieldComposer: () => $$TransactionsTableAnnotationComposer($db: db,$table:table),
-        updateCompanionCallback: ({Value<int> id = const Value.absent(),Value<String> title = const Value.absent(),Value<double> value = const Value.absent(),Value<DateTime> createdAt = const Value.absent(),Value<bool> isExpense = const Value.absent(),})=> TransactionsCompanion(id: id,title: title,value: value,createdAt: createdAt,isExpense: isExpense,),
-        createCompanionCallback: ({Value<int> id = const Value.absent(),required String title,required double value,required DateTime createdAt,required bool isExpense,})=> TransactionsCompanion.insert(id: id,title: title,value: value,createdAt: createdAt,isExpense: isExpense,),
-        withReferenceMapper: (p0) => p0
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<bool> get isExpense =>
+      $composableBuilder(column: $table.isExpense, builder: (column) => column);
+
+  GeneratedColumn<bool> get isArchived => $composableBuilder(
+    column: $table.isArchived,
+    builder: (column) => column,
+  );
+
+  Expression<T> transactionsRefs<T extends Object>(
+    Expression<T> Function($$TransactionsTableAnnotationComposer a) f,
+  ) {
+    final $$TransactionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.transactions,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TransactionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$CategoriesTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $CategoriesTable,
+          Category,
+          $$CategoriesTableFilterComposer,
+          $$CategoriesTableOrderingComposer,
+          $$CategoriesTableAnnotationComposer,
+          $$CategoriesTableCreateCompanionBuilder,
+          $$CategoriesTableUpdateCompanionBuilder,
+          (Category, $$CategoriesTableReferences),
+          Category,
+          PrefetchHooks Function({bool transactionsRefs})
+        > {
+  $$CategoriesTableTableManager(_$BudgieDatabase db, $CategoriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CategoriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CategoriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CategoriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> color = const Value.absent(),
+                Value<bool> isExpense = const Value.absent(),
+                Value<bool> isArchived = const Value.absent(),
+              }) => CategoriesCompanion(
+                id: id,
+                name: name,
+                color: color,
+                isExpense: isExpense,
+                isArchived: isArchived,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required int color,
+                required bool isExpense,
+                Value<bool> isArchived = const Value.absent(),
+              }) => CategoriesCompanion.insert(
+                id: id,
+                name: name,
+                color: color,
+                isExpense: isExpense,
+                isArchived: isArchived,
+              ),
+          withReferenceMapper: (p0) => p0
               .map(
-                  (e) =>
-                     (e.readTable(table), BaseReferences(db, table, e))
-                  )
+                (e) => (
+                  e.readTable<$CategoriesTable, Category>(table),
+                  $$CategoriesTableReferences(db, table, e),
+                ),
+              )
               .toList(),
-        prefetchHooksCallback: null,
-        ));
-        }
-    typedef $$TransactionsTableProcessedTableManager = ProcessedTableManager    <_$BudgieDatabase,
-    $TransactionsTable,
-    Transaction,
-    $$TransactionsTableFilterComposer,
-    $$TransactionsTableOrderingComposer,
-    $$TransactionsTableAnnotationComposer,
-    $$TransactionsTableCreateCompanionBuilder,
-    $$TransactionsTableUpdateCompanionBuilder,
-    (Transaction,BaseReferences<_$BudgieDatabase,$TransactionsTable,Transaction>),
-    Transaction,
-    PrefetchHooks Function()
-    >;class $BudgieDatabaseManager {
-final _$BudgieDatabase _db;
-$BudgieDatabaseManager(this._db);
-$$TransactionsTableTableManager get transactions => $$TransactionsTableTableManager(_db, _db.transactions);
+          prefetchHooksCallback: ({transactionsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (transactionsRefs) db.transactions],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (transactionsRefs)
+                    await $_getPrefetchedData<
+                      Category,
+                      $CategoriesTable,
+                      Transaction
+                    >(
+                      currentTable: table,
+                      referencedTable: $$CategoriesTableReferences
+                          ._transactionsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$CategoriesTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).transactionsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.categoryId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$CategoriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $CategoriesTable,
+      Category,
+      $$CategoriesTableFilterComposer,
+      $$CategoriesTableOrderingComposer,
+      $$CategoriesTableAnnotationComposer,
+      $$CategoriesTableCreateCompanionBuilder,
+      $$CategoriesTableUpdateCompanionBuilder,
+      (Category, $$CategoriesTableReferences),
+      Category,
+      PrefetchHooks Function({bool transactionsRefs})
+    >;
+typedef $$TransactionsTableCreateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> id,
+      required String title,
+      required int value,
+      required int categoryId,
+      required DateTime date,
+    });
+typedef $$TransactionsTableUpdateCompanionBuilder =
+    TransactionsCompanion Function({
+      Value<int> id,
+      Value<String> title,
+      Value<int> value,
+      Value<int> categoryId,
+      Value<DateTime> date,
+    });
+
+final class $$TransactionsTableReferences
+    extends BaseReferences<_$BudgieDatabase, $TransactionsTable, Transaction> {
+  $$TransactionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $CategoriesTable _categoryIdTable(_$BudgieDatabase db) =>
+      db.categories.createAlias('transactions__category_id__categories__id');
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TransactionsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $TransactionsTable> {
+  $$TransactionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TransactionsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $TransactionsTable> {
+  $$TransactionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+    column: $table.date,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TransactionsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $TransactionsTable> {
+  $$TransactionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<int> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TransactionsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $TransactionsTable,
+          Transaction,
+          $$TransactionsTableFilterComposer,
+          $$TransactionsTableOrderingComposer,
+          $$TransactionsTableAnnotationComposer,
+          $$TransactionsTableCreateCompanionBuilder,
+          $$TransactionsTableUpdateCompanionBuilder,
+          (Transaction, $$TransactionsTableReferences),
+          Transaction,
+          PrefetchHooks Function({bool categoryId})
+        > {
+  $$TransactionsTableTableManager(_$BudgieDatabase db, $TransactionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TransactionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TransactionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TransactionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<int> value = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+                Value<DateTime> date = const Value.absent(),
+              }) => TransactionsCompanion(
+                id: id,
+                title: title,
+                value: value,
+                categoryId: categoryId,
+                date: date,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String title,
+                required int value,
+                required int categoryId,
+                required DateTime date,
+              }) => TransactionsCompanion.insert(
+                id: id,
+                title: title,
+                value: value,
+                categoryId: categoryId,
+                date: date,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$TransactionsTable, Transaction>(table),
+                  $$TransactionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({categoryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (categoryId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.categoryId,
+                                referencedTable: $$TransactionsTableReferences
+                                    ._categoryIdTable(db),
+                                referencedColumn: $$TransactionsTableReferences
+                                    ._categoryIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$TransactionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $TransactionsTable,
+      Transaction,
+      $$TransactionsTableFilterComposer,
+      $$TransactionsTableOrderingComposer,
+      $$TransactionsTableAnnotationComposer,
+      $$TransactionsTableCreateCompanionBuilder,
+      $$TransactionsTableUpdateCompanionBuilder,
+      (Transaction, $$TransactionsTableReferences),
+      Transaction,
+      PrefetchHooks Function({bool categoryId})
+    >;
+typedef $$FixedCostsTableCreateCompanionBuilder =
+    FixedCostsCompanion Function({Value<int> id, required String name});
+typedef $$FixedCostsTableUpdateCompanionBuilder =
+    FixedCostsCompanion Function({Value<int> id, Value<String> name});
+
+class $$FixedCostsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FixedCostsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FixedCostsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+}
+
+class $$FixedCostsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $FixedCostsTable,
+          FixedCost,
+          $$FixedCostsTableFilterComposer,
+          $$FixedCostsTableOrderingComposer,
+          $$FixedCostsTableAnnotationComposer,
+          $$FixedCostsTableCreateCompanionBuilder,
+          $$FixedCostsTableUpdateCompanionBuilder,
+          (
+            FixedCost,
+            BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>,
+          ),
+          FixedCost,
+          PrefetchHooks Function()
+        > {
+  $$FixedCostsTableTableManager(_$BudgieDatabase db, $FixedCostsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FixedCostsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FixedCostsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FixedCostsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+              }) => FixedCostsCompanion(id: id, name: name),
+          createCompanionCallback:
+              ({Value<int> id = const Value.absent(), required String name}) =>
+                  FixedCostsCompanion.insert(id: id, name: name),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FixedCostsTable, FixedCost>(table),
+                  BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>(
+                    db,
+                    table,
+                    e,
+                  ),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FixedCostsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $FixedCostsTable,
+      FixedCost,
+      $$FixedCostsTableFilterComposer,
+      $$FixedCostsTableOrderingComposer,
+      $$FixedCostsTableAnnotationComposer,
+      $$FixedCostsTableCreateCompanionBuilder,
+      $$FixedCostsTableUpdateCompanionBuilder,
+      (
+        FixedCost,
+        BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>,
+      ),
+      FixedCost,
+      PrefetchHooks Function()
+    >;
+typedef $$BudgetPeriodsTableCreateCompanionBuilder =
+    BudgetPeriodsCompanion Function({
+      Value<int> id,
+      required DateTime startDate,
+      required DateTime endDate,
+    });
+typedef $$BudgetPeriodsTableUpdateCompanionBuilder =
+    BudgetPeriodsCompanion Function({
+      Value<int> id,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+
+class $$BudgetPeriodsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $BudgetPeriodsTable> {
+  $$BudgetPeriodsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$BudgetPeriodsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $BudgetPeriodsTable> {
+  $$BudgetPeriodsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$BudgetPeriodsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $BudgetPeriodsTable> {
+  $$BudgetPeriodsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+}
+
+class $$BudgetPeriodsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $BudgetPeriodsTable,
+          BudgetPeriod,
+          $$BudgetPeriodsTableFilterComposer,
+          $$BudgetPeriodsTableOrderingComposer,
+          $$BudgetPeriodsTableAnnotationComposer,
+          $$BudgetPeriodsTableCreateCompanionBuilder,
+          $$BudgetPeriodsTableUpdateCompanionBuilder,
+          (
+            BudgetPeriod,
+            BaseReferences<_$BudgieDatabase, $BudgetPeriodsTable, BudgetPeriod>,
+          ),
+          BudgetPeriod,
+          PrefetchHooks Function()
+        > {
+  $$BudgetPeriodsTableTableManager(
+    _$BudgieDatabase db,
+    $BudgetPeriodsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BudgetPeriodsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BudgetPeriodsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BudgetPeriodsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => BudgetPeriodsCompanion(
+                id: id,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required DateTime startDate,
+                required DateTime endDate,
+              }) => BudgetPeriodsCompanion.insert(
+                id: id,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$BudgetPeriodsTable, BudgetPeriod>(table),
+                  BaseReferences<
+                    _$BudgieDatabase,
+                    $BudgetPeriodsTable,
+                    BudgetPeriod
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$BudgetPeriodsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $BudgetPeriodsTable,
+      BudgetPeriod,
+      $$BudgetPeriodsTableFilterComposer,
+      $$BudgetPeriodsTableOrderingComposer,
+      $$BudgetPeriodsTableAnnotationComposer,
+      $$BudgetPeriodsTableCreateCompanionBuilder,
+      $$BudgetPeriodsTableUpdateCompanionBuilder,
+      (
+        BudgetPeriod,
+        BaseReferences<_$BudgieDatabase, $BudgetPeriodsTable, BudgetPeriod>,
+      ),
+      BudgetPeriod,
+      PrefetchHooks Function()
+    >;
+typedef $$CategoryBudgetLimitsTableCreateCompanionBuilder =
+    CategoryBudgetLimitsCompanion Function({
+      Value<int> id,
+      required int amount,
+    });
+typedef $$CategoryBudgetLimitsTableUpdateCompanionBuilder =
+    CategoryBudgetLimitsCompanion Function({Value<int> id, Value<int> amount});
+
+class $$CategoryBudgetLimitsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $CategoryBudgetLimitsTable> {
+  $$CategoryBudgetLimitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CategoryBudgetLimitsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $CategoryBudgetLimitsTable> {
+  $$CategoryBudgetLimitsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CategoryBudgetLimitsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $CategoryBudgetLimitsTable> {
+  $$CategoryBudgetLimitsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+}
+
+class $$CategoryBudgetLimitsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $CategoryBudgetLimitsTable,
+          CategoryBudgetLimit,
+          $$CategoryBudgetLimitsTableFilterComposer,
+          $$CategoryBudgetLimitsTableOrderingComposer,
+          $$CategoryBudgetLimitsTableAnnotationComposer,
+          $$CategoryBudgetLimitsTableCreateCompanionBuilder,
+          $$CategoryBudgetLimitsTableUpdateCompanionBuilder,
+          (
+            CategoryBudgetLimit,
+            BaseReferences<
+              _$BudgieDatabase,
+              $CategoryBudgetLimitsTable,
+              CategoryBudgetLimit
+            >,
+          ),
+          CategoryBudgetLimit,
+          PrefetchHooks Function()
+        > {
+  $$CategoryBudgetLimitsTableTableManager(
+    _$BudgieDatabase db,
+    $CategoryBudgetLimitsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CategoryBudgetLimitsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CategoryBudgetLimitsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$CategoryBudgetLimitsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+              }) => CategoryBudgetLimitsCompanion(id: id, amount: amount),
+          createCompanionCallback:
+              ({Value<int> id = const Value.absent(), required int amount}) =>
+                  CategoryBudgetLimitsCompanion.insert(id: id, amount: amount),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$CategoryBudgetLimitsTable, CategoryBudgetLimit>(
+                    table,
+                  ),
+                  BaseReferences<
+                    _$BudgieDatabase,
+                    $CategoryBudgetLimitsTable,
+                    CategoryBudgetLimit
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CategoryBudgetLimitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $CategoryBudgetLimitsTable,
+      CategoryBudgetLimit,
+      $$CategoryBudgetLimitsTableFilterComposer,
+      $$CategoryBudgetLimitsTableOrderingComposer,
+      $$CategoryBudgetLimitsTableAnnotationComposer,
+      $$CategoryBudgetLimitsTableCreateCompanionBuilder,
+      $$CategoryBudgetLimitsTableUpdateCompanionBuilder,
+      (
+        CategoryBudgetLimit,
+        BaseReferences<
+          _$BudgieDatabase,
+          $CategoryBudgetLimitsTable,
+          CategoryBudgetLimit
+        >,
+      ),
+      CategoryBudgetLimit,
+      PrefetchHooks Function()
+    >;
+typedef $$FixedCostBudgetLimitsTableCreateCompanionBuilder =
+    FixedCostBudgetLimitsCompanion Function({
+      Value<int> id,
+      required int amount,
+    });
+typedef $$FixedCostBudgetLimitsTableUpdateCompanionBuilder =
+    FixedCostBudgetLimitsCompanion Function({Value<int> id, Value<int> amount});
+
+class $$FixedCostBudgetLimitsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
+  $$FixedCostBudgetLimitsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$FixedCostBudgetLimitsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
+  $$FixedCostBudgetLimitsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$FixedCostBudgetLimitsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
+  $$FixedCostBudgetLimitsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+}
+
+class $$FixedCostBudgetLimitsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $FixedCostBudgetLimitsTable,
+          FixedCostBudgetLimit,
+          $$FixedCostBudgetLimitsTableFilterComposer,
+          $$FixedCostBudgetLimitsTableOrderingComposer,
+          $$FixedCostBudgetLimitsTableAnnotationComposer,
+          $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
+          $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
+          (
+            FixedCostBudgetLimit,
+            BaseReferences<
+              _$BudgieDatabase,
+              $FixedCostBudgetLimitsTable,
+              FixedCostBudgetLimit
+            >,
+          ),
+          FixedCostBudgetLimit,
+          PrefetchHooks Function()
+        > {
+  $$FixedCostBudgetLimitsTableTableManager(
+    _$BudgieDatabase db,
+    $FixedCostBudgetLimitsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FixedCostBudgetLimitsTableFilterComposer(
+                $db: db,
+                $table: table,
+              ),
+          createOrderingComposer: () =>
+              $$FixedCostBudgetLimitsTableOrderingComposer(
+                $db: db,
+                $table: table,
+              ),
+          createComputedFieldComposer: () =>
+              $$FixedCostBudgetLimitsTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+              }) => FixedCostBudgetLimitsCompanion(id: id, amount: amount),
+          createCompanionCallback:
+              ({Value<int> id = const Value.absent(), required int amount}) =>
+                  FixedCostBudgetLimitsCompanion.insert(id: id, amount: amount),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<
+                    $FixedCostBudgetLimitsTable,
+                    FixedCostBudgetLimit
+                  >(table),
+                  BaseReferences<
+                    _$BudgieDatabase,
+                    $FixedCostBudgetLimitsTable,
+                    FixedCostBudgetLimit
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$FixedCostBudgetLimitsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $FixedCostBudgetLimitsTable,
+      FixedCostBudgetLimit,
+      $$FixedCostBudgetLimitsTableFilterComposer,
+      $$FixedCostBudgetLimitsTableOrderingComposer,
+      $$FixedCostBudgetLimitsTableAnnotationComposer,
+      $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
+      $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
+      (
+        FixedCostBudgetLimit,
+        BaseReferences<
+          _$BudgieDatabase,
+          $FixedCostBudgetLimitsTable,
+          FixedCostBudgetLimit
+        >,
+      ),
+      FixedCostBudgetLimit,
+      PrefetchHooks Function()
+    >;
+typedef $$PlansTableCreateCompanionBuilder =
+    PlansCompanion Function({
+      Value<int> id,
+      required String name,
+      required DateTime startDate,
+      required DateTime endDate,
+    });
+typedef $$PlansTableUpdateCompanionBuilder =
+    PlansCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+    });
+
+final class $$PlansTableReferences
+    extends BaseReferences<_$BudgieDatabase, $PlansTable, Plan> {
+  $$PlansTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$PlanEntriesTable, List<PlanEntry>>
+  _planEntriesRefsTable(_$BudgieDatabase db) => MultiTypedResultKey.fromTable(
+    db.planEntries,
+    aliasName: 'plans__id__plan_entries__trip_id',
+  );
+
+  $$PlanEntriesTableProcessedTableManager get planEntriesRefs {
+    final manager = $$PlanEntriesTableTableManager(
+      $_db,
+      $_db.planEntries,
+    ).filter((f) => f.tripId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_planEntriesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$PlansTableFilterComposer
+    extends Composer<_$BudgieDatabase, $PlansTable> {
+  $$PlansTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  Expression<bool> planEntriesRefs(
+    Expression<bool> Function($$PlanEntriesTableFilterComposer f) f,
+  ) {
+    final $$PlanEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.planEntries,
+      getReferencedColumn: (t) => t.tripId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.planEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PlansTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $PlansTable> {
+  $$PlansTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$PlansTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $PlansTable> {
+  $$PlansTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  Expression<T> planEntriesRefs<T extends Object>(
+    Expression<T> Function($$PlanEntriesTableAnnotationComposer a) f,
+  ) {
+    final $$PlanEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.planEntries,
+      getReferencedColumn: (t) => t.tripId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.planEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PlansTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $PlansTable,
+          Plan,
+          $$PlansTableFilterComposer,
+          $$PlansTableOrderingComposer,
+          $$PlansTableAnnotationComposer,
+          $$PlansTableCreateCompanionBuilder,
+          $$PlansTableUpdateCompanionBuilder,
+          (Plan, $$PlansTableReferences),
+          Plan,
+          PrefetchHooks Function({bool planEntriesRefs})
+        > {
+  $$PlansTableTableManager(_$BudgieDatabase db, $PlansTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlansTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlansTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlansTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+              }) => PlansCompanion(
+                id: id,
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required DateTime startDate,
+                required DateTime endDate,
+              }) => PlansCompanion.insert(
+                id: id,
+                name: name,
+                startDate: startDate,
+                endDate: endDate,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlansTable, Plan>(table),
+                  $$PlansTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({planEntriesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (planEntriesRefs) db.planEntries],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (planEntriesRefs)
+                    await $_getPrefetchedData<Plan, $PlansTable, PlanEntry>(
+                      currentTable: table,
+                      referencedTable: $$PlansTableReferences
+                          ._planEntriesRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$PlansTableReferences(db, table, p0).planEntriesRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.tripId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PlansTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $PlansTable,
+      Plan,
+      $$PlansTableFilterComposer,
+      $$PlansTableOrderingComposer,
+      $$PlansTableAnnotationComposer,
+      $$PlansTableCreateCompanionBuilder,
+      $$PlansTableUpdateCompanionBuilder,
+      (Plan, $$PlansTableReferences),
+      Plan,
+      PrefetchHooks Function({bool planEntriesRefs})
+    >;
+typedef $$PlanEntriesTableCreateCompanionBuilder =
+    PlanEntriesCompanion Function({
+      Value<int> id,
+      required int tripId,
+      required int position,
+      required DateTime startDate,
+      required DateTime endDate,
+      required int amount,
+    });
+typedef $$PlanEntriesTableUpdateCompanionBuilder =
+    PlanEntriesCompanion Function({
+      Value<int> id,
+      Value<int> tripId,
+      Value<int> position,
+      Value<DateTime> startDate,
+      Value<DateTime> endDate,
+      Value<int> amount,
+    });
+
+final class $$PlanEntriesTableReferences
+    extends BaseReferences<_$BudgieDatabase, $PlanEntriesTable, PlanEntry> {
+  $$PlanEntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $PlansTable _tripIdTable(_$BudgieDatabase db) =>
+      db.plans.createAlias('plan_entries__trip_id__plans__id');
+
+  $$PlansTableProcessedTableManager get tripId {
+    final $_column = $_itemColumn<int>('trip_id')!;
+
+    final manager = $$PlansTableTableManager(
+      $_db,
+      $_db.plans,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_tripIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$PlanEntryColorsTable, List<PlanEntryColor>>
+  _planEntryColorsRefsTable(_$BudgieDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.planEntryColors,
+        aliasName: 'plan_entries__id__plan_entry_colors__entry_id',
+      );
+
+  $$PlanEntryColorsTableProcessedTableManager get planEntryColorsRefs {
+    final manager = $$PlanEntryColorsTableTableManager(
+      $_db,
+      $_db.planEntryColors,
+    ).filter((f) => f.entryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _planEntryColorsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
+class $$PlanEntriesTableFilterComposer
+    extends Composer<_$BudgieDatabase, $PlanEntriesTable> {
+  $$PlanEntriesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlansTableFilterComposer get tripId {
+    final $$PlansTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.plans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlansTableFilterComposer(
+            $db: $db,
+            $table: $db.plans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<bool> planEntryColorsRefs(
+    Expression<bool> Function($$PlanEntryColorsTableFilterComposer f) f,
+  ) {
+    final $$PlanEntryColorsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.planEntryColors,
+      getReferencedColumn: (t) => t.entryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntryColorsTableFilterComposer(
+            $db: $db,
+            $table: $db.planEntryColors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PlanEntriesTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $PlanEntriesTable> {
+  $$PlanEntriesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+    column: $table.startDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+    column: $table.endDate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlansTableOrderingComposer get tripId {
+    final $$PlansTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.plans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlansTableOrderingComposer(
+            $db: $db,
+            $table: $db.plans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlanEntriesTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $PlanEntriesTable> {
+  $$PlanEntriesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  $$PlansTableAnnotationComposer get tripId {
+    final $$PlansTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.tripId,
+      referencedTable: $db.plans,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlansTableAnnotationComposer(
+            $db: $db,
+            $table: $db.plans,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  Expression<T> planEntryColorsRefs<T extends Object>(
+    Expression<T> Function($$PlanEntryColorsTableAnnotationComposer a) f,
+  ) {
+    final $$PlanEntryColorsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.planEntryColors,
+      getReferencedColumn: (t) => t.entryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntryColorsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.planEntryColors,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+}
+
+class $$PlanEntriesTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $PlanEntriesTable,
+          PlanEntry,
+          $$PlanEntriesTableFilterComposer,
+          $$PlanEntriesTableOrderingComposer,
+          $$PlanEntriesTableAnnotationComposer,
+          $$PlanEntriesTableCreateCompanionBuilder,
+          $$PlanEntriesTableUpdateCompanionBuilder,
+          (PlanEntry, $$PlanEntriesTableReferences),
+          PlanEntry,
+          PrefetchHooks Function({bool tripId, bool planEntryColorsRefs})
+        > {
+  $$PlanEntriesTableTableManager(_$BudgieDatabase db, $PlanEntriesTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlanEntriesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlanEntriesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlanEntriesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> tripId = const Value.absent(),
+                Value<int> position = const Value.absent(),
+                Value<DateTime> startDate = const Value.absent(),
+                Value<DateTime> endDate = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+              }) => PlanEntriesCompanion(
+                id: id,
+                tripId: tripId,
+                position: position,
+                startDate: startDate,
+                endDate: endDate,
+                amount: amount,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int tripId,
+                required int position,
+                required DateTime startDate,
+                required DateTime endDate,
+                required int amount,
+              }) => PlanEntriesCompanion.insert(
+                id: id,
+                tripId: tripId,
+                position: position,
+                startDate: startDate,
+                endDate: endDate,
+                amount: amount,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlanEntriesTable, PlanEntry>(table),
+                  $$PlanEntriesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({tripId = false, planEntryColorsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (planEntryColorsRefs) db.planEntryColors,
+                  ],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (tripId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.tripId,
+                                    referencedTable:
+                                        $$PlanEntriesTableReferences
+                                            ._tripIdTable(db),
+                                    referencedColumn:
+                                        $$PlanEntriesTableReferences
+                                            ._tripIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (planEntryColorsRefs)
+                        await $_getPrefetchedData<
+                          PlanEntry,
+                          $PlanEntriesTable,
+                          PlanEntryColor
+                        >(
+                          currentTable: table,
+                          referencedTable: $$PlanEntriesTableReferences
+                              ._planEntryColorsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$PlanEntriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).planEntryColorsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.entryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$PlanEntriesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $PlanEntriesTable,
+      PlanEntry,
+      $$PlanEntriesTableFilterComposer,
+      $$PlanEntriesTableOrderingComposer,
+      $$PlanEntriesTableAnnotationComposer,
+      $$PlanEntriesTableCreateCompanionBuilder,
+      $$PlanEntriesTableUpdateCompanionBuilder,
+      (PlanEntry, $$PlanEntriesTableReferences),
+      PlanEntry,
+      PrefetchHooks Function({bool tripId, bool planEntryColorsRefs})
+    >;
+typedef $$PlanEntryColorsTableCreateCompanionBuilder =
+    PlanEntryColorsCompanion Function({
+      Value<int> id,
+      required int entryId,
+      required int color,
+    });
+typedef $$PlanEntryColorsTableUpdateCompanionBuilder =
+    PlanEntryColorsCompanion Function({
+      Value<int> id,
+      Value<int> entryId,
+      Value<int> color,
+    });
+
+final class $$PlanEntryColorsTableReferences
+    extends
+        BaseReferences<
+          _$BudgieDatabase,
+          $PlanEntryColorsTable,
+          PlanEntryColor
+        > {
+  $$PlanEntryColorsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $PlanEntriesTable _entryIdTable(_$BudgieDatabase db) => db.planEntries
+      .createAlias('plan_entry_colors__entry_id__plan_entries__id');
+
+  $$PlanEntriesTableProcessedTableManager get entryId {
+    final $_column = $_itemColumn<int>('entry_id')!;
+
+    final manager = $$PlanEntriesTableTableManager(
+      $_db,
+      $_db.planEntries,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_entryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PlanEntryColorsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $PlanEntryColorsTable> {
+  $$PlanEntryColorsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$PlanEntriesTableFilterComposer get entryId {
+    final $$PlanEntriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.entryId,
+      referencedTable: $db.planEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntriesTableFilterComposer(
+            $db: $db,
+            $table: $db.planEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlanEntryColorsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $PlanEntryColorsTable> {
+  $$PlanEntryColorsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get color => $composableBuilder(
+    column: $table.color,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$PlanEntriesTableOrderingComposer get entryId {
+    final $$PlanEntriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.entryId,
+      referencedTable: $db.planEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.planEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlanEntryColorsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $PlanEntryColorsTable> {
+  $$PlanEntryColorsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get color =>
+      $composableBuilder(column: $table.color, builder: (column) => column);
+
+  $$PlanEntriesTableAnnotationComposer get entryId {
+    final $$PlanEntriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.entryId,
+      referencedTable: $db.planEntries,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlanEntriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.planEntries,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlanEntryColorsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $PlanEntryColorsTable,
+          PlanEntryColor,
+          $$PlanEntryColorsTableFilterComposer,
+          $$PlanEntryColorsTableOrderingComposer,
+          $$PlanEntryColorsTableAnnotationComposer,
+          $$PlanEntryColorsTableCreateCompanionBuilder,
+          $$PlanEntryColorsTableUpdateCompanionBuilder,
+          (PlanEntryColor, $$PlanEntryColorsTableReferences),
+          PlanEntryColor,
+          PrefetchHooks Function({bool entryId})
+        > {
+  $$PlanEntryColorsTableTableManager(
+    _$BudgieDatabase db,
+    $PlanEntryColorsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlanEntryColorsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlanEntryColorsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlanEntryColorsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<int> entryId = const Value.absent(),
+                Value<int> color = const Value.absent(),
+              }) => PlanEntryColorsCompanion(
+                id: id,
+                entryId: entryId,
+                color: color,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required int entryId,
+                required int color,
+              }) => PlanEntryColorsCompanion.insert(
+                id: id,
+                entryId: entryId,
+                color: color,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$PlanEntryColorsTable, PlanEntryColor>(table),
+                  $$PlanEntryColorsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({entryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (entryId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.entryId,
+                                referencedTable:
+                                    $$PlanEntryColorsTableReferences
+                                        ._entryIdTable(db),
+                                referencedColumn:
+                                    $$PlanEntryColorsTableReferences
+                                        ._entryIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PlanEntryColorsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $PlanEntryColorsTable,
+      PlanEntryColor,
+      $$PlanEntryColorsTableFilterComposer,
+      $$PlanEntryColorsTableOrderingComposer,
+      $$PlanEntryColorsTableAnnotationComposer,
+      $$PlanEntryColorsTableCreateCompanionBuilder,
+      $$PlanEntryColorsTableUpdateCompanionBuilder,
+      (PlanEntryColor, $$PlanEntryColorsTableReferences),
+      PlanEntryColor,
+      PrefetchHooks Function({bool entryId})
+    >;
+typedef $$AccountBalancesTableCreateCompanionBuilder =
+    AccountBalancesCompanion Function({
+      Value<int> id,
+      required String name,
+      required int total,
+      required bool isExpenseAccount,
+    });
+typedef $$AccountBalancesTableUpdateCompanionBuilder =
+    AccountBalancesCompanion Function({
+      Value<int> id,
+      Value<String> name,
+      Value<int> total,
+      Value<bool> isExpenseAccount,
+    });
+
+class $$AccountBalancesTableFilterComposer
+    extends Composer<_$BudgieDatabase, $AccountBalancesTable> {
+  $$AccountBalancesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get total => $composableBuilder(
+    column: $table.total,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isExpenseAccount => $composableBuilder(
+    column: $table.isExpenseAccount,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AccountBalancesTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $AccountBalancesTable> {
+  $$AccountBalancesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get total => $composableBuilder(
+    column: $table.total,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isExpenseAccount => $composableBuilder(
+    column: $table.isExpenseAccount,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AccountBalancesTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $AccountBalancesTable> {
+  $$AccountBalancesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get total =>
+      $composableBuilder(column: $table.total, builder: (column) => column);
+
+  GeneratedColumn<bool> get isExpenseAccount => $composableBuilder(
+    column: $table.isExpenseAccount,
+    builder: (column) => column,
+  );
+}
+
+class $$AccountBalancesTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $AccountBalancesTable,
+          AccountBalance,
+          $$AccountBalancesTableFilterComposer,
+          $$AccountBalancesTableOrderingComposer,
+          $$AccountBalancesTableAnnotationComposer,
+          $$AccountBalancesTableCreateCompanionBuilder,
+          $$AccountBalancesTableUpdateCompanionBuilder,
+          (
+            AccountBalance,
+            BaseReferences<
+              _$BudgieDatabase,
+              $AccountBalancesTable,
+              AccountBalance
+            >,
+          ),
+          AccountBalance,
+          PrefetchHooks Function()
+        > {
+  $$AccountBalancesTableTableManager(
+    _$BudgieDatabase db,
+    $AccountBalancesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AccountBalancesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AccountBalancesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AccountBalancesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<String> name = const Value.absent(),
+                Value<int> total = const Value.absent(),
+                Value<bool> isExpenseAccount = const Value.absent(),
+              }) => AccountBalancesCompanion(
+                id: id,
+                name: name,
+                total: total,
+                isExpenseAccount: isExpenseAccount,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                required String name,
+                required int total,
+                required bool isExpenseAccount,
+              }) => AccountBalancesCompanion.insert(
+                id: id,
+                name: name,
+                total: total,
+                isExpenseAccount: isExpenseAccount,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AccountBalancesTable, AccountBalance>(table),
+                  BaseReferences<
+                    _$BudgieDatabase,
+                    $AccountBalancesTable,
+                    AccountBalance
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AccountBalancesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $AccountBalancesTable,
+      AccountBalance,
+      $$AccountBalancesTableFilterComposer,
+      $$AccountBalancesTableOrderingComposer,
+      $$AccountBalancesTableAnnotationComposer,
+      $$AccountBalancesTableCreateCompanionBuilder,
+      $$AccountBalancesTableUpdateCompanionBuilder,
+      (
+        AccountBalance,
+        BaseReferences<_$BudgieDatabase, $AccountBalancesTable, AccountBalance>,
+      ),
+      AccountBalance,
+      PrefetchHooks Function()
+    >;
+
+class $BudgieDatabaseManager {
+  final _$BudgieDatabase _db;
+  $BudgieDatabaseManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db, _db.categories);
+  $$TransactionsTableTableManager get transactions =>
+      $$TransactionsTableTableManager(_db, _db.transactions);
+  $$FixedCostsTableTableManager get fixedCosts =>
+      $$FixedCostsTableTableManager(_db, _db.fixedCosts);
+  $$BudgetPeriodsTableTableManager get budgetPeriods =>
+      $$BudgetPeriodsTableTableManager(_db, _db.budgetPeriods);
+  $$CategoryBudgetLimitsTableTableManager get categoryBudgetLimits =>
+      $$CategoryBudgetLimitsTableTableManager(_db, _db.categoryBudgetLimits);
+  $$FixedCostBudgetLimitsTableTableManager get fixedCostBudgetLimits =>
+      $$FixedCostBudgetLimitsTableTableManager(_db, _db.fixedCostBudgetLimits);
+  $$PlansTableTableManager get plans =>
+      $$PlansTableTableManager(_db, _db.plans);
+  $$PlanEntriesTableTableManager get planEntries =>
+      $$PlanEntriesTableTableManager(_db, _db.planEntries);
+  $$PlanEntryColorsTableTableManager get planEntryColors =>
+      $$PlanEntryColorsTableTableManager(_db, _db.planEntryColors);
+  $$AccountBalancesTableTableManager get accountBalances =>
+      $$AccountBalancesTableTableManager(_db, _db.accountBalances);
 }
