@@ -1166,6 +1166,34 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES categories (id)',
+    ),
+  );
+  static const VerificationMeta _planningPeriodIdMeta = const VerificationMeta(
+    'planningPeriodId',
+  );
+  @override
+  late final GeneratedColumn<int> planningPeriodId = GeneratedColumn<int>(
+    'planning_period_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES budget_periods (id)',
+    ),
+  );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
   late final GeneratedColumn<int> amount = GeneratedColumn<int>(
@@ -1176,7 +1204,12 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, amount];
+  List<GeneratedColumn> get $columns => [
+    id,
+    categoryId,
+    planningPeriodId,
+    amount,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1191,6 +1224,25 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('planning_period_id')) {
+      context.handle(
+        _planningPeriodIdMeta,
+        planningPeriodId.isAcceptableOrUnknown(
+          data['planning_period_id']!,
+          _planningPeriodIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_planningPeriodIdMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -1213,6 +1265,14 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+      planningPeriodId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}planning_period_id'],
+      )!,
       amount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
@@ -1229,18 +1289,32 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
 class CategoryBudgetLimit extends DataClass
     implements Insertable<CategoryBudgetLimit> {
   final int id;
+  final int categoryId;
+  final int planningPeriodId;
   final int amount;
-  const CategoryBudgetLimit({required this.id, required this.amount});
+  const CategoryBudgetLimit({
+    required this.id,
+    required this.categoryId,
+    required this.planningPeriodId,
+    required this.amount,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['category_id'] = Variable<int>(categoryId);
+    map['planning_period_id'] = Variable<int>(planningPeriodId);
     map['amount'] = Variable<int>(amount);
     return map;
   }
 
   CategoryBudgetLimitsCompanion toCompanion(bool nullToAbsent) {
-    return CategoryBudgetLimitsCompanion(id: Value(id), amount: Value(amount));
+    return CategoryBudgetLimitsCompanion(
+      id: Value(id),
+      categoryId: Value(categoryId),
+      planningPeriodId: Value(planningPeriodId),
+      amount: Value(amount),
+    );
   }
 
   factory CategoryBudgetLimit.fromJson(
@@ -1250,6 +1324,8 @@ class CategoryBudgetLimit extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CategoryBudgetLimit(
       id: serializer.fromJson<int>(json['id']),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+      planningPeriodId: serializer.fromJson<int>(json['planningPeriodId']),
       amount: serializer.fromJson<int>(json['amount']),
     );
   }
@@ -1258,15 +1334,32 @@ class CategoryBudgetLimit extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'categoryId': serializer.toJson<int>(categoryId),
+      'planningPeriodId': serializer.toJson<int>(planningPeriodId),
       'amount': serializer.toJson<int>(amount),
     };
   }
 
-  CategoryBudgetLimit copyWith({int? id, int? amount}) =>
-      CategoryBudgetLimit(id: id ?? this.id, amount: amount ?? this.amount);
+  CategoryBudgetLimit copyWith({
+    int? id,
+    int? categoryId,
+    int? planningPeriodId,
+    int? amount,
+  }) => CategoryBudgetLimit(
+    id: id ?? this.id,
+    categoryId: categoryId ?? this.categoryId,
+    planningPeriodId: planningPeriodId ?? this.planningPeriodId,
+    amount: amount ?? this.amount,
+  );
   CategoryBudgetLimit copyWithCompanion(CategoryBudgetLimitsCompanion data) {
     return CategoryBudgetLimit(
       id: data.id.present ? data.id.value : this.id,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      planningPeriodId: data.planningPeriodId.present
+          ? data.planningPeriodId.value
+          : this.planningPeriodId,
       amount: data.amount.present ? data.amount.value : this.amount,
     );
   }
@@ -1275,46 +1368,69 @@ class CategoryBudgetLimit extends DataClass
   String toString() {
     return (StringBuffer('CategoryBudgetLimit(')
           ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, amount);
+  int get hashCode => Object.hash(id, categoryId, planningPeriodId, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is CategoryBudgetLimit &&
           other.id == this.id &&
+          other.categoryId == this.categoryId &&
+          other.planningPeriodId == this.planningPeriodId &&
           other.amount == this.amount);
 }
 
 class CategoryBudgetLimitsCompanion
     extends UpdateCompanion<CategoryBudgetLimit> {
   final Value<int> id;
+  final Value<int> categoryId;
+  final Value<int> planningPeriodId;
   final Value<int> amount;
   const CategoryBudgetLimitsCompanion({
     this.id = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.planningPeriodId = const Value.absent(),
     this.amount = const Value.absent(),
   });
   CategoryBudgetLimitsCompanion.insert({
     this.id = const Value.absent(),
+    required int categoryId,
+    required int planningPeriodId,
     required int amount,
-  }) : amount = Value(amount);
+  }) : categoryId = Value(categoryId),
+       planningPeriodId = Value(planningPeriodId),
+       amount = Value(amount);
   static Insertable<CategoryBudgetLimit> custom({
     Expression<int>? id,
+    Expression<int>? categoryId,
+    Expression<int>? planningPeriodId,
     Expression<int>? amount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (categoryId != null) 'category_id': categoryId,
+      if (planningPeriodId != null) 'planning_period_id': planningPeriodId,
       if (amount != null) 'amount': amount,
     });
   }
 
-  CategoryBudgetLimitsCompanion copyWith({Value<int>? id, Value<int>? amount}) {
+  CategoryBudgetLimitsCompanion copyWith({
+    Value<int>? id,
+    Value<int>? categoryId,
+    Value<int>? planningPeriodId,
+    Value<int>? amount,
+  }) {
     return CategoryBudgetLimitsCompanion(
       id: id ?? this.id,
+      categoryId: categoryId ?? this.categoryId,
+      planningPeriodId: planningPeriodId ?? this.planningPeriodId,
       amount: amount ?? this.amount,
     );
   }
@@ -1324,6 +1440,12 @@ class CategoryBudgetLimitsCompanion
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (planningPeriodId.present) {
+      map['planning_period_id'] = Variable<int>(planningPeriodId.value);
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
@@ -1335,6 +1457,8 @@ class CategoryBudgetLimitsCompanion
   String toString() {
     return (StringBuffer('CategoryBudgetLimitsCompanion(')
           ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
@@ -1360,6 +1484,34 @@ class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
+  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
+    'categoryId',
+  );
+  @override
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+    'category_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES fixed_costs (id)',
+    ),
+  );
+  static const VerificationMeta _planningPeriodIdMeta = const VerificationMeta(
+    'planningPeriodId',
+  );
+  @override
+  late final GeneratedColumn<int> planningPeriodId = GeneratedColumn<int>(
+    'planning_period_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES budget_periods (id)',
+    ),
+  );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
   late final GeneratedColumn<int> amount = GeneratedColumn<int>(
@@ -1370,7 +1522,12 @@ class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [id, amount];
+  List<GeneratedColumn> get $columns => [
+    id,
+    categoryId,
+    planningPeriodId,
+    amount,
+  ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1385,6 +1542,25 @@ class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+        _categoryIdMeta,
+        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
+    }
+    if (data.containsKey('planning_period_id')) {
+      context.handle(
+        _planningPeriodIdMeta,
+        planningPeriodId.isAcceptableOrUnknown(
+          data['planning_period_id']!,
+          _planningPeriodIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_planningPeriodIdMeta);
     }
     if (data.containsKey('amount')) {
       context.handle(
@@ -1407,6 +1583,14 @@ class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
+      categoryId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}category_id'],
+      )!,
+      planningPeriodId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}planning_period_id'],
+      )!,
       amount: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}amount'],
@@ -1423,18 +1607,32 @@ class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
 class FixedCostBudgetLimit extends DataClass
     implements Insertable<FixedCostBudgetLimit> {
   final int id;
+  final int categoryId;
+  final int planningPeriodId;
   final int amount;
-  const FixedCostBudgetLimit({required this.id, required this.amount});
+  const FixedCostBudgetLimit({
+    required this.id,
+    required this.categoryId,
+    required this.planningPeriodId,
+    required this.amount,
+  });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    map['category_id'] = Variable<int>(categoryId);
+    map['planning_period_id'] = Variable<int>(planningPeriodId);
     map['amount'] = Variable<int>(amount);
     return map;
   }
 
   FixedCostBudgetLimitsCompanion toCompanion(bool nullToAbsent) {
-    return FixedCostBudgetLimitsCompanion(id: Value(id), amount: Value(amount));
+    return FixedCostBudgetLimitsCompanion(
+      id: Value(id),
+      categoryId: Value(categoryId),
+      planningPeriodId: Value(planningPeriodId),
+      amount: Value(amount),
+    );
   }
 
   factory FixedCostBudgetLimit.fromJson(
@@ -1444,6 +1642,8 @@ class FixedCostBudgetLimit extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FixedCostBudgetLimit(
       id: serializer.fromJson<int>(json['id']),
+      categoryId: serializer.fromJson<int>(json['categoryId']),
+      planningPeriodId: serializer.fromJson<int>(json['planningPeriodId']),
       amount: serializer.fromJson<int>(json['amount']),
     );
   }
@@ -1452,15 +1652,32 @@ class FixedCostBudgetLimit extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'categoryId': serializer.toJson<int>(categoryId),
+      'planningPeriodId': serializer.toJson<int>(planningPeriodId),
       'amount': serializer.toJson<int>(amount),
     };
   }
 
-  FixedCostBudgetLimit copyWith({int? id, int? amount}) =>
-      FixedCostBudgetLimit(id: id ?? this.id, amount: amount ?? this.amount);
+  FixedCostBudgetLimit copyWith({
+    int? id,
+    int? categoryId,
+    int? planningPeriodId,
+    int? amount,
+  }) => FixedCostBudgetLimit(
+    id: id ?? this.id,
+    categoryId: categoryId ?? this.categoryId,
+    planningPeriodId: planningPeriodId ?? this.planningPeriodId,
+    amount: amount ?? this.amount,
+  );
   FixedCostBudgetLimit copyWithCompanion(FixedCostBudgetLimitsCompanion data) {
     return FixedCostBudgetLimit(
       id: data.id.present ? data.id.value : this.id,
+      categoryId: data.categoryId.present
+          ? data.categoryId.value
+          : this.categoryId,
+      planningPeriodId: data.planningPeriodId.present
+          ? data.planningPeriodId.value
+          : this.planningPeriodId,
       amount: data.amount.present ? data.amount.value : this.amount,
     );
   }
@@ -1469,49 +1686,69 @@ class FixedCostBudgetLimit extends DataClass
   String toString() {
     return (StringBuffer('FixedCostBudgetLimit(')
           ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, amount);
+  int get hashCode => Object.hash(id, categoryId, planningPeriodId, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FixedCostBudgetLimit &&
           other.id == this.id &&
+          other.categoryId == this.categoryId &&
+          other.planningPeriodId == this.planningPeriodId &&
           other.amount == this.amount);
 }
 
 class FixedCostBudgetLimitsCompanion
     extends UpdateCompanion<FixedCostBudgetLimit> {
   final Value<int> id;
+  final Value<int> categoryId;
+  final Value<int> planningPeriodId;
   final Value<int> amount;
   const FixedCostBudgetLimitsCompanion({
     this.id = const Value.absent(),
+    this.categoryId = const Value.absent(),
+    this.planningPeriodId = const Value.absent(),
     this.amount = const Value.absent(),
   });
   FixedCostBudgetLimitsCompanion.insert({
     this.id = const Value.absent(),
+    required int categoryId,
+    required int planningPeriodId,
     required int amount,
-  }) : amount = Value(amount);
+  }) : categoryId = Value(categoryId),
+       planningPeriodId = Value(planningPeriodId),
+       amount = Value(amount);
   static Insertable<FixedCostBudgetLimit> custom({
     Expression<int>? id,
+    Expression<int>? categoryId,
+    Expression<int>? planningPeriodId,
     Expression<int>? amount,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (categoryId != null) 'category_id': categoryId,
+      if (planningPeriodId != null) 'planning_period_id': planningPeriodId,
       if (amount != null) 'amount': amount,
     });
   }
 
   FixedCostBudgetLimitsCompanion copyWith({
     Value<int>? id,
+    Value<int>? categoryId,
+    Value<int>? planningPeriodId,
     Value<int>? amount,
   }) {
     return FixedCostBudgetLimitsCompanion(
       id: id ?? this.id,
+      categoryId: categoryId ?? this.categoryId,
+      planningPeriodId: planningPeriodId ?? this.planningPeriodId,
       amount: amount ?? this.amount,
     );
   }
@@ -1521,6 +1758,12 @@ class FixedCostBudgetLimitsCompanion
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (categoryId.present) {
+      map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (planningPeriodId.present) {
+      map['planning_period_id'] = Variable<int>(planningPeriodId.value);
     }
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
@@ -1532,6 +1775,8 @@ class FixedCostBudgetLimitsCompanion
   String toString() {
     return (StringBuffer('FixedCostBudgetLimitsCompanion(')
           ..write('id: $id, ')
+          ..write('categoryId: $categoryId, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
           ..write('amount: $amount')
           ..write(')'))
         .toString();
@@ -2888,6 +3133,31 @@ final class $$CategoriesTableReferences
       manager.$state.copyWith(prefetchedData: cache),
     );
   }
+
+  static MultiTypedResultKey<
+    $CategoryBudgetLimitsTable,
+    List<CategoryBudgetLimit>
+  >
+  _categoryBudgetLimitsRefsTable(_$BudgieDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.categoryBudgetLimits,
+        aliasName: 'categories__id__category_budget_limits__category_id',
+      );
+
+  $$CategoryBudgetLimitsTableProcessedTableManager
+  get categoryBudgetLimitsRefs {
+    final manager = $$CategoryBudgetLimitsTableTableManager(
+      $_db,
+      $_db.categoryBudgetLimits,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _categoryBudgetLimitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
 }
 
 class $$CategoriesTableFilterComposer
@@ -2940,6 +3210,31 @@ class $$CategoriesTableFilterComposer
           }) => $$TransactionsTableFilterComposer(
             $db: $db,
             $table: $db.transactions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> categoryBudgetLimitsRefs(
+    Expression<bool> Function($$CategoryBudgetLimitsTableFilterComposer f) f,
+  ) {
+    final $$CategoryBudgetLimitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.categoryBudgetLimits,
+      getReferencedColumn: (t) => t.categoryId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoryBudgetLimitsTableFilterComposer(
+            $db: $db,
+            $table: $db.categoryBudgetLimits,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -3035,6 +3330,32 @@ class $$CategoriesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> categoryBudgetLimitsRefs<T extends Object>(
+    Expression<T> Function($$CategoryBudgetLimitsTableAnnotationComposer a) f,
+  ) {
+    final $$CategoryBudgetLimitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.categoryBudgetLimits,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CategoryBudgetLimitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.categoryBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$CategoriesTableTableManager
@@ -3050,7 +3371,10 @@ class $$CategoriesTableTableManager
           $$CategoriesTableUpdateCompanionBuilder,
           (Category, $$CategoriesTableReferences),
           Category,
-          PrefetchHooks Function({bool transactionsRefs})
+          PrefetchHooks Function({
+            bool transactionsRefs,
+            bool categoryBudgetLimitsRefs,
+          })
         > {
   $$CategoriesTableTableManager(_$BudgieDatabase db, $CategoriesTable table)
     : super(
@@ -3099,36 +3423,63 @@ class $$CategoriesTableTableManager
                 ),
               )
               .toList(),
-          prefetchHooksCallback: ({transactionsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [if (transactionsRefs) db.transactions],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (transactionsRefs)
-                    await $_getPrefetchedData<
-                      Category,
-                      $CategoriesTable,
-                      Transaction
-                    >(
-                      currentTable: table,
-                      referencedTable: $$CategoriesTableReferences
-                          ._transactionsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$CategoriesTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).transactionsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.categoryId == item.id),
-                      typedResults: items,
-                    ),
-                ];
+          prefetchHooksCallback:
+              ({transactionsRefs = false, categoryBudgetLimitsRefs = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (transactionsRefs) db.transactions,
+                    if (categoryBudgetLimitsRefs) db.categoryBudgetLimits,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (transactionsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          Transaction
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._transactionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).transactionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (categoryBudgetLimitsRefs)
+                        await $_getPrefetchedData<
+                          Category,
+                          $CategoriesTable,
+                          CategoryBudgetLimit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$CategoriesTableReferences
+                              ._categoryBudgetLimitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$CategoriesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).categoryBudgetLimitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.categoryId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
               },
-            );
-          },
         ),
       );
 }
@@ -3145,7 +3496,10 @@ typedef $$CategoriesTableProcessedTableManager =
       $$CategoriesTableUpdateCompanionBuilder,
       (Category, $$CategoriesTableReferences),
       Category,
-      PrefetchHooks Function({bool transactionsRefs})
+      PrefetchHooks Function({
+        bool transactionsRefs,
+        bool categoryBudgetLimitsRefs,
+      })
     >;
 typedef $$TransactionsTableCreateCompanionBuilder =
     TransactionsCompanion Function({
@@ -3463,6 +3817,36 @@ typedef $$FixedCostsTableCreateCompanionBuilder =
 typedef $$FixedCostsTableUpdateCompanionBuilder =
     FixedCostsCompanion Function({Value<int> id, Value<String> name});
 
+final class $$FixedCostsTableReferences
+    extends BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost> {
+  $$FixedCostsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<
+    $FixedCostBudgetLimitsTable,
+    List<FixedCostBudgetLimit>
+  >
+  _fixedCostBudgetLimitsRefsTable(_$BudgieDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.fixedCostBudgetLimits,
+        aliasName: 'fixed_costs__id__fixed_cost_budget_limits__category_id',
+      );
+
+  $$FixedCostBudgetLimitsTableProcessedTableManager
+  get fixedCostBudgetLimitsRefs {
+    final manager = $$FixedCostBudgetLimitsTableTableManager(
+      $_db,
+      $_db.fixedCostBudgetLimits,
+    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _fixedCostBudgetLimitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
+
 class $$FixedCostsTableFilterComposer
     extends Composer<_$BudgieDatabase, $FixedCostsTable> {
   $$FixedCostsTableFilterComposer({
@@ -3481,6 +3865,32 @@ class $$FixedCostsTableFilterComposer
     column: $table.name,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> fixedCostBudgetLimitsRefs(
+    Expression<bool> Function($$FixedCostBudgetLimitsTableFilterComposer f) f,
+  ) {
+    final $$FixedCostBudgetLimitsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.fixedCostBudgetLimits,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FixedCostBudgetLimitsTableFilterComposer(
+                $db: $db,
+                $table: $db.fixedCostBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$FixedCostsTableOrderingComposer
@@ -3517,6 +3927,32 @@ class $$FixedCostsTableAnnotationComposer
 
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
+
+  Expression<T> fixedCostBudgetLimitsRefs<T extends Object>(
+    Expression<T> Function($$FixedCostBudgetLimitsTableAnnotationComposer a) f,
+  ) {
+    final $$FixedCostBudgetLimitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.fixedCostBudgetLimits,
+          getReferencedColumn: (t) => t.categoryId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FixedCostBudgetLimitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.fixedCostBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$FixedCostsTableTableManager
@@ -3530,12 +3966,9 @@ class $$FixedCostsTableTableManager
           $$FixedCostsTableAnnotationComposer,
           $$FixedCostsTableCreateCompanionBuilder,
           $$FixedCostsTableUpdateCompanionBuilder,
-          (
-            FixedCost,
-            BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>,
-          ),
+          (FixedCost, $$FixedCostsTableReferences),
           FixedCost,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool fixedCostBudgetLimitsRefs})
         > {
   $$FixedCostsTableTableManager(_$BudgieDatabase db, $FixedCostsTable table)
     : super(
@@ -3560,15 +3993,42 @@ class $$FixedCostsTableTableManager
               .map(
                 (e) => (
                   e.readTable<$FixedCostsTable, FixedCost>(table),
-                  BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>(
-                    db,
-                    table,
-                    e,
-                  ),
+                  $$FixedCostsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback: ({fixedCostBudgetLimitsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [
+                if (fixedCostBudgetLimitsRefs) db.fixedCostBudgetLimits,
+              ],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (fixedCostBudgetLimitsRefs)
+                    await $_getPrefetchedData<
+                      FixedCost,
+                      $FixedCostsTable,
+                      FixedCostBudgetLimit
+                    >(
+                      currentTable: table,
+                      referencedTable: $$FixedCostsTableReferences
+                          ._fixedCostBudgetLimitsRefsTable(db),
+                      managerFromTypedResult: (p0) =>
+                          $$FixedCostsTableReferences(
+                            db,
+                            table,
+                            p0,
+                          ).fixedCostBudgetLimitsRefs,
+                      referencedItemsForCurrentItem: (item, referencedItems) =>
+                          referencedItems.where((e) => e.categoryId == item.id),
+                      typedResults: items,
+                    ),
+                ];
+              },
+            );
+          },
         ),
       );
 }
@@ -3583,12 +4043,9 @@ typedef $$FixedCostsTableProcessedTableManager =
       $$FixedCostsTableAnnotationComposer,
       $$FixedCostsTableCreateCompanionBuilder,
       $$FixedCostsTableUpdateCompanionBuilder,
-      (
-        FixedCost,
-        BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost>,
-      ),
+      (FixedCost, $$FixedCostsTableReferences),
       FixedCost,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool fixedCostBudgetLimitsRefs})
     >;
 typedef $$BudgetPeriodsTableCreateCompanionBuilder =
     BudgetPeriodsCompanion Function({
@@ -3602,6 +4059,68 @@ typedef $$BudgetPeriodsTableUpdateCompanionBuilder =
       Value<DateTime> startDate,
       Value<DateTime> endDate,
     });
+
+final class $$BudgetPeriodsTableReferences
+    extends
+        BaseReferences<_$BudgieDatabase, $BudgetPeriodsTable, BudgetPeriod> {
+  $$BudgetPeriodsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static MultiTypedResultKey<
+    $CategoryBudgetLimitsTable,
+    List<CategoryBudgetLimit>
+  >
+  _categoryBudgetLimitsRefsTable(_$BudgieDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.categoryBudgetLimits,
+        aliasName:
+            'budget_periods__id__category_budget_limits__planning_period_id',
+      );
+
+  $$CategoryBudgetLimitsTableProcessedTableManager
+  get categoryBudgetLimitsRefs {
+    final manager = $$CategoryBudgetLimitsTableTableManager(
+      $_db,
+      $_db.categoryBudgetLimits,
+    ).filter((f) => f.planningPeriodId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _categoryBudgetLimitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<
+    $FixedCostBudgetLimitsTable,
+    List<FixedCostBudgetLimit>
+  >
+  _fixedCostBudgetLimitsRefsTable(_$BudgieDatabase db) =>
+      MultiTypedResultKey.fromTable(
+        db.fixedCostBudgetLimits,
+        aliasName:
+            'budget_periods__id__fixed_cost_budget_limits__planning_period_id',
+      );
+
+  $$FixedCostBudgetLimitsTableProcessedTableManager
+  get fixedCostBudgetLimitsRefs {
+    final manager = $$FixedCostBudgetLimitsTableTableManager(
+      $_db,
+      $_db.fixedCostBudgetLimits,
+    ).filter((f) => f.planningPeriodId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(
+      _fixedCostBudgetLimitsRefsTable($_db),
+    );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+}
 
 class $$BudgetPeriodsTableFilterComposer
     extends Composer<_$BudgieDatabase, $BudgetPeriodsTable> {
@@ -3626,6 +4145,57 @@ class $$BudgetPeriodsTableFilterComposer
     column: $table.endDate,
     builder: (column) => ColumnFilters(column),
   );
+
+  Expression<bool> categoryBudgetLimitsRefs(
+    Expression<bool> Function($$CategoryBudgetLimitsTableFilterComposer f) f,
+  ) {
+    final $$CategoryBudgetLimitsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.categoryBudgetLimits,
+      getReferencedColumn: (t) => t.planningPeriodId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoryBudgetLimitsTableFilterComposer(
+            $db: $db,
+            $table: $db.categoryBudgetLimits,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> fixedCostBudgetLimitsRefs(
+    Expression<bool> Function($$FixedCostBudgetLimitsTableFilterComposer f) f,
+  ) {
+    final $$FixedCostBudgetLimitsTableFilterComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.fixedCostBudgetLimits,
+          getReferencedColumn: (t) => t.planningPeriodId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FixedCostBudgetLimitsTableFilterComposer(
+                $db: $db,
+                $table: $db.fixedCostBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$BudgetPeriodsTableOrderingComposer
@@ -3670,6 +4240,58 @@ class $$BudgetPeriodsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  Expression<T> categoryBudgetLimitsRefs<T extends Object>(
+    Expression<T> Function($$CategoryBudgetLimitsTableAnnotationComposer a) f,
+  ) {
+    final $$CategoryBudgetLimitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.categoryBudgetLimits,
+          getReferencedColumn: (t) => t.planningPeriodId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$CategoryBudgetLimitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.categoryBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
+
+  Expression<T> fixedCostBudgetLimitsRefs<T extends Object>(
+    Expression<T> Function($$FixedCostBudgetLimitsTableAnnotationComposer a) f,
+  ) {
+    final $$FixedCostBudgetLimitsTableAnnotationComposer composer =
+        $composerBuilder(
+          composer: this,
+          getCurrentColumn: (t) => t.id,
+          referencedTable: $db.fixedCostBudgetLimits,
+          getReferencedColumn: (t) => t.planningPeriodId,
+          builder:
+              (
+                joinBuilder, {
+                $addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer,
+              }) => $$FixedCostBudgetLimitsTableAnnotationComposer(
+                $db: $db,
+                $table: $db.fixedCostBudgetLimits,
+                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+                joinBuilder: joinBuilder,
+                $removeJoinBuilderFromRootComposer:
+                    $removeJoinBuilderFromRootComposer,
+              ),
+        );
+    return f(composer);
+  }
 }
 
 class $$BudgetPeriodsTableTableManager
@@ -3683,12 +4305,12 @@ class $$BudgetPeriodsTableTableManager
           $$BudgetPeriodsTableAnnotationComposer,
           $$BudgetPeriodsTableCreateCompanionBuilder,
           $$BudgetPeriodsTableUpdateCompanionBuilder,
-          (
-            BudgetPeriod,
-            BaseReferences<_$BudgieDatabase, $BudgetPeriodsTable, BudgetPeriod>,
-          ),
+          (BudgetPeriod, $$BudgetPeriodsTableReferences),
           BudgetPeriod,
-          PrefetchHooks Function()
+          PrefetchHooks Function({
+            bool categoryBudgetLimitsRefs,
+            bool fixedCostBudgetLimitsRefs,
+          })
         > {
   $$BudgetPeriodsTableTableManager(
     _$BudgieDatabase db,
@@ -3727,15 +4349,70 @@ class $$BudgetPeriodsTableTableManager
               .map(
                 (e) => (
                   e.readTable<$BudgetPeriodsTable, BudgetPeriod>(table),
-                  BaseReferences<
-                    _$BudgieDatabase,
-                    $BudgetPeriodsTable,
-                    BudgetPeriod
-                  >(db, table, e),
+                  $$BudgetPeriodsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({
+                categoryBudgetLimitsRefs = false,
+                fixedCostBudgetLimitsRefs = false,
+              }) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [
+                    if (categoryBudgetLimitsRefs) db.categoryBudgetLimits,
+                    if (fixedCostBudgetLimitsRefs) db.fixedCostBudgetLimits,
+                  ],
+                  addJoins: null,
+                  getPrefetchedDataCallback: (items) async {
+                    return [
+                      if (categoryBudgetLimitsRefs)
+                        await $_getPrefetchedData<
+                          BudgetPeriod,
+                          $BudgetPeriodsTable,
+                          CategoryBudgetLimit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BudgetPeriodsTableReferences
+                              ._categoryBudgetLimitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BudgetPeriodsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).categoryBudgetLimitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.planningPeriodId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (fixedCostBudgetLimitsRefs)
+                        await $_getPrefetchedData<
+                          BudgetPeriod,
+                          $BudgetPeriodsTable,
+                          FixedCostBudgetLimit
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BudgetPeriodsTableReferences
+                              ._fixedCostBudgetLimitsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BudgetPeriodsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).fixedCostBudgetLimitsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.planningPeriodId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                    ];
+                  },
+                );
+              },
         ),
       );
 }
@@ -3750,20 +4427,77 @@ typedef $$BudgetPeriodsTableProcessedTableManager =
       $$BudgetPeriodsTableAnnotationComposer,
       $$BudgetPeriodsTableCreateCompanionBuilder,
       $$BudgetPeriodsTableUpdateCompanionBuilder,
-      (
-        BudgetPeriod,
-        BaseReferences<_$BudgieDatabase, $BudgetPeriodsTable, BudgetPeriod>,
-      ),
+      (BudgetPeriod, $$BudgetPeriodsTableReferences),
       BudgetPeriod,
-      PrefetchHooks Function()
+      PrefetchHooks Function({
+        bool categoryBudgetLimitsRefs,
+        bool fixedCostBudgetLimitsRefs,
+      })
     >;
 typedef $$CategoryBudgetLimitsTableCreateCompanionBuilder =
     CategoryBudgetLimitsCompanion Function({
       Value<int> id,
+      required int categoryId,
+      required int planningPeriodId,
       required int amount,
     });
 typedef $$CategoryBudgetLimitsTableUpdateCompanionBuilder =
-    CategoryBudgetLimitsCompanion Function({Value<int> id, Value<int> amount});
+    CategoryBudgetLimitsCompanion Function({
+      Value<int> id,
+      Value<int> categoryId,
+      Value<int> planningPeriodId,
+      Value<int> amount,
+    });
+
+final class $$CategoryBudgetLimitsTableReferences
+    extends
+        BaseReferences<
+          _$BudgieDatabase,
+          $CategoryBudgetLimitsTable,
+          CategoryBudgetLimit
+        > {
+  $$CategoryBudgetLimitsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $CategoriesTable _categoryIdTable(_$BudgieDatabase db) => db.categories
+      .createAlias('category_budget_limits__category_id__categories__id');
+
+  $$CategoriesTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$CategoriesTableTableManager(
+      $_db,
+      $_db.categories,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $BudgetPeriodsTable _planningPeriodIdTable(_$BudgieDatabase db) =>
+      db.budgetPeriods.createAlias(
+        'category_budget_limits__planning_period_id__budget_periods__id',
+      );
+
+  $$BudgetPeriodsTableProcessedTableManager get planningPeriodId {
+    final $_column = $_itemColumn<int>('planning_period_id')!;
+
+    final manager = $$BudgetPeriodsTableTableManager(
+      $_db,
+      $_db.budgetPeriods,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_planningPeriodIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$CategoryBudgetLimitsTableFilterComposer
     extends Composer<_$BudgieDatabase, $CategoryBudgetLimitsTable> {
@@ -3783,6 +4517,52 @@ class $$CategoryBudgetLimitsTableFilterComposer
     column: $table.amount,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$CategoriesTableFilterComposer get categoryId {
+    final $$CategoriesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableFilterComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableFilterComposer get planningPeriodId {
+    final $$BudgetPeriodsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CategoryBudgetLimitsTableOrderingComposer
@@ -3803,6 +4583,52 @@ class $$CategoryBudgetLimitsTableOrderingComposer
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$CategoriesTableOrderingComposer get categoryId {
+    final $$CategoriesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableOrderingComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableOrderingComposer get planningPeriodId {
+    final $$BudgetPeriodsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableOrderingComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CategoryBudgetLimitsTableAnnotationComposer
@@ -3819,6 +4645,52 @@ class $$CategoryBudgetLimitsTableAnnotationComposer
 
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  $$CategoriesTableAnnotationComposer get categoryId {
+    final $$CategoriesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.categories,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$CategoriesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.categories,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableAnnotationComposer get planningPeriodId {
+    final $$BudgetPeriodsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$CategoryBudgetLimitsTableTableManager
@@ -3832,16 +4704,9 @@ class $$CategoryBudgetLimitsTableTableManager
           $$CategoryBudgetLimitsTableAnnotationComposer,
           $$CategoryBudgetLimitsTableCreateCompanionBuilder,
           $$CategoryBudgetLimitsTableUpdateCompanionBuilder,
-          (
-            CategoryBudgetLimit,
-            BaseReferences<
-              _$BudgieDatabase,
-              $CategoryBudgetLimitsTable,
-              CategoryBudgetLimit
-            >,
-          ),
+          (CategoryBudgetLimit, $$CategoryBudgetLimitsTableReferences),
           CategoryBudgetLimit,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool categoryId, bool planningPeriodId})
         > {
   $$CategoryBudgetLimitsTableTableManager(
     _$BudgieDatabase db,
@@ -3865,26 +4730,96 @@ class $$CategoryBudgetLimitsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+                Value<int> planningPeriodId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
-              }) => CategoryBudgetLimitsCompanion(id: id, amount: amount),
+              }) => CategoryBudgetLimitsCompanion(
+                id: id,
+                categoryId: categoryId,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+              ),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required int amount}) =>
-                  CategoryBudgetLimitsCompanion.insert(id: id, amount: amount),
+              ({
+                Value<int> id = const Value.absent(),
+                required int categoryId,
+                required int planningPeriodId,
+                required int amount,
+              }) => CategoryBudgetLimitsCompanion.insert(
+                id: id,
+                categoryId: categoryId,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
                   e.readTable<$CategoryBudgetLimitsTable, CategoryBudgetLimit>(
                     table,
                   ),
-                  BaseReferences<
-                    _$BudgieDatabase,
-                    $CategoryBudgetLimitsTable,
-                    CategoryBudgetLimit
-                  >(db, table, e),
+                  $$CategoryBudgetLimitsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({categoryId = false, planningPeriodId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable:
+                                        $$CategoryBudgetLimitsTableReferences
+                                            ._categoryIdTable(db),
+                                    referencedColumn:
+                                        $$CategoryBudgetLimitsTableReferences
+                                            ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (planningPeriodId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.planningPeriodId,
+                                    referencedTable:
+                                        $$CategoryBudgetLimitsTableReferences
+                                            ._planningPeriodIdTable(db),
+                                    referencedColumn:
+                                        $$CategoryBudgetLimitsTableReferences
+                                            ._planningPeriodIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -3899,24 +4834,74 @@ typedef $$CategoryBudgetLimitsTableProcessedTableManager =
       $$CategoryBudgetLimitsTableAnnotationComposer,
       $$CategoryBudgetLimitsTableCreateCompanionBuilder,
       $$CategoryBudgetLimitsTableUpdateCompanionBuilder,
-      (
-        CategoryBudgetLimit,
-        BaseReferences<
-          _$BudgieDatabase,
-          $CategoryBudgetLimitsTable,
-          CategoryBudgetLimit
-        >,
-      ),
+      (CategoryBudgetLimit, $$CategoryBudgetLimitsTableReferences),
       CategoryBudgetLimit,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool categoryId, bool planningPeriodId})
     >;
 typedef $$FixedCostBudgetLimitsTableCreateCompanionBuilder =
     FixedCostBudgetLimitsCompanion Function({
       Value<int> id,
+      required int categoryId,
+      required int planningPeriodId,
       required int amount,
     });
 typedef $$FixedCostBudgetLimitsTableUpdateCompanionBuilder =
-    FixedCostBudgetLimitsCompanion Function({Value<int> id, Value<int> amount});
+    FixedCostBudgetLimitsCompanion Function({
+      Value<int> id,
+      Value<int> categoryId,
+      Value<int> planningPeriodId,
+      Value<int> amount,
+    });
+
+final class $$FixedCostBudgetLimitsTableReferences
+    extends
+        BaseReferences<
+          _$BudgieDatabase,
+          $FixedCostBudgetLimitsTable,
+          FixedCostBudgetLimit
+        > {
+  $$FixedCostBudgetLimitsTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $FixedCostsTable _categoryIdTable(_$BudgieDatabase db) => db.fixedCosts
+      .createAlias('fixed_cost_budget_limits__category_id__fixed_costs__id');
+
+  $$FixedCostsTableProcessedTableManager get categoryId {
+    final $_column = $_itemColumn<int>('category_id')!;
+
+    final manager = $$FixedCostsTableTableManager(
+      $_db,
+      $_db.fixedCosts,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $BudgetPeriodsTable _planningPeriodIdTable(_$BudgieDatabase db) =>
+      db.budgetPeriods.createAlias(
+        'fixed_cost_budget_limits__planning_period_id__budget_periods__id',
+      );
+
+  $$BudgetPeriodsTableProcessedTableManager get planningPeriodId {
+    final $_column = $_itemColumn<int>('planning_period_id')!;
+
+    final manager = $$BudgetPeriodsTableTableManager(
+      $_db,
+      $_db.budgetPeriods,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_planningPeriodIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
 
 class $$FixedCostBudgetLimitsTableFilterComposer
     extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
@@ -3936,6 +4921,52 @@ class $$FixedCostBudgetLimitsTableFilterComposer
     column: $table.amount,
     builder: (column) => ColumnFilters(column),
   );
+
+  $$FixedCostsTableFilterComposer get categoryId {
+    final $$FixedCostsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.fixedCosts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FixedCostsTableFilterComposer(
+            $db: $db,
+            $table: $db.fixedCosts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableFilterComposer get planningPeriodId {
+    final $$BudgetPeriodsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FixedCostBudgetLimitsTableOrderingComposer
@@ -3956,6 +4987,52 @@ class $$FixedCostBudgetLimitsTableOrderingComposer
     column: $table.amount,
     builder: (column) => ColumnOrderings(column),
   );
+
+  $$FixedCostsTableOrderingComposer get categoryId {
+    final $$FixedCostsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.fixedCosts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FixedCostsTableOrderingComposer(
+            $db: $db,
+            $table: $db.fixedCosts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableOrderingComposer get planningPeriodId {
+    final $$BudgetPeriodsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableOrderingComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FixedCostBudgetLimitsTableAnnotationComposer
@@ -3972,6 +5049,52 @@ class $$FixedCostBudgetLimitsTableAnnotationComposer
 
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  $$FixedCostsTableAnnotationComposer get categoryId {
+    final $$FixedCostsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.categoryId,
+      referencedTable: $db.fixedCosts,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FixedCostsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.fixedCosts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$BudgetPeriodsTableAnnotationComposer get planningPeriodId {
+    final $$BudgetPeriodsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
 }
 
 class $$FixedCostBudgetLimitsTableTableManager
@@ -3985,16 +5108,9 @@ class $$FixedCostBudgetLimitsTableTableManager
           $$FixedCostBudgetLimitsTableAnnotationComposer,
           $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
           $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
-          (
-            FixedCostBudgetLimit,
-            BaseReferences<
-              _$BudgieDatabase,
-              $FixedCostBudgetLimitsTable,
-              FixedCostBudgetLimit
-            >,
-          ),
+          (FixedCostBudgetLimit, $$FixedCostBudgetLimitsTableReferences),
           FixedCostBudgetLimit,
-          PrefetchHooks Function()
+          PrefetchHooks Function({bool categoryId, bool planningPeriodId})
         > {
   $$FixedCostBudgetLimitsTableTableManager(
     _$BudgieDatabase db,
@@ -4021,11 +5137,27 @@ class $$FixedCostBudgetLimitsTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
+                Value<int> categoryId = const Value.absent(),
+                Value<int> planningPeriodId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
-              }) => FixedCostBudgetLimitsCompanion(id: id, amount: amount),
+              }) => FixedCostBudgetLimitsCompanion(
+                id: id,
+                categoryId: categoryId,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+              ),
           createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required int amount}) =>
-                  FixedCostBudgetLimitsCompanion.insert(id: id, amount: amount),
+              ({
+                Value<int> id = const Value.absent(),
+                required int categoryId,
+                required int planningPeriodId,
+                required int amount,
+              }) => FixedCostBudgetLimitsCompanion.insert(
+                id: id,
+                categoryId: categoryId,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+              ),
           withReferenceMapper: (p0) => p0
               .map(
                 (e) => (
@@ -4033,15 +5165,69 @@ class $$FixedCostBudgetLimitsTableTableManager
                     $FixedCostBudgetLimitsTable,
                     FixedCostBudgetLimit
                   >(table),
-                  BaseReferences<
-                    _$BudgieDatabase,
-                    $FixedCostBudgetLimitsTable,
-                    FixedCostBudgetLimit
-                  >(db, table, e),
+                  $$FixedCostBudgetLimitsTableReferences(db, table, e),
                 ),
               )
               .toList(),
-          prefetchHooksCallback: null,
+          prefetchHooksCallback:
+              ({categoryId = false, planningPeriodId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (categoryId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.categoryId,
+                                    referencedTable:
+                                        $$FixedCostBudgetLimitsTableReferences
+                                            ._categoryIdTable(db),
+                                    referencedColumn:
+                                        $$FixedCostBudgetLimitsTableReferences
+                                            ._categoryIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (planningPeriodId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.planningPeriodId,
+                                    referencedTable:
+                                        $$FixedCostBudgetLimitsTableReferences
+                                            ._planningPeriodIdTable(db),
+                                    referencedColumn:
+                                        $$FixedCostBudgetLimitsTableReferences
+                                            ._planningPeriodIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
         ),
       );
 }
@@ -4056,16 +5242,9 @@ typedef $$FixedCostBudgetLimitsTableProcessedTableManager =
       $$FixedCostBudgetLimitsTableAnnotationComposer,
       $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
       $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
-      (
-        FixedCostBudgetLimit,
-        BaseReferences<
-          _$BudgieDatabase,
-          $FixedCostBudgetLimitsTable,
-          FixedCostBudgetLimit
-        >,
-      ),
+      (FixedCostBudgetLimit, $$FixedCostBudgetLimitsTableReferences),
       FixedCostBudgetLimit,
-      PrefetchHooks Function()
+      PrefetchHooks Function({bool categoryId, bool planningPeriodId})
     >;
 typedef $$PlansTableCreateCompanionBuilder =
     PlansCompanion Function({

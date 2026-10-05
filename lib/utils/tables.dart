@@ -30,16 +30,16 @@ class BudgetPeriods extends Table {
 
 class CategoryBudgetLimits extends Table {
   late final id = integer().autoIncrement()();
-  late final categoryId = integer().references(Categories, #id);
-  late final planningPeriodId = integer().references(BudgetPeriods, #id);
+  late final categoryId = integer().references(Categories, #id)();
+  late final planningPeriodId = integer().references(BudgetPeriods, #id)();
   // Stored in cents to avoid floating-point rounding problems
   late final amount = integer()();
 }
 
 class FixedCostBudgetLimits extends Table {
   late final id = integer().autoIncrement()();
-  late final categoryId = integer().references(FixedCosts, #id);
-  late final planningPeriodId = integer().references(BudgetPeriods, #id);
+  late final categoryId = integer().references(FixedCosts, #id)();
+  late final planningPeriodId = integer().references(BudgetPeriods, #id)();
   // Stored in cents to avoid floating-point rounding problems
   late final amount = integer()();
 }

@@ -1,8 +1,8 @@
 class YearTotals {
   final int year;
-  final List<CategoryTotals> categoryTotals;
-
-  YearTotals({required this.year, required this.categoryTotals});
+  final Map<int, CategoryTotals> categoryTotals;
+  int totalExpenses;
+  YearTotals({required this.year, required this.categoryTotals, required this.totalExpenses});
 }
 
 class CategoryTotals {
