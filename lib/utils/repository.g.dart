@@ -707,194 +707,6 @@ class TransactionsCompanion extends UpdateCompanion<Transaction> {
   }
 }
 
-class $FixedCostsTable extends FixedCosts
-    with TableInfo<$FixedCostsTable, FixedCost> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $FixedCostsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-    'name',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-  );
-  @override
-  List<GeneratedColumn> get $columns => [id, name];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'fixed_costs';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<FixedCost> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-        _nameMeta,
-        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_nameMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  FixedCost map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FixedCost(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      name: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}name'],
-      )!,
-    );
-  }
-
-  @override
-  $FixedCostsTable createAlias(String alias) {
-    return $FixedCostsTable(attachedDatabase, alias);
-  }
-}
-
-class FixedCost extends DataClass implements Insertable<FixedCost> {
-  final int id;
-  final String name;
-  const FixedCost({required this.id, required this.name});
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['name'] = Variable<String>(name);
-    return map;
-  }
-
-  FixedCostsCompanion toCompanion(bool nullToAbsent) {
-    return FixedCostsCompanion(id: Value(id), name: Value(name));
-  }
-
-  factory FixedCost.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FixedCost(
-      id: serializer.fromJson<int>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'name': serializer.toJson<String>(name),
-    };
-  }
-
-  FixedCost copyWith({int? id, String? name}) =>
-      FixedCost(id: id ?? this.id, name: name ?? this.name);
-  FixedCost copyWithCompanion(FixedCostsCompanion data) {
-    return FixedCost(
-      id: data.id.present ? data.id.value : this.id,
-      name: data.name.present ? data.name.value : this.name,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FixedCost(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, name);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FixedCost && other.id == this.id && other.name == this.name);
-}
-
-class FixedCostsCompanion extends UpdateCompanion<FixedCost> {
-  final Value<int> id;
-  final Value<String> name;
-  const FixedCostsCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-  });
-  FixedCostsCompanion.insert({
-    this.id = const Value.absent(),
-    required String name,
-  }) : name = Value(name);
-  static Insertable<FixedCost> custom({
-    Expression<int>? id,
-    Expression<String>? name,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (name != null) 'name': name,
-    });
-  }
-
-  FixedCostsCompanion copyWith({Value<int>? id, Value<String>? name}) {
-    return FixedCostsCompanion(id: id ?? this.id, name: name ?? this.name);
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FixedCostsCompanion(')
-          ..write('id: $id, ')
-          ..write('name: $name')
-          ..write(')'))
-        .toString();
-  }
-}
-
 class $BudgetPeriodsTable extends BudgetPeriods
     with TableInfo<$BudgetPeriodsTable, BudgetPeriod> {
   @override
@@ -1142,6 +954,280 @@ class BudgetPeriodsCompanion extends UpdateCompanion<BudgetPeriod> {
           ..write('id: $id, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FixedCostsTable extends FixedCosts
+    with TableInfo<$FixedCostsTable, FixedCost> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FixedCostsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _planningPeriodIdMeta = const VerificationMeta(
+    'planningPeriodId',
+  );
+  @override
+  late final GeneratedColumn<int> planningPeriodId = GeneratedColumn<int>(
+    'planning_period_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES budget_periods (id)',
+    ),
+  );
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  @override
+  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
+    'amount',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [name, planningPeriodId, amount];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'fixed_costs';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<FixedCost> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('planning_period_id')) {
+      context.handle(
+        _planningPeriodIdMeta,
+        planningPeriodId.isAcceptableOrUnknown(
+          data['planning_period_id']!,
+          _planningPeriodIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_planningPeriodIdMeta);
+    }
+    if (data.containsKey('amount')) {
+      context.handle(
+        _amountMeta,
+        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_amountMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {name};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+    {planningPeriodId, name},
+  ];
+  @override
+  FixedCost map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FixedCost(
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      planningPeriodId: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}planning_period_id'],
+      )!,
+      amount: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}amount'],
+      )!,
+    );
+  }
+
+  @override
+  $FixedCostsTable createAlias(String alias) {
+    return $FixedCostsTable(attachedDatabase, alias);
+  }
+}
+
+class FixedCost extends DataClass implements Insertable<FixedCost> {
+  final String name;
+  final int planningPeriodId;
+  final int amount;
+  const FixedCost({
+    required this.name,
+    required this.planningPeriodId,
+    required this.amount,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['name'] = Variable<String>(name);
+    map['planning_period_id'] = Variable<int>(planningPeriodId);
+    map['amount'] = Variable<int>(amount);
+    return map;
+  }
+
+  FixedCostsCompanion toCompanion(bool nullToAbsent) {
+    return FixedCostsCompanion(
+      name: Value(name),
+      planningPeriodId: Value(planningPeriodId),
+      amount: Value(amount),
+    );
+  }
+
+  factory FixedCost.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return FixedCost(
+      name: serializer.fromJson<String>(json['name']),
+      planningPeriodId: serializer.fromJson<int>(json['planningPeriodId']),
+      amount: serializer.fromJson<int>(json['amount']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'name': serializer.toJson<String>(name),
+      'planningPeriodId': serializer.toJson<int>(planningPeriodId),
+      'amount': serializer.toJson<int>(amount),
+    };
+  }
+
+  FixedCost copyWith({String? name, int? planningPeriodId, int? amount}) =>
+      FixedCost(
+        name: name ?? this.name,
+        planningPeriodId: planningPeriodId ?? this.planningPeriodId,
+        amount: amount ?? this.amount,
+      );
+  FixedCost copyWithCompanion(FixedCostsCompanion data) {
+    return FixedCost(
+      name: data.name.present ? data.name.value : this.name,
+      planningPeriodId: data.planningPeriodId.present
+          ? data.planningPeriodId.value
+          : this.planningPeriodId,
+      amount: data.amount.present ? data.amount.value : this.amount,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCost(')
+          ..write('name: $name, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
+          ..write('amount: $amount')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(name, planningPeriodId, amount);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is FixedCost &&
+          other.name == this.name &&
+          other.planningPeriodId == this.planningPeriodId &&
+          other.amount == this.amount);
+}
+
+class FixedCostsCompanion extends UpdateCompanion<FixedCost> {
+  final Value<String> name;
+  final Value<int> planningPeriodId;
+  final Value<int> amount;
+  final Value<int> rowid;
+  const FixedCostsCompanion({
+    this.name = const Value.absent(),
+    this.planningPeriodId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FixedCostsCompanion.insert({
+    required String name,
+    required int planningPeriodId,
+    required int amount,
+    this.rowid = const Value.absent(),
+  }) : name = Value(name),
+       planningPeriodId = Value(planningPeriodId),
+       amount = Value(amount);
+  static Insertable<FixedCost> custom({
+    Expression<String>? name,
+    Expression<int>? planningPeriodId,
+    Expression<int>? amount,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (name != null) 'name': name,
+      if (planningPeriodId != null) 'planning_period_id': planningPeriodId,
+      if (amount != null) 'amount': amount,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FixedCostsCompanion copyWith({
+    Value<String>? name,
+    Value<int>? planningPeriodId,
+    Value<int>? amount,
+    Value<int>? rowid,
+  }) {
+    return FixedCostsCompanion(
+      name: name ?? this.name,
+      planningPeriodId: planningPeriodId ?? this.planningPeriodId,
+      amount: amount ?? this.amount,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (planningPeriodId.present) {
+      map['planning_period_id'] = Variable<int>(planningPeriodId.value);
+    }
+    if (amount.present) {
+      map['amount'] = Variable<int>(amount.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FixedCostsCompanion(')
+          ..write('name: $name, ')
+          ..write('planningPeriodId: $planningPeriodId, ')
+          ..write('amount: $amount, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -1456,324 +1542,6 @@ class CategoryBudgetLimitsCompanion
   @override
   String toString() {
     return (StringBuffer('CategoryBudgetLimitsCompanion(')
-          ..write('id: $id, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('planningPeriodId: $planningPeriodId, ')
-          ..write('amount: $amount')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $FixedCostBudgetLimitsTable extends FixedCostBudgetLimits
-    with TableInfo<$FixedCostBudgetLimitsTable, FixedCostBudgetLimit> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $FixedCostBudgetLimitsTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-    'id',
-    aliasedName,
-    false,
-    hasAutoIncrement: true,
-    type: DriftSqlType.int,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'PRIMARY KEY AUTOINCREMENT',
-    ),
-  );
-  static const VerificationMeta _categoryIdMeta = const VerificationMeta(
-    'categoryId',
-  );
-  @override
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-    'category_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES fixed_costs (id)',
-    ),
-  );
-  static const VerificationMeta _planningPeriodIdMeta = const VerificationMeta(
-    'planningPeriodId',
-  );
-  @override
-  late final GeneratedColumn<int> planningPeriodId = GeneratedColumn<int>(
-    'planning_period_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES budget_periods (id)',
-    ),
-  );
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
-  @override
-  late final GeneratedColumn<int> amount = GeneratedColumn<int>(
-    'amount',
-    aliasedName,
-    false,
-    type: DriftSqlType.int,
-    requiredDuringInsert: true,
-  );
-  @override
-  List<GeneratedColumn> get $columns => [
-    id,
-    categoryId,
-    planningPeriodId,
-    amount,
-  ];
-  @override
-  String get aliasedName => _alias ?? actualTableName;
-  @override
-  String get actualTableName => $name;
-  static const String $name = 'fixed_cost_budget_limits';
-  @override
-  VerificationContext validateIntegrity(
-    Insertable<FixedCostBudgetLimit> instance, {
-    bool isInserting = false,
-  }) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('category_id')) {
-      context.handle(
-        _categoryIdMeta,
-        categoryId.isAcceptableOrUnknown(data['category_id']!, _categoryIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_categoryIdMeta);
-    }
-    if (data.containsKey('planning_period_id')) {
-      context.handle(
-        _planningPeriodIdMeta,
-        planningPeriodId.isAcceptableOrUnknown(
-          data['planning_period_id']!,
-          _planningPeriodIdMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_planningPeriodIdMeta);
-    }
-    if (data.containsKey('amount')) {
-      context.handle(
-        _amountMeta,
-        amount.isAcceptableOrUnknown(data['amount']!, _amountMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_amountMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  FixedCostBudgetLimit map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return FixedCostBudgetLimit(
-      id: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}id'],
-      )!,
-      categoryId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}category_id'],
-      )!,
-      planningPeriodId: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}planning_period_id'],
-      )!,
-      amount: attachedDatabase.typeMapping.read(
-        DriftSqlType.int,
-        data['${effectivePrefix}amount'],
-      )!,
-    );
-  }
-
-  @override
-  $FixedCostBudgetLimitsTable createAlias(String alias) {
-    return $FixedCostBudgetLimitsTable(attachedDatabase, alias);
-  }
-}
-
-class FixedCostBudgetLimit extends DataClass
-    implements Insertable<FixedCostBudgetLimit> {
-  final int id;
-  final int categoryId;
-  final int planningPeriodId;
-  final int amount;
-  const FixedCostBudgetLimit({
-    required this.id,
-    required this.categoryId,
-    required this.planningPeriodId,
-    required this.amount,
-  });
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
-    map['category_id'] = Variable<int>(categoryId);
-    map['planning_period_id'] = Variable<int>(planningPeriodId);
-    map['amount'] = Variable<int>(amount);
-    return map;
-  }
-
-  FixedCostBudgetLimitsCompanion toCompanion(bool nullToAbsent) {
-    return FixedCostBudgetLimitsCompanion(
-      id: Value(id),
-      categoryId: Value(categoryId),
-      planningPeriodId: Value(planningPeriodId),
-      amount: Value(amount),
-    );
-  }
-
-  factory FixedCostBudgetLimit.fromJson(
-    Map<String, dynamic> json, {
-    ValueSerializer? serializer,
-  }) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return FixedCostBudgetLimit(
-      id: serializer.fromJson<int>(json['id']),
-      categoryId: serializer.fromJson<int>(json['categoryId']),
-      planningPeriodId: serializer.fromJson<int>(json['planningPeriodId']),
-      amount: serializer.fromJson<int>(json['amount']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
-      'categoryId': serializer.toJson<int>(categoryId),
-      'planningPeriodId': serializer.toJson<int>(planningPeriodId),
-      'amount': serializer.toJson<int>(amount),
-    };
-  }
-
-  FixedCostBudgetLimit copyWith({
-    int? id,
-    int? categoryId,
-    int? planningPeriodId,
-    int? amount,
-  }) => FixedCostBudgetLimit(
-    id: id ?? this.id,
-    categoryId: categoryId ?? this.categoryId,
-    planningPeriodId: planningPeriodId ?? this.planningPeriodId,
-    amount: amount ?? this.amount,
-  );
-  FixedCostBudgetLimit copyWithCompanion(FixedCostBudgetLimitsCompanion data) {
-    return FixedCostBudgetLimit(
-      id: data.id.present ? data.id.value : this.id,
-      categoryId: data.categoryId.present
-          ? data.categoryId.value
-          : this.categoryId,
-      planningPeriodId: data.planningPeriodId.present
-          ? data.planningPeriodId.value
-          : this.planningPeriodId,
-      amount: data.amount.present ? data.amount.value : this.amount,
-    );
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FixedCostBudgetLimit(')
-          ..write('id: $id, ')
-          ..write('categoryId: $categoryId, ')
-          ..write('planningPeriodId: $planningPeriodId, ')
-          ..write('amount: $amount')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(id, categoryId, planningPeriodId, amount);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is FixedCostBudgetLimit &&
-          other.id == this.id &&
-          other.categoryId == this.categoryId &&
-          other.planningPeriodId == this.planningPeriodId &&
-          other.amount == this.amount);
-}
-
-class FixedCostBudgetLimitsCompanion
-    extends UpdateCompanion<FixedCostBudgetLimit> {
-  final Value<int> id;
-  final Value<int> categoryId;
-  final Value<int> planningPeriodId;
-  final Value<int> amount;
-  const FixedCostBudgetLimitsCompanion({
-    this.id = const Value.absent(),
-    this.categoryId = const Value.absent(),
-    this.planningPeriodId = const Value.absent(),
-    this.amount = const Value.absent(),
-  });
-  FixedCostBudgetLimitsCompanion.insert({
-    this.id = const Value.absent(),
-    required int categoryId,
-    required int planningPeriodId,
-    required int amount,
-  }) : categoryId = Value(categoryId),
-       planningPeriodId = Value(planningPeriodId),
-       amount = Value(amount);
-  static Insertable<FixedCostBudgetLimit> custom({
-    Expression<int>? id,
-    Expression<int>? categoryId,
-    Expression<int>? planningPeriodId,
-    Expression<int>? amount,
-  }) {
-    return RawValuesInsertable({
-      if (id != null) 'id': id,
-      if (categoryId != null) 'category_id': categoryId,
-      if (planningPeriodId != null) 'planning_period_id': planningPeriodId,
-      if (amount != null) 'amount': amount,
-    });
-  }
-
-  FixedCostBudgetLimitsCompanion copyWith({
-    Value<int>? id,
-    Value<int>? categoryId,
-    Value<int>? planningPeriodId,
-    Value<int>? amount,
-  }) {
-    return FixedCostBudgetLimitsCompanion(
-      id: id ?? this.id,
-      categoryId: categoryId ?? this.categoryId,
-      planningPeriodId: planningPeriodId ?? this.planningPeriodId,
-      amount: amount ?? this.amount,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
-    }
-    if (categoryId.present) {
-      map['category_id'] = Variable<int>(categoryId.value);
-    }
-    if (planningPeriodId.present) {
-      map['planning_period_id'] = Variable<int>(planningPeriodId.value);
-    }
-    if (amount.present) {
-      map['amount'] = Variable<int>(amount.value);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('FixedCostBudgetLimitsCompanion(')
           ..write('id: $id, ')
           ..write('categoryId: $categoryId, ')
           ..write('planningPeriodId: $planningPeriodId, ')
@@ -2101,10 +1869,10 @@ class $PlanEntriesTable extends PlanEntries
       'PRIMARY KEY AUTOINCREMENT',
     ),
   );
-  static const VerificationMeta _tripIdMeta = const VerificationMeta('tripId');
+  static const VerificationMeta _planIdMeta = const VerificationMeta('planId');
   @override
-  late final GeneratedColumn<int> tripId = GeneratedColumn<int>(
-    'trip_id',
+  late final GeneratedColumn<int> planId = GeneratedColumn<int>(
+    'plan_id',
     aliasedName,
     false,
     type: DriftSqlType.int,
@@ -2158,7 +1926,7 @@ class $PlanEntriesTable extends PlanEntries
   @override
   List<GeneratedColumn> get $columns => [
     id,
-    tripId,
+    planId,
     position,
     startDate,
     endDate,
@@ -2179,13 +1947,13 @@ class $PlanEntriesTable extends PlanEntries
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('trip_id')) {
+    if (data.containsKey('plan_id')) {
       context.handle(
-        _tripIdMeta,
-        tripId.isAcceptableOrUnknown(data['trip_id']!, _tripIdMeta),
+        _planIdMeta,
+        planId.isAcceptableOrUnknown(data['plan_id']!, _planIdMeta),
       );
     } else if (isInserting) {
-      context.missing(_tripIdMeta);
+      context.missing(_planIdMeta);
     }
     if (data.containsKey('position')) {
       context.handle(
@@ -2226,7 +1994,7 @@ class $PlanEntriesTable extends PlanEntries
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
-    {tripId, position},
+    {planId, position},
   ];
   @override
   PlanEntry map(Map<String, dynamic> data, {String? tablePrefix}) {
@@ -2236,9 +2004,9 @@ class $PlanEntriesTable extends PlanEntries
         DriftSqlType.int,
         data['${effectivePrefix}id'],
       )!,
-      tripId: attachedDatabase.typeMapping.read(
+      planId: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
-        data['${effectivePrefix}trip_id'],
+        data['${effectivePrefix}plan_id'],
       )!,
       position: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
@@ -2267,14 +2035,14 @@ class $PlanEntriesTable extends PlanEntries
 
 class PlanEntry extends DataClass implements Insertable<PlanEntry> {
   final int id;
-  final int tripId;
+  final int planId;
   final int position;
   final DateTime startDate;
   final DateTime endDate;
   final int amount;
   const PlanEntry({
     required this.id,
-    required this.tripId,
+    required this.planId,
     required this.position,
     required this.startDate,
     required this.endDate,
@@ -2284,7 +2052,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['trip_id'] = Variable<int>(tripId);
+    map['plan_id'] = Variable<int>(planId);
     map['position'] = Variable<int>(position);
     map['start_date'] = Variable<DateTime>(startDate);
     map['end_date'] = Variable<DateTime>(endDate);
@@ -2295,7 +2063,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
   PlanEntriesCompanion toCompanion(bool nullToAbsent) {
     return PlanEntriesCompanion(
       id: Value(id),
-      tripId: Value(tripId),
+      planId: Value(planId),
       position: Value(position),
       startDate: Value(startDate),
       endDate: Value(endDate),
@@ -2310,7 +2078,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return PlanEntry(
       id: serializer.fromJson<int>(json['id']),
-      tripId: serializer.fromJson<int>(json['tripId']),
+      planId: serializer.fromJson<int>(json['planId']),
       position: serializer.fromJson<int>(json['position']),
       startDate: serializer.fromJson<DateTime>(json['startDate']),
       endDate: serializer.fromJson<DateTime>(json['endDate']),
@@ -2322,7 +2090,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'tripId': serializer.toJson<int>(tripId),
+      'planId': serializer.toJson<int>(planId),
       'position': serializer.toJson<int>(position),
       'startDate': serializer.toJson<DateTime>(startDate),
       'endDate': serializer.toJson<DateTime>(endDate),
@@ -2332,14 +2100,14 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
 
   PlanEntry copyWith({
     int? id,
-    int? tripId,
+    int? planId,
     int? position,
     DateTime? startDate,
     DateTime? endDate,
     int? amount,
   }) => PlanEntry(
     id: id ?? this.id,
-    tripId: tripId ?? this.tripId,
+    planId: planId ?? this.planId,
     position: position ?? this.position,
     startDate: startDate ?? this.startDate,
     endDate: endDate ?? this.endDate,
@@ -2348,7 +2116,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
   PlanEntry copyWithCompanion(PlanEntriesCompanion data) {
     return PlanEntry(
       id: data.id.present ? data.id.value : this.id,
-      tripId: data.tripId.present ? data.tripId.value : this.tripId,
+      planId: data.planId.present ? data.planId.value : this.planId,
       position: data.position.present ? data.position.value : this.position,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
@@ -2360,7 +2128,7 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
   String toString() {
     return (StringBuffer('PlanEntry(')
           ..write('id: $id, ')
-          ..write('tripId: $tripId, ')
+          ..write('planId: $planId, ')
           ..write('position: $position, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
@@ -2371,13 +2139,13 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
 
   @override
   int get hashCode =>
-      Object.hash(id, tripId, position, startDate, endDate, amount);
+      Object.hash(id, planId, position, startDate, endDate, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PlanEntry &&
           other.id == this.id &&
-          other.tripId == this.tripId &&
+          other.planId == this.planId &&
           other.position == this.position &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
@@ -2386,14 +2154,14 @@ class PlanEntry extends DataClass implements Insertable<PlanEntry> {
 
 class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
   final Value<int> id;
-  final Value<int> tripId;
+  final Value<int> planId;
   final Value<int> position;
   final Value<DateTime> startDate;
   final Value<DateTime> endDate;
   final Value<int> amount;
   const PlanEntriesCompanion({
     this.id = const Value.absent(),
-    this.tripId = const Value.absent(),
+    this.planId = const Value.absent(),
     this.position = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
@@ -2401,19 +2169,19 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
   });
   PlanEntriesCompanion.insert({
     this.id = const Value.absent(),
-    required int tripId,
+    required int planId,
     required int position,
     required DateTime startDate,
     required DateTime endDate,
     required int amount,
-  }) : tripId = Value(tripId),
+  }) : planId = Value(planId),
        position = Value(position),
        startDate = Value(startDate),
        endDate = Value(endDate),
        amount = Value(amount);
   static Insertable<PlanEntry> custom({
     Expression<int>? id,
-    Expression<int>? tripId,
+    Expression<int>? planId,
     Expression<int>? position,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
@@ -2421,7 +2189,7 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (tripId != null) 'trip_id': tripId,
+      if (planId != null) 'plan_id': planId,
       if (position != null) 'position': position,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
@@ -2431,7 +2199,7 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
 
   PlanEntriesCompanion copyWith({
     Value<int>? id,
-    Value<int>? tripId,
+    Value<int>? planId,
     Value<int>? position,
     Value<DateTime>? startDate,
     Value<DateTime>? endDate,
@@ -2439,7 +2207,7 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
   }) {
     return PlanEntriesCompanion(
       id: id ?? this.id,
-      tripId: tripId ?? this.tripId,
+      planId: planId ?? this.planId,
       position: position ?? this.position,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
@@ -2453,8 +2221,8 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (tripId.present) {
-      map['trip_id'] = Variable<int>(tripId.value);
+    if (planId.present) {
+      map['plan_id'] = Variable<int>(planId.value);
     }
     if (position.present) {
       map['position'] = Variable<int>(position.value);
@@ -2475,7 +2243,7 @@ class PlanEntriesCompanion extends UpdateCompanion<PlanEntry> {
   String toString() {
     return (StringBuffer('PlanEntriesCompanion(')
           ..write('id: $id, ')
-          ..write('tripId: $tripId, ')
+          ..write('planId: $planId, ')
           ..write('position: $position, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
@@ -3046,12 +2814,10 @@ abstract class _$BudgieDatabase extends GeneratedDatabase {
   $BudgieDatabaseManager get managers => $BudgieDatabaseManager(this);
   late final $CategoriesTable categories = $CategoriesTable(this);
   late final $TransactionsTable transactions = $TransactionsTable(this);
-  late final $FixedCostsTable fixedCosts = $FixedCostsTable(this);
   late final $BudgetPeriodsTable budgetPeriods = $BudgetPeriodsTable(this);
+  late final $FixedCostsTable fixedCosts = $FixedCostsTable(this);
   late final $CategoryBudgetLimitsTable categoryBudgetLimits =
       $CategoryBudgetLimitsTable(this);
-  late final $FixedCostBudgetLimitsTable fixedCostBudgetLimits =
-      $FixedCostBudgetLimitsTable(this);
   late final $PlansTable plans = $PlansTable(this);
   late final $PlanEntriesTable planEntries = $PlanEntriesTable(this);
   late final $PlanEntryColorsTable planEntryColors = $PlanEntryColorsTable(
@@ -3067,10 +2833,9 @@ abstract class _$BudgieDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
     categories,
     transactions,
-    fixedCosts,
     budgetPeriods,
+    fixedCosts,
     categoryBudgetLimits,
-    fixedCostBudgetLimits,
     plans,
     planEntries,
     planEntryColors,
@@ -3812,241 +3577,6 @@ typedef $$TransactionsTableProcessedTableManager =
       Transaction,
       PrefetchHooks Function({bool categoryId})
     >;
-typedef $$FixedCostsTableCreateCompanionBuilder =
-    FixedCostsCompanion Function({Value<int> id, required String name});
-typedef $$FixedCostsTableUpdateCompanionBuilder =
-    FixedCostsCompanion Function({Value<int> id, Value<String> name});
-
-final class $$FixedCostsTableReferences
-    extends BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost> {
-  $$FixedCostsTableReferences(super.$_db, super.$_table, super.$_typedResult);
-
-  static MultiTypedResultKey<
-    $FixedCostBudgetLimitsTable,
-    List<FixedCostBudgetLimit>
-  >
-  _fixedCostBudgetLimitsRefsTable(_$BudgieDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.fixedCostBudgetLimits,
-        aliasName: 'fixed_costs__id__fixed_cost_budget_limits__category_id',
-      );
-
-  $$FixedCostBudgetLimitsTableProcessedTableManager
-  get fixedCostBudgetLimitsRefs {
-    final manager = $$FixedCostBudgetLimitsTableTableManager(
-      $_db,
-      $_db.fixedCostBudgetLimits,
-    ).filter((f) => f.categoryId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _fixedCostBudgetLimitsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-}
-
-class $$FixedCostsTableFilterComposer
-    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
-  $$FixedCostsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  Expression<bool> fixedCostBudgetLimitsRefs(
-    Expression<bool> Function($$FixedCostBudgetLimitsTableFilterComposer f) f,
-  ) {
-    final $$FixedCostBudgetLimitsTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.fixedCostBudgetLimits,
-          getReferencedColumn: (t) => t.categoryId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$FixedCostBudgetLimitsTableFilterComposer(
-                $db: $db,
-                $table: $db.fixedCostBudgetLimits,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$FixedCostsTableOrderingComposer
-    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
-  $$FixedCostsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<String> get name => $composableBuilder(
-    column: $table.name,
-    builder: (column) => ColumnOrderings(column),
-  );
-}
-
-class $$FixedCostsTableAnnotationComposer
-    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
-  $$FixedCostsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<String> get name =>
-      $composableBuilder(column: $table.name, builder: (column) => column);
-
-  Expression<T> fixedCostBudgetLimitsRefs<T extends Object>(
-    Expression<T> Function($$FixedCostBudgetLimitsTableAnnotationComposer a) f,
-  ) {
-    final $$FixedCostBudgetLimitsTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.fixedCostBudgetLimits,
-          getReferencedColumn: (t) => t.categoryId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$FixedCostBudgetLimitsTableAnnotationComposer(
-                $db: $db,
-                $table: $db.fixedCostBudgetLimits,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
-}
-
-class $$FixedCostsTableTableManager
-    extends
-        RootTableManager<
-          _$BudgieDatabase,
-          $FixedCostsTable,
-          FixedCost,
-          $$FixedCostsTableFilterComposer,
-          $$FixedCostsTableOrderingComposer,
-          $$FixedCostsTableAnnotationComposer,
-          $$FixedCostsTableCreateCompanionBuilder,
-          $$FixedCostsTableUpdateCompanionBuilder,
-          (FixedCost, $$FixedCostsTableReferences),
-          FixedCost,
-          PrefetchHooks Function({bool fixedCostBudgetLimitsRefs})
-        > {
-  $$FixedCostsTableTableManager(_$BudgieDatabase db, $FixedCostsTable table)
-    : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$FixedCostsTableFilterComposer($db: db, $table: table),
-          createOrderingComposer: () =>
-              $$FixedCostsTableOrderingComposer($db: db, $table: table),
-          createComputedFieldComposer: () =>
-              $$FixedCostsTableAnnotationComposer($db: db, $table: table),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<String> name = const Value.absent(),
-              }) => FixedCostsCompanion(id: id, name: name),
-          createCompanionCallback:
-              ({Value<int> id = const Value.absent(), required String name}) =>
-                  FixedCostsCompanion.insert(id: id, name: name),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<$FixedCostsTable, FixedCost>(table),
-                  $$FixedCostsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback: ({fixedCostBudgetLimitsRefs = false}) {
-            return PrefetchHooks(
-              db: db,
-              explicitlyWatchedTables: [
-                if (fixedCostBudgetLimitsRefs) db.fixedCostBudgetLimits,
-              ],
-              addJoins: null,
-              getPrefetchedDataCallback: (items) async {
-                return [
-                  if (fixedCostBudgetLimitsRefs)
-                    await $_getPrefetchedData<
-                      FixedCost,
-                      $FixedCostsTable,
-                      FixedCostBudgetLimit
-                    >(
-                      currentTable: table,
-                      referencedTable: $$FixedCostsTableReferences
-                          ._fixedCostBudgetLimitsRefsTable(db),
-                      managerFromTypedResult: (p0) =>
-                          $$FixedCostsTableReferences(
-                            db,
-                            table,
-                            p0,
-                          ).fixedCostBudgetLimitsRefs,
-                      referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.categoryId == item.id),
-                      typedResults: items,
-                    ),
-                ];
-              },
-            );
-          },
-        ),
-      );
-}
-
-typedef $$FixedCostsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$BudgieDatabase,
-      $FixedCostsTable,
-      FixedCost,
-      $$FixedCostsTableFilterComposer,
-      $$FixedCostsTableOrderingComposer,
-      $$FixedCostsTableAnnotationComposer,
-      $$FixedCostsTableCreateCompanionBuilder,
-      $$FixedCostsTableUpdateCompanionBuilder,
-      (FixedCost, $$FixedCostsTableReferences),
-      FixedCost,
-      PrefetchHooks Function({bool fixedCostBudgetLimitsRefs})
-    >;
 typedef $$BudgetPeriodsTableCreateCompanionBuilder =
     BudgetPeriodsCompanion Function({
       Value<int> id,
@@ -4069,6 +3599,24 @@ final class $$BudgetPeriodsTableReferences
     super.$_typedResult,
   );
 
+  static MultiTypedResultKey<$FixedCostsTable, List<FixedCost>>
+  _fixedCostsRefsTable(_$BudgieDatabase db) => MultiTypedResultKey.fromTable(
+    db.fixedCosts,
+    aliasName: 'budget_periods__id__fixed_costs__planning_period_id',
+  );
+
+  $$FixedCostsTableProcessedTableManager get fixedCostsRefs {
+    final manager = $$FixedCostsTableTableManager(
+      $_db,
+      $_db.fixedCosts,
+    ).filter((f) => f.planningPeriodId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_fixedCostsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
   static MultiTypedResultKey<
     $CategoryBudgetLimitsTable,
     List<CategoryBudgetLimit>
@@ -4089,32 +3637,6 @@ final class $$BudgetPeriodsTableReferences
 
     final cache = $_typedResult.readTableOrNull(
       _categoryBudgetLimitsRefsTable($_db),
-    );
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: cache),
-    );
-  }
-
-  static MultiTypedResultKey<
-    $FixedCostBudgetLimitsTable,
-    List<FixedCostBudgetLimit>
-  >
-  _fixedCostBudgetLimitsRefsTable(_$BudgieDatabase db) =>
-      MultiTypedResultKey.fromTable(
-        db.fixedCostBudgetLimits,
-        aliasName:
-            'budget_periods__id__fixed_cost_budget_limits__planning_period_id',
-      );
-
-  $$FixedCostBudgetLimitsTableProcessedTableManager
-  get fixedCostBudgetLimitsRefs {
-    final manager = $$FixedCostBudgetLimitsTableTableManager(
-      $_db,
-      $_db.fixedCostBudgetLimits,
-    ).filter((f) => f.planningPeriodId.id.sqlEquals($_itemColumn<int>('id')!));
-
-    final cache = $_typedResult.readTableOrNull(
-      _fixedCostBudgetLimitsRefsTable($_db),
     );
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
@@ -4146,6 +3668,31 @@ class $$BudgetPeriodsTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  Expression<bool> fixedCostsRefs(
+    Expression<bool> Function($$FixedCostsTableFilterComposer f) f,
+  ) {
+    final $$FixedCostsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.fixedCosts,
+      getReferencedColumn: (t) => t.planningPeriodId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FixedCostsTableFilterComposer(
+            $db: $db,
+            $table: $db.fixedCosts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<bool> categoryBudgetLimitsRefs(
     Expression<bool> Function($$CategoryBudgetLimitsTableFilterComposer f) f,
   ) {
@@ -4168,32 +3715,6 @@ class $$BudgetPeriodsTableFilterComposer
                 $removeJoinBuilderFromRootComposer,
           ),
     );
-    return f(composer);
-  }
-
-  Expression<bool> fixedCostBudgetLimitsRefs(
-    Expression<bool> Function($$FixedCostBudgetLimitsTableFilterComposer f) f,
-  ) {
-    final $$FixedCostBudgetLimitsTableFilterComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.fixedCostBudgetLimits,
-          getReferencedColumn: (t) => t.planningPeriodId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$FixedCostBudgetLimitsTableFilterComposer(
-                $db: $db,
-                $table: $db.fixedCostBudgetLimits,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
     return f(composer);
   }
 }
@@ -4241,6 +3762,31 @@ class $$BudgetPeriodsTableAnnotationComposer
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 
+  Expression<T> fixedCostsRefs<T extends Object>(
+    Expression<T> Function($$FixedCostsTableAnnotationComposer a) f,
+  ) {
+    final $$FixedCostsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.fixedCosts,
+      getReferencedColumn: (t) => t.planningPeriodId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$FixedCostsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.fixedCosts,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> categoryBudgetLimitsRefs<T extends Object>(
     Expression<T> Function($$CategoryBudgetLimitsTableAnnotationComposer a) f,
   ) {
@@ -4266,32 +3812,6 @@ class $$BudgetPeriodsTableAnnotationComposer
         );
     return f(composer);
   }
-
-  Expression<T> fixedCostBudgetLimitsRefs<T extends Object>(
-    Expression<T> Function($$FixedCostBudgetLimitsTableAnnotationComposer a) f,
-  ) {
-    final $$FixedCostBudgetLimitsTableAnnotationComposer composer =
-        $composerBuilder(
-          composer: this,
-          getCurrentColumn: (t) => t.id,
-          referencedTable: $db.fixedCostBudgetLimits,
-          getReferencedColumn: (t) => t.planningPeriodId,
-          builder:
-              (
-                joinBuilder, {
-                $addJoinBuilderToRootComposer,
-                $removeJoinBuilderFromRootComposer,
-              }) => $$FixedCostBudgetLimitsTableAnnotationComposer(
-                $db: $db,
-                $table: $db.fixedCostBudgetLimits,
-                $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-                joinBuilder: joinBuilder,
-                $removeJoinBuilderFromRootComposer:
-                    $removeJoinBuilderFromRootComposer,
-              ),
-        );
-    return f(composer);
-  }
 }
 
 class $$BudgetPeriodsTableTableManager
@@ -4308,8 +3828,8 @@ class $$BudgetPeriodsTableTableManager
           (BudgetPeriod, $$BudgetPeriodsTableReferences),
           BudgetPeriod,
           PrefetchHooks Function({
+            bool fixedCostsRefs,
             bool categoryBudgetLimitsRefs,
-            bool fixedCostBudgetLimitsRefs,
           })
         > {
   $$BudgetPeriodsTableTableManager(
@@ -4354,19 +3874,37 @@ class $$BudgetPeriodsTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({
-                categoryBudgetLimitsRefs = false,
-                fixedCostBudgetLimitsRefs = false,
-              }) {
+              ({fixedCostsRefs = false, categoryBudgetLimitsRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (fixedCostsRefs) db.fixedCosts,
                     if (categoryBudgetLimitsRefs) db.categoryBudgetLimits,
-                    if (fixedCostBudgetLimitsRefs) db.fixedCostBudgetLimits,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (fixedCostsRefs)
+                        await $_getPrefetchedData<
+                          BudgetPeriod,
+                          $BudgetPeriodsTable,
+                          FixedCost
+                        >(
+                          currentTable: table,
+                          referencedTable: $$BudgetPeriodsTableReferences
+                              ._fixedCostsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$BudgetPeriodsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).fixedCostsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.planningPeriodId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (categoryBudgetLimitsRefs)
                         await $_getPrefetchedData<
                           BudgetPeriod,
@@ -4382,27 +3920,6 @@ class $$BudgetPeriodsTableTableManager
                                 table,
                                 p0,
                               ).categoryBudgetLimitsRefs,
-                          referencedItemsForCurrentItem:
-                              (item, referencedItems) => referencedItems.where(
-                                (e) => e.planningPeriodId == item.id,
-                              ),
-                          typedResults: items,
-                        ),
-                      if (fixedCostBudgetLimitsRefs)
-                        await $_getPrefetchedData<
-                          BudgetPeriod,
-                          $BudgetPeriodsTable,
-                          FixedCostBudgetLimit
-                        >(
-                          currentTable: table,
-                          referencedTable: $$BudgetPeriodsTableReferences
-                              ._fixedCostBudgetLimitsRefsTable(db),
-                          managerFromTypedResult: (p0) =>
-                              $$BudgetPeriodsTableReferences(
-                                db,
-                                table,
-                                p0,
-                              ).fixedCostBudgetLimitsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.planningPeriodId == item.id,
@@ -4430,9 +3947,289 @@ typedef $$BudgetPeriodsTableProcessedTableManager =
       (BudgetPeriod, $$BudgetPeriodsTableReferences),
       BudgetPeriod,
       PrefetchHooks Function({
+        bool fixedCostsRefs,
         bool categoryBudgetLimitsRefs,
-        bool fixedCostBudgetLimitsRefs,
       })
+    >;
+typedef $$FixedCostsTableCreateCompanionBuilder =
+    FixedCostsCompanion Function({
+      required String name,
+      required int planningPeriodId,
+      required int amount,
+      Value<int> rowid,
+    });
+typedef $$FixedCostsTableUpdateCompanionBuilder =
+    FixedCostsCompanion Function({
+      Value<String> name,
+      Value<int> planningPeriodId,
+      Value<int> amount,
+      Value<int> rowid,
+    });
+
+final class $$FixedCostsTableReferences
+    extends BaseReferences<_$BudgieDatabase, $FixedCostsTable, FixedCost> {
+  $$FixedCostsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $BudgetPeriodsTable _planningPeriodIdTable(_$BudgieDatabase db) => db
+      .budgetPeriods
+      .createAlias('fixed_costs__planning_period_id__budget_periods__id');
+
+  $$BudgetPeriodsTableProcessedTableManager get planningPeriodId {
+    final $_column = $_itemColumn<int>('planning_period_id')!;
+
+    final manager = $$BudgetPeriodsTableTableManager(
+      $_db,
+      $_db.budgetPeriods,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_planningPeriodIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$FixedCostsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$BudgetPeriodsTableFilterComposer get planningPeriodId {
+    final $$BudgetPeriodsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableFilterComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FixedCostsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get amount => $composableBuilder(
+    column: $table.amount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$BudgetPeriodsTableOrderingComposer get planningPeriodId {
+    final $$BudgetPeriodsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableOrderingComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FixedCostsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $FixedCostsTable> {
+  $$FixedCostsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<int> get amount =>
+      $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  $$BudgetPeriodsTableAnnotationComposer get planningPeriodId {
+    final $$BudgetPeriodsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.planningPeriodId,
+      referencedTable: $db.budgetPeriods,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$BudgetPeriodsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.budgetPeriods,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$FixedCostsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $FixedCostsTable,
+          FixedCost,
+          $$FixedCostsTableFilterComposer,
+          $$FixedCostsTableOrderingComposer,
+          $$FixedCostsTableAnnotationComposer,
+          $$FixedCostsTableCreateCompanionBuilder,
+          $$FixedCostsTableUpdateCompanionBuilder,
+          (FixedCost, $$FixedCostsTableReferences),
+          FixedCost,
+          PrefetchHooks Function({bool planningPeriodId})
+        > {
+  $$FixedCostsTableTableManager(_$BudgieDatabase db, $FixedCostsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$FixedCostsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$FixedCostsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$FixedCostsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> name = const Value.absent(),
+                Value<int> planningPeriodId = const Value.absent(),
+                Value<int> amount = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => FixedCostsCompanion(
+                name: name,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String name,
+                required int planningPeriodId,
+                required int amount,
+                Value<int> rowid = const Value.absent(),
+              }) => FixedCostsCompanion.insert(
+                name: name,
+                planningPeriodId: planningPeriodId,
+                amount: amount,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$FixedCostsTable, FixedCost>(table),
+                  $$FixedCostsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({planningPeriodId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (planningPeriodId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.planningPeriodId,
+                                referencedTable: $$FixedCostsTableReferences
+                                    ._planningPeriodIdTable(db),
+                                referencedColumn: $$FixedCostsTableReferences
+                                    ._planningPeriodIdTable(db)
+                                    .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$FixedCostsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $FixedCostsTable,
+      FixedCost,
+      $$FixedCostsTableFilterComposer,
+      $$FixedCostsTableOrderingComposer,
+      $$FixedCostsTableAnnotationComposer,
+      $$FixedCostsTableCreateCompanionBuilder,
+      $$FixedCostsTableUpdateCompanionBuilder,
+      (FixedCost, $$FixedCostsTableReferences),
+      FixedCost,
+      PrefetchHooks Function({bool planningPeriodId})
     >;
 typedef $$CategoryBudgetLimitsTableCreateCompanionBuilder =
     CategoryBudgetLimitsCompanion Function({
@@ -4838,414 +4635,6 @@ typedef $$CategoryBudgetLimitsTableProcessedTableManager =
       CategoryBudgetLimit,
       PrefetchHooks Function({bool categoryId, bool planningPeriodId})
     >;
-typedef $$FixedCostBudgetLimitsTableCreateCompanionBuilder =
-    FixedCostBudgetLimitsCompanion Function({
-      Value<int> id,
-      required int categoryId,
-      required int planningPeriodId,
-      required int amount,
-    });
-typedef $$FixedCostBudgetLimitsTableUpdateCompanionBuilder =
-    FixedCostBudgetLimitsCompanion Function({
-      Value<int> id,
-      Value<int> categoryId,
-      Value<int> planningPeriodId,
-      Value<int> amount,
-    });
-
-final class $$FixedCostBudgetLimitsTableReferences
-    extends
-        BaseReferences<
-          _$BudgieDatabase,
-          $FixedCostBudgetLimitsTable,
-          FixedCostBudgetLimit
-        > {
-  $$FixedCostBudgetLimitsTableReferences(
-    super.$_db,
-    super.$_table,
-    super.$_typedResult,
-  );
-
-  static $FixedCostsTable _categoryIdTable(_$BudgieDatabase db) => db.fixedCosts
-      .createAlias('fixed_cost_budget_limits__category_id__fixed_costs__id');
-
-  $$FixedCostsTableProcessedTableManager get categoryId {
-    final $_column = $_itemColumn<int>('category_id')!;
-
-    final manager = $$FixedCostsTableTableManager(
-      $_db,
-      $_db.fixedCosts,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $BudgetPeriodsTable _planningPeriodIdTable(_$BudgieDatabase db) =>
-      db.budgetPeriods.createAlias(
-        'fixed_cost_budget_limits__planning_period_id__budget_periods__id',
-      );
-
-  $$BudgetPeriodsTableProcessedTableManager get planningPeriodId {
-    final $_column = $_itemColumn<int>('planning_period_id')!;
-
-    final manager = $$BudgetPeriodsTableTableManager(
-      $_db,
-      $_db.budgetPeriods,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_planningPeriodIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-}
-
-class $$FixedCostBudgetLimitsTableFilterComposer
-    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
-  $$FixedCostBudgetLimitsTableFilterComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnFilters<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  ColumnFilters<int> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnFilters(column),
-  );
-
-  $$FixedCostsTableFilterComposer get categoryId {
-    final $$FixedCostsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.fixedCosts,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$FixedCostsTableFilterComposer(
-            $db: $db,
-            $table: $db.fixedCosts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$BudgetPeriodsTableFilterComposer get planningPeriodId {
-    final $$BudgetPeriodsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.planningPeriodId,
-      referencedTable: $db.budgetPeriods,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetPeriodsTableFilterComposer(
-            $db: $db,
-            $table: $db.budgetPeriods,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$FixedCostBudgetLimitsTableOrderingComposer
-    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
-  $$FixedCostBudgetLimitsTableOrderingComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  ColumnOrderings<int> get id => $composableBuilder(
-    column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get amount => $composableBuilder(
-    column: $table.amount,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  $$FixedCostsTableOrderingComposer get categoryId {
-    final $$FixedCostsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.fixedCosts,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$FixedCostsTableOrderingComposer(
-            $db: $db,
-            $table: $db.fixedCosts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$BudgetPeriodsTableOrderingComposer get planningPeriodId {
-    final $$BudgetPeriodsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.planningPeriodId,
-      referencedTable: $db.budgetPeriods,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetPeriodsTableOrderingComposer(
-            $db: $db,
-            $table: $db.budgetPeriods,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$FixedCostBudgetLimitsTableAnnotationComposer
-    extends Composer<_$BudgieDatabase, $FixedCostBudgetLimitsTable> {
-  $$FixedCostBudgetLimitsTableAnnotationComposer({
-    required super.$db,
-    required super.$table,
-    super.joinBuilder,
-    super.$addJoinBuilderToRootComposer,
-    super.$removeJoinBuilderFromRootComposer,
-  });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumn<int> get amount =>
-      $composableBuilder(column: $table.amount, builder: (column) => column);
-
-  $$FixedCostsTableAnnotationComposer get categoryId {
-    final $$FixedCostsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.categoryId,
-      referencedTable: $db.fixedCosts,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$FixedCostsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.fixedCosts,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$BudgetPeriodsTableAnnotationComposer get planningPeriodId {
-    final $$BudgetPeriodsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.planningPeriodId,
-      referencedTable: $db.budgetPeriods,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$BudgetPeriodsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.budgetPeriods,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-}
-
-class $$FixedCostBudgetLimitsTableTableManager
-    extends
-        RootTableManager<
-          _$BudgieDatabase,
-          $FixedCostBudgetLimitsTable,
-          FixedCostBudgetLimit,
-          $$FixedCostBudgetLimitsTableFilterComposer,
-          $$FixedCostBudgetLimitsTableOrderingComposer,
-          $$FixedCostBudgetLimitsTableAnnotationComposer,
-          $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
-          $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
-          (FixedCostBudgetLimit, $$FixedCostBudgetLimitsTableReferences),
-          FixedCostBudgetLimit,
-          PrefetchHooks Function({bool categoryId, bool planningPeriodId})
-        > {
-  $$FixedCostBudgetLimitsTableTableManager(
-    _$BudgieDatabase db,
-    $FixedCostBudgetLimitsTable table,
-  ) : super(
-        TableManagerState(
-          db: db,
-          table: table,
-          createFilteringComposer: () =>
-              $$FixedCostBudgetLimitsTableFilterComposer(
-                $db: db,
-                $table: table,
-              ),
-          createOrderingComposer: () =>
-              $$FixedCostBudgetLimitsTableOrderingComposer(
-                $db: db,
-                $table: table,
-              ),
-          createComputedFieldComposer: () =>
-              $$FixedCostBudgetLimitsTableAnnotationComposer(
-                $db: db,
-                $table: table,
-              ),
-          updateCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                Value<int> categoryId = const Value.absent(),
-                Value<int> planningPeriodId = const Value.absent(),
-                Value<int> amount = const Value.absent(),
-              }) => FixedCostBudgetLimitsCompanion(
-                id: id,
-                categoryId: categoryId,
-                planningPeriodId: planningPeriodId,
-                amount: amount,
-              ),
-          createCompanionCallback:
-              ({
-                Value<int> id = const Value.absent(),
-                required int categoryId,
-                required int planningPeriodId,
-                required int amount,
-              }) => FixedCostBudgetLimitsCompanion.insert(
-                id: id,
-                categoryId: categoryId,
-                planningPeriodId: planningPeriodId,
-                amount: amount,
-              ),
-          withReferenceMapper: (p0) => p0
-              .map(
-                (e) => (
-                  e.readTable<
-                    $FixedCostBudgetLimitsTable,
-                    FixedCostBudgetLimit
-                  >(table),
-                  $$FixedCostBudgetLimitsTableReferences(db, table, e),
-                ),
-              )
-              .toList(),
-          prefetchHooksCallback:
-              ({categoryId = false, planningPeriodId = false}) {
-                return PrefetchHooks(
-                  db: db,
-                  explicitlyWatchedTables: [],
-                  addJoins:
-                      <
-                        T extends TableManagerState<
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic,
-                          dynamic
-                        >
-                      >(state) {
-                        if (categoryId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.categoryId,
-                                    referencedTable:
-                                        $$FixedCostBudgetLimitsTableReferences
-                                            ._categoryIdTable(db),
-                                    referencedColumn:
-                                        $$FixedCostBudgetLimitsTableReferences
-                                            ._categoryIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-                        if (planningPeriodId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.planningPeriodId,
-                                    referencedTable:
-                                        $$FixedCostBudgetLimitsTableReferences
-                                            ._planningPeriodIdTable(db),
-                                    referencedColumn:
-                                        $$FixedCostBudgetLimitsTableReferences
-                                            ._planningPeriodIdTable(db)
-                                            .id,
-                                  )
-                                  as T;
-                        }
-
-                        return state;
-                      },
-                  getPrefetchedDataCallback: (items) async {
-                    return [];
-                  },
-                );
-              },
-        ),
-      );
-}
-
-typedef $$FixedCostBudgetLimitsTableProcessedTableManager =
-    ProcessedTableManager<
-      _$BudgieDatabase,
-      $FixedCostBudgetLimitsTable,
-      FixedCostBudgetLimit,
-      $$FixedCostBudgetLimitsTableFilterComposer,
-      $$FixedCostBudgetLimitsTableOrderingComposer,
-      $$FixedCostBudgetLimitsTableAnnotationComposer,
-      $$FixedCostBudgetLimitsTableCreateCompanionBuilder,
-      $$FixedCostBudgetLimitsTableUpdateCompanionBuilder,
-      (FixedCostBudgetLimit, $$FixedCostBudgetLimitsTableReferences),
-      FixedCostBudgetLimit,
-      PrefetchHooks Function({bool categoryId, bool planningPeriodId})
-    >;
 typedef $$PlansTableCreateCompanionBuilder =
     PlansCompanion Function({
       Value<int> id,
@@ -5268,14 +4657,14 @@ final class $$PlansTableReferences
   static MultiTypedResultKey<$PlanEntriesTable, List<PlanEntry>>
   _planEntriesRefsTable(_$BudgieDatabase db) => MultiTypedResultKey.fromTable(
     db.planEntries,
-    aliasName: 'plans__id__plan_entries__trip_id',
+    aliasName: 'plans__id__plan_entries__plan_id',
   );
 
   $$PlanEntriesTableProcessedTableManager get planEntriesRefs {
     final manager = $$PlanEntriesTableTableManager(
       $_db,
       $_db.planEntries,
-    ).filter((f) => f.tripId.id.sqlEquals($_itemColumn<int>('id')!));
+    ).filter((f) => f.planId.id.sqlEquals($_itemColumn<int>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_planEntriesRefsTable($_db));
     return ProcessedTableManager(
@@ -5320,7 +4709,7 @@ class $$PlansTableFilterComposer
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.planEntries,
-      getReferencedColumn: (t) => t.tripId,
+      getReferencedColumn: (t) => t.planId,
       builder:
           (
             joinBuilder, {
@@ -5397,7 +4786,7 @@ class $$PlansTableAnnotationComposer
       composer: this,
       getCurrentColumn: (t) => t.id,
       referencedTable: $db.planEntries,
-      getReferencedColumn: (t) => t.tripId,
+      getReferencedColumn: (t) => t.planId,
       builder:
           (
             joinBuilder, {
@@ -5489,7 +4878,7 @@ class $$PlansTableTableManager
                       managerFromTypedResult: (p0) =>
                           $$PlansTableReferences(db, table, p0).planEntriesRefs,
                       referencedItemsForCurrentItem: (item, referencedItems) =>
-                          referencedItems.where((e) => e.tripId == item.id),
+                          referencedItems.where((e) => e.planId == item.id),
                       typedResults: items,
                     ),
                 ];
@@ -5517,7 +4906,7 @@ typedef $$PlansTableProcessedTableManager =
 typedef $$PlanEntriesTableCreateCompanionBuilder =
     PlanEntriesCompanion Function({
       Value<int> id,
-      required int tripId,
+      required int planId,
       required int position,
       required DateTime startDate,
       required DateTime endDate,
@@ -5526,7 +4915,7 @@ typedef $$PlanEntriesTableCreateCompanionBuilder =
 typedef $$PlanEntriesTableUpdateCompanionBuilder =
     PlanEntriesCompanion Function({
       Value<int> id,
-      Value<int> tripId,
+      Value<int> planId,
       Value<int> position,
       Value<DateTime> startDate,
       Value<DateTime> endDate,
@@ -5537,17 +4926,17 @@ final class $$PlanEntriesTableReferences
     extends BaseReferences<_$BudgieDatabase, $PlanEntriesTable, PlanEntry> {
   $$PlanEntriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $PlansTable _tripIdTable(_$BudgieDatabase db) =>
-      db.plans.createAlias('plan_entries__trip_id__plans__id');
+  static $PlansTable _planIdTable(_$BudgieDatabase db) =>
+      db.plans.createAlias('plan_entries__plan_id__plans__id');
 
-  $$PlansTableProcessedTableManager get tripId {
-    final $_column = $_itemColumn<int>('trip_id')!;
+  $$PlansTableProcessedTableManager get planId {
+    final $_column = $_itemColumn<int>('plan_id')!;
 
     final manager = $$PlansTableTableManager(
       $_db,
       $_db.plans,
     ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_tripIdTable($_db));
+    final item = $_typedResult.readTableOrNull(_planIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
@@ -5610,10 +4999,10 @@ class $$PlanEntriesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  $$PlansTableFilterComposer get tripId {
+  $$PlansTableFilterComposer get planId {
     final $$PlansTableFilterComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.tripId,
+      getCurrentColumn: (t) => t.planId,
       referencedTable: $db.plans,
       getReferencedColumn: (t) => t.id,
       builder:
@@ -5693,10 +5082,10 @@ class $$PlanEntriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$PlansTableOrderingComposer get tripId {
+  $$PlansTableOrderingComposer get planId {
     final $$PlansTableOrderingComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.tripId,
+      getCurrentColumn: (t) => t.planId,
       referencedTable: $db.plans,
       getReferencedColumn: (t) => t.id,
       builder:
@@ -5741,10 +5130,10 @@ class $$PlanEntriesTableAnnotationComposer
   GeneratedColumn<int> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
 
-  $$PlansTableAnnotationComposer get tripId {
+  $$PlansTableAnnotationComposer get planId {
     final $$PlansTableAnnotationComposer composer = $composerBuilder(
       composer: this,
-      getCurrentColumn: (t) => t.tripId,
+      getCurrentColumn: (t) => t.planId,
       referencedTable: $db.plans,
       getReferencedColumn: (t) => t.id,
       builder:
@@ -5803,7 +5192,7 @@ class $$PlanEntriesTableTableManager
           $$PlanEntriesTableUpdateCompanionBuilder,
           (PlanEntry, $$PlanEntriesTableReferences),
           PlanEntry,
-          PrefetchHooks Function({bool tripId, bool planEntryColorsRefs})
+          PrefetchHooks Function({bool planId, bool planEntryColorsRefs})
         > {
   $$PlanEntriesTableTableManager(_$BudgieDatabase db, $PlanEntriesTable table)
     : super(
@@ -5819,14 +5208,14 @@ class $$PlanEntriesTableTableManager
           updateCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                Value<int> tripId = const Value.absent(),
+                Value<int> planId = const Value.absent(),
                 Value<int> position = const Value.absent(),
                 Value<DateTime> startDate = const Value.absent(),
                 Value<DateTime> endDate = const Value.absent(),
                 Value<int> amount = const Value.absent(),
               }) => PlanEntriesCompanion(
                 id: id,
-                tripId: tripId,
+                planId: planId,
                 position: position,
                 startDate: startDate,
                 endDate: endDate,
@@ -5835,14 +5224,14 @@ class $$PlanEntriesTableTableManager
           createCompanionCallback:
               ({
                 Value<int> id = const Value.absent(),
-                required int tripId,
+                required int planId,
                 required int position,
                 required DateTime startDate,
                 required DateTime endDate,
                 required int amount,
               }) => PlanEntriesCompanion.insert(
                 id: id,
-                tripId: tripId,
+                planId: planId,
                 position: position,
                 startDate: startDate,
                 endDate: endDate,
@@ -5857,7 +5246,7 @@ class $$PlanEntriesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({tripId = false, planEntryColorsRefs = false}) {
+              ({planId = false, planEntryColorsRefs = false}) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
@@ -5879,17 +5268,17 @@ class $$PlanEntriesTableTableManager
                           dynamic
                         >
                       >(state) {
-                        if (tripId) {
+                        if (planId) {
                           state =
                               state.withJoin(
                                     currentTable: table,
-                                    currentColumn: table.tripId,
+                                    currentColumn: table.planId,
                                     referencedTable:
                                         $$PlanEntriesTableReferences
-                                            ._tripIdTable(db),
+                                            ._planIdTable(db),
                                     referencedColumn:
                                         $$PlanEntriesTableReferences
-                                            ._tripIdTable(db)
+                                            ._planIdTable(db)
                                             .id,
                                   )
                                   as T;
@@ -5940,7 +5329,7 @@ typedef $$PlanEntriesTableProcessedTableManager =
       $$PlanEntriesTableUpdateCompanionBuilder,
       (PlanEntry, $$PlanEntriesTableReferences),
       PlanEntry,
-      PrefetchHooks Function({bool tripId, bool planEntryColorsRefs})
+      PrefetchHooks Function({bool planId, bool planEntryColorsRefs})
     >;
 typedef $$PlanEntryColorsTableCreateCompanionBuilder =
     PlanEntryColorsCompanion Function({
@@ -6428,14 +5817,12 @@ class $BudgieDatabaseManager {
       $$CategoriesTableTableManager(_db, _db.categories);
   $$TransactionsTableTableManager get transactions =>
       $$TransactionsTableTableManager(_db, _db.transactions);
-  $$FixedCostsTableTableManager get fixedCosts =>
-      $$FixedCostsTableTableManager(_db, _db.fixedCosts);
   $$BudgetPeriodsTableTableManager get budgetPeriods =>
       $$BudgetPeriodsTableTableManager(_db, _db.budgetPeriods);
+  $$FixedCostsTableTableManager get fixedCosts =>
+      $$FixedCostsTableTableManager(_db, _db.fixedCosts);
   $$CategoryBudgetLimitsTableTableManager get categoryBudgetLimits =>
       $$CategoryBudgetLimitsTableTableManager(_db, _db.categoryBudgetLimits);
-  $$FixedCostBudgetLimitsTableTableManager get fixedCostBudgetLimits =>
-      $$FixedCostBudgetLimitsTableTableManager(_db, _db.fixedCostBudgetLimits);
   $$PlansTableTableManager get plans =>
       $$PlansTableTableManager(_db, _db.plans);
   $$PlanEntriesTableTableManager get planEntries =>

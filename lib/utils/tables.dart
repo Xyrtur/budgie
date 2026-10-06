@@ -13,13 +13,23 @@ class Categories extends Table {
   late final id = integer().autoIncrement()();
   late final name = text().unique()();
   late final color = integer()();
+  late final position = integer()();
   late final isExpense = boolean()();
   late final isArchived = boolean().withDefault(const Constant(false))();
 }
 
 class FixedCosts extends Table {
   late final id = integer().autoIncrement()();
-  late final name = text().unique()();
+  late final name = text()();
+  late final planningPeriodId = integer().references(BudgetPeriods, #id, onDelete: KeyAction.cascade)();
+  // Stored in cents to avoid floating-point rounding problems
+  late final amount = integer()();
+
+  // No two costs can have the same name in a planning period
+  @override
+  List<Set<Column>> get uniqueKeys => [
+    {planningPeriodId, name},
+  ];
 }
 
 class BudgetPeriods extends Table {
@@ -31,15 +41,7 @@ class BudgetPeriods extends Table {
 class CategoryBudgetLimits extends Table {
   late final id = integer().autoIncrement()();
   late final categoryId = integer().references(Categories, #id)();
-  late final planningPeriodId = integer().references(BudgetPeriods, #id)();
-  // Stored in cents to avoid floating-point rounding problems
-  late final amount = integer()();
-}
-
-class FixedCostBudgetLimits extends Table {
-  late final id = integer().autoIncrement()();
-  late final categoryId = integer().references(FixedCosts, #id)();
-  late final planningPeriodId = integer().references(BudgetPeriods, #id)();
+  late final planningPeriodId = integer().references(BudgetPeriods, #id, onDelete: KeyAction.cascade)();
   // Stored in cents to avoid floating-point rounding problems
   late final amount = integer()();
 }
@@ -53,7 +55,7 @@ class Plans extends Table {
 
 class PlanEntries extends Table {
   late final id = integer().autoIncrement()();
-  late final tripId = integer().references(Plans, #id, onDelete: KeyAction.cascade)();
+  late final planId = integer().references(Plans, #id, onDelete: KeyAction.cascade)();
   late final position = integer()();
   late final startDate = dateTime()();
   late final endDate = dateTime()();
@@ -62,7 +64,7 @@ class PlanEntries extends Table {
   // No two entries can have the same position in a trip
   @override
   List<Set<Column>> get uniqueKeys => [
-    {tripId, position},
+    {planId, position},
   ];
 }
 

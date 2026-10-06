@@ -1,3 +1,4 @@
+import 'package:budgie/models/expense_plan_models.dart';
 import 'package:budgie/models/graph_totals.dart';
 import 'package:budgie/models/transaction_models.dart';
 import 'package:budgie/utils/datetime_ext.dart';
@@ -15,7 +16,6 @@ part 'tables.dart';
     FixedCosts,
     BudgetPeriods,
     CategoryBudgetLimits,
-    FixedCostBudgetLimits,
     Plans,
     PlanEntries,
     PlanEntryColors,
@@ -62,17 +62,17 @@ class BudgieDatabase extends _$BudgieDatabase {
     final budgetPeriods =
         await (select(this.budgetPeriods)..where(
               (period) =>
-                  // 4 cases
-                  // Period rests within year
-                  period.startDate.isSmallerThanValue(nextYearStart) & period.endDate.isBiggerThanValue(yearStart) |
-                  // Period encircles year
-                  period.startDate.isSmallerThanValue(yearStart) & period.endDate.isBiggerThanValue(nextYearStart) |
-                  // Period overlaps start of year
-                  period.startDate.isSmallerThanValue(yearStart) & period.endDate.isBiggerThanValue(yearStart) |
-                  // Period overlaps end of year
-                  period.startDate.isSmallerThanValue(nextYearStart) & period.endDate.isBiggerThanValue(nextYearStart),
+                  period.startDate.isSmallerThanValue(nextYearStart) & period.endDate.isBiggerThanValue(yearStart),
             ))
             .get();
+
+    // Load all category limits that coincide with loaded budget periods
+    final limitRows = await (select(
+      categoryBudgetLimits,
+    )..where((row) => row.planningPeriodId.isIn(budgetPeriods.map((period) => period.id).toList()))).get();
+    final categoryLimits = <(int, int), int>{
+      for (final limit in limitRows) (limit.planningPeriodId, limit.categoryId): limit.amount,
+    };
 
     final result = <MonthTransactions>[];
     for (var month = 1; month <= 12; month++) {
@@ -98,11 +98,7 @@ class BudgieDatabase extends _$BudgieDatabase {
           }
         }
 
-        final categoryLimit =
-            (await (select(categoryBudgetLimits)
-                      ..where((row) => row.categoryId.equals(categoryId) & row.planningPeriodId.equals(periodID)))
-                    .getSingle())
-                .amount;
+        final categoryLimit = categoryLimits[(periodID, categoryId)] ?? 0;
 
         categoryGroups.add(
           CategoryTransactions(
@@ -182,28 +178,162 @@ class BudgieDatabase extends _$BudgieDatabase {
   }
 
   // Add transaction
+  Future<int> addTransaction(TransactionsCompanion txn) {
+    return into(transactions).insert(txn);
+  }
 
   // Edit transaction
+  Future<bool> editTransaction(TransactionsCompanion txn) {
+    return update(transactions).replace(txn);
+  }
 
   // Delete transaction
+  Future<int> deleteTransaction(Transaction txn) {
+    return delete(transactions).delete(txn);
+  }
 
   // Provide List<Plan> for expense planning page
+  Future<List<Plan>> fetchAllPlans() {
+    return (select(plans)).get();
+  }
+
+  // Provide ExpensePlan with all entries onSelect
+  Future<ExpensePlan> fetchExpensePlan(int id) async {
+    final selectedPlan = await (select(plans)..where((row) => row.id.equals(id))).getSingle();
+    final rows =
+        await (select(
+                planEntries,
+              ).join([leftOuterJoin(planEntryColors, planEntryColors.entryId.equalsExp(planEntries.id))])
+              ..where(planEntries.planId.equals(id))
+              ..orderBy([OrderingTerm(expression: planEntries.position)]))
+            .get();
+
+    final selectedEntries = <int, ExpensePlanEntry>{};
+    for (final row in rows) {
+      // Creates a row per color, so if an entry appears multiple times due to having multiple colors, putIfAbsent
+      final entry = row.readTable(planEntries);
+      final color = row.readTableOrNull(planEntryColors);
+      final result = selectedEntries.putIfAbsent(entry.id, () => ExpensePlanEntry(entry: entry, colors: <int>[]));
+      if (color != null) {
+        result.colors.add(color.color);
+      }
+    }
+
+    return ExpensePlan(
+      planId: selectedPlan.id,
+      name: selectedPlan.name,
+      startDate: selectedPlan.startDate,
+      endDate: selectedPlan.endDate,
+      planEntries: selectedEntries.values.toList(),
+    );
+  }
 
   // Add Expense plan
+  Future<int> addPlan(PlansCompanion plan) {
+    return into(plans).insert(plan);
+  }
 
   // Edit Expense plan
+  Future<bool> editPlan(PlansCompanion plan) {
+    return update(plans).replace(plan);
+  }
 
   // Delete Expense plan
+  Future<int> deletePlan(Plan plan) {
+    return delete(plans).delete(plan);
+  }
 
   // Add PlanEntry
+  Future<int> addPlanEntry(PlanEntriesCompanion planEntry) {
+    return into(planEntries).insert(planEntry);
+  }
 
   // Edit PlanEntry
+  Future<bool> editPlanEntry(PlanEntriesCompanion planEntry) {
+    return update(planEntries).replace(planEntry);
+  }
+
+  // Reorder plan entries
+  Future<void> reorderPlanEntries(List<PlanEntry> updatedList) async {
+    await batch((b) {
+      b.insertAllOnConflictUpdate(planEntries, updatedList);
+    });
+  }
 
   // Delete PlanEntry
+  Future<int> deletePlanEntry(PlanEntry planEntry) {
+    return delete(planEntries).delete(planEntry);
+  }
+
+  // Fetch all budget periods
+  Future<List<BudgetPeriod>> fetchAllBudgetPeriods() {
+    return (select(budgetPeriods)).get();
+  }
+
+  // Add budget period
+  Future<int> addBudgetPeriod(BudgetPeriodsCompanion budgetPeriod) {
+    return into(budgetPeriods).insert(budgetPeriod);
+  }
+
+  // Edit budget period
+  Future<bool> editBudgetPeriod(BudgetPeriodsCompanion budgetPeriod) {
+    return update(budgetPeriods).replace(budgetPeriod);
+  }
+
+  // Delete budget period
+  Future<int> deleteBudgetPeriod(BudgetPeriod budgetPeriod) {
+    return delete(budgetPeriods).delete(budgetPeriod);
+  }
+
+  // Get list of fixed costs for selected period
+  Future<List<FixedCost>> fetchFixedCostsForPeriod(int periodId) async {
+    return await (select(fixedCosts)..where((row) => row.planningPeriodId.equals(periodId))).get();
+  }
 
   // Add / Edit Fixed Cost
+  Future<void> updateFixedCosts(List<FixedCost> updatedList) async {
+    await batch((b) {
+      b.insertAllOnConflictUpdate(fixedCosts, updatedList);
+    });
+  }
 
   // Delete Fixed Cost
+  Future<int> deleteFixedCost(FixedCost fixedCost) {
+    return delete(fixedCosts).delete(fixedCost);
+  }
 
-  //
+  // Update category limits for selected period
+
+  // Fetch list of categories
+
+  // Add category
+
+  // Edit category
+
+  // Reorder categories
+  // batch update this
+
+  // Delete category
+
+  // Fetch list of account balances
+
+  // Add account
+
+  // Edit account
+
+  // Delete account
+
+  // Reorder accounts
+
+  // Toggle expenses account
+
+  // Toggle show savings
+
+  // Toggle warm mode
+
+  // Toggle include fixed costs
+
+  // Import data
+
+  // Export data
 }
