@@ -79,5 +79,12 @@ class AccountBalances extends Table {
   late final name = text()();
   // Amount in cents
   late final total = integer()();
-  late final isExpenseAccount = boolean()();
+  late final isExpenseAccount = boolean().withDefault(const Constant(false))();
+}
+
+class AppSettings extends Table {
+  late final id = integer().autoIncrement()();
+  late final includeFixedCosts = boolean().withDefault(const Constant(false))();
+  late final warmModeToggled = boolean().withDefault(const Constant(false))();
+  late final showSavingsToggled = boolean().withDefault(const Constant(false))();
 }

@@ -41,6 +41,17 @@ class $CategoriesTable extends Categories
     type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _positionMeta = const VerificationMeta(
+    'position',
+  );
+  @override
+  late final GeneratedColumn<int> position = GeneratedColumn<int>(
+    'position',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _isExpenseMeta = const VerificationMeta(
     'isExpense',
   );
@@ -75,6 +86,7 @@ class $CategoriesTable extends Categories
     id,
     name,
     color,
+    position,
     isExpense,
     isArchived,
   ];
@@ -108,6 +120,14 @@ class $CategoriesTable extends Categories
       );
     } else if (isInserting) {
       context.missing(_colorMeta);
+    }
+    if (data.containsKey('position')) {
+      context.handle(
+        _positionMeta,
+        position.isAcceptableOrUnknown(data['position']!, _positionMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_positionMeta);
     }
     if (data.containsKey('is_expense')) {
       context.handle(
@@ -144,6 +164,10 @@ class $CategoriesTable extends Categories
         DriftSqlType.int,
         data['${effectivePrefix}color'],
       )!,
+      position: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}position'],
+      )!,
       isExpense: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_expense'],
@@ -165,12 +189,14 @@ class Category extends DataClass implements Insertable<Category> {
   final int id;
   final String name;
   final int color;
+  final int position;
   final bool isExpense;
   final bool isArchived;
   const Category({
     required this.id,
     required this.name,
     required this.color,
+    required this.position,
     required this.isExpense,
     required this.isArchived,
   });
@@ -180,6 +206,7 @@ class Category extends DataClass implements Insertable<Category> {
     map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['color'] = Variable<int>(color);
+    map['position'] = Variable<int>(position);
     map['is_expense'] = Variable<bool>(isExpense);
     map['is_archived'] = Variable<bool>(isArchived);
     return map;
@@ -190,6 +217,7 @@ class Category extends DataClass implements Insertable<Category> {
       id: Value(id),
       name: Value(name),
       color: Value(color),
+      position: Value(position),
       isExpense: Value(isExpense),
       isArchived: Value(isArchived),
     );
@@ -204,6 +232,7 @@ class Category extends DataClass implements Insertable<Category> {
       id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       color: serializer.fromJson<int>(json['color']),
+      position: serializer.fromJson<int>(json['position']),
       isExpense: serializer.fromJson<bool>(json['isExpense']),
       isArchived: serializer.fromJson<bool>(json['isArchived']),
     );
@@ -215,6 +244,7 @@ class Category extends DataClass implements Insertable<Category> {
       'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'color': serializer.toJson<int>(color),
+      'position': serializer.toJson<int>(position),
       'isExpense': serializer.toJson<bool>(isExpense),
       'isArchived': serializer.toJson<bool>(isArchived),
     };
@@ -224,12 +254,14 @@ class Category extends DataClass implements Insertable<Category> {
     int? id,
     String? name,
     int? color,
+    int? position,
     bool? isExpense,
     bool? isArchived,
   }) => Category(
     id: id ?? this.id,
     name: name ?? this.name,
     color: color ?? this.color,
+    position: position ?? this.position,
     isExpense: isExpense ?? this.isExpense,
     isArchived: isArchived ?? this.isArchived,
   );
@@ -238,6 +270,7 @@ class Category extends DataClass implements Insertable<Category> {
       id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       color: data.color.present ? data.color.value : this.color,
+      position: data.position.present ? data.position.value : this.position,
       isExpense: data.isExpense.present ? data.isExpense.value : this.isExpense,
       isArchived: data.isArchived.present
           ? data.isArchived.value
@@ -251,6 +284,7 @@ class Category extends DataClass implements Insertable<Category> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('color: $color, ')
+          ..write('position: $position, ')
           ..write('isExpense: $isExpense, ')
           ..write('isArchived: $isArchived')
           ..write(')'))
@@ -258,7 +292,8 @@ class Category extends DataClass implements Insertable<Category> {
   }
 
   @override
-  int get hashCode => Object.hash(id, name, color, isExpense, isArchived);
+  int get hashCode =>
+      Object.hash(id, name, color, position, isExpense, isArchived);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -266,6 +301,7 @@ class Category extends DataClass implements Insertable<Category> {
           other.id == this.id &&
           other.name == this.name &&
           other.color == this.color &&
+          other.position == this.position &&
           other.isExpense == this.isExpense &&
           other.isArchived == this.isArchived);
 }
@@ -274,12 +310,14 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<int> id;
   final Value<String> name;
   final Value<int> color;
+  final Value<int> position;
   final Value<bool> isExpense;
   final Value<bool> isArchived;
   const CategoriesCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.color = const Value.absent(),
+    this.position = const Value.absent(),
     this.isExpense = const Value.absent(),
     this.isArchived = const Value.absent(),
   });
@@ -287,15 +325,18 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     this.id = const Value.absent(),
     required String name,
     required int color,
+    required int position,
     required bool isExpense,
     this.isArchived = const Value.absent(),
   }) : name = Value(name),
        color = Value(color),
+       position = Value(position),
        isExpense = Value(isExpense);
   static Insertable<Category> custom({
     Expression<int>? id,
     Expression<String>? name,
     Expression<int>? color,
+    Expression<int>? position,
     Expression<bool>? isExpense,
     Expression<bool>? isArchived,
   }) {
@@ -303,6 +344,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (color != null) 'color': color,
+      if (position != null) 'position': position,
       if (isExpense != null) 'is_expense': isExpense,
       if (isArchived != null) 'is_archived': isArchived,
     });
@@ -312,6 +354,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     Value<int>? id,
     Value<String>? name,
     Value<int>? color,
+    Value<int>? position,
     Value<bool>? isExpense,
     Value<bool>? isArchived,
   }) {
@@ -319,6 +362,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
+      position: position ?? this.position,
       isExpense: isExpense ?? this.isExpense,
       isArchived: isArchived ?? this.isArchived,
     );
@@ -336,6 +380,9 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
     if (color.present) {
       map['color'] = Variable<int>(color.value);
     }
+    if (position.present) {
+      map['position'] = Variable<int>(position.value);
+    }
     if (isExpense.present) {
       map['is_expense'] = Variable<bool>(isExpense.value);
     }
@@ -351,6 +398,7 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('color: $color, ')
+          ..write('position: $position, ')
           ..write('isExpense: $isExpense, ')
           ..write('isArchived: $isArchived')
           ..write(')'))
@@ -965,6 +1013,19 @@ class $FixedCostsTable extends FixedCosts
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $FixedCostsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -985,7 +1046,7 @@ class $FixedCostsTable extends FixedCosts
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES budget_periods (id)',
+      'REFERENCES budget_periods (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
@@ -998,7 +1059,7 @@ class $FixedCostsTable extends FixedCosts
     requiredDuringInsert: true,
   );
   @override
-  List<GeneratedColumn> get $columns => [name, planningPeriodId, amount];
+  List<GeneratedColumn> get $columns => [id, name, planningPeriodId, amount];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -1011,6 +1072,9 @@ class $FixedCostsTable extends FixedCosts
   }) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
     if (data.containsKey('name')) {
       context.handle(
         _nameMeta,
@@ -1042,7 +1106,7 @@ class $FixedCostsTable extends FixedCosts
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {name};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   List<Set<GeneratedColumn>> get uniqueKeys => [
     {planningPeriodId, name},
@@ -1051,6 +1115,10 @@ class $FixedCostsTable extends FixedCosts
   FixedCost map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return FixedCost(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
       name: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}name'],
@@ -1073,10 +1141,12 @@ class $FixedCostsTable extends FixedCosts
 }
 
 class FixedCost extends DataClass implements Insertable<FixedCost> {
+  final int id;
   final String name;
   final int planningPeriodId;
   final int amount;
   const FixedCost({
+    required this.id,
     required this.name,
     required this.planningPeriodId,
     required this.amount,
@@ -1084,6 +1154,7 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
     map['name'] = Variable<String>(name);
     map['planning_period_id'] = Variable<int>(planningPeriodId);
     map['amount'] = Variable<int>(amount);
@@ -1092,6 +1163,7 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
 
   FixedCostsCompanion toCompanion(bool nullToAbsent) {
     return FixedCostsCompanion(
+      id: Value(id),
       name: Value(name),
       planningPeriodId: Value(planningPeriodId),
       amount: Value(amount),
@@ -1104,6 +1176,7 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
   }) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return FixedCost(
+      id: serializer.fromJson<int>(json['id']),
       name: serializer.fromJson<String>(json['name']),
       planningPeriodId: serializer.fromJson<int>(json['planningPeriodId']),
       amount: serializer.fromJson<int>(json['amount']),
@@ -1113,20 +1186,27 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
       'name': serializer.toJson<String>(name),
       'planningPeriodId': serializer.toJson<int>(planningPeriodId),
       'amount': serializer.toJson<int>(amount),
     };
   }
 
-  FixedCost copyWith({String? name, int? planningPeriodId, int? amount}) =>
-      FixedCost(
-        name: name ?? this.name,
-        planningPeriodId: planningPeriodId ?? this.planningPeriodId,
-        amount: amount ?? this.amount,
-      );
+  FixedCost copyWith({
+    int? id,
+    String? name,
+    int? planningPeriodId,
+    int? amount,
+  }) => FixedCost(
+    id: id ?? this.id,
+    name: name ?? this.name,
+    planningPeriodId: planningPeriodId ?? this.planningPeriodId,
+    amount: amount ?? this.amount,
+  );
   FixedCost copyWithCompanion(FixedCostsCompanion data) {
     return FixedCost(
+      id: data.id.present ? data.id.value : this.id,
       name: data.name.present ? data.name.value : this.name,
       planningPeriodId: data.planningPeriodId.present
           ? data.planningPeriodId.value
@@ -1138,6 +1218,7 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
   @override
   String toString() {
     return (StringBuffer('FixedCost(')
+          ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('planningPeriodId: $planningPeriodId, ')
           ..write('amount: $amount')
@@ -1146,66 +1227,70 @@ class FixedCost extends DataClass implements Insertable<FixedCost> {
   }
 
   @override
-  int get hashCode => Object.hash(name, planningPeriodId, amount);
+  int get hashCode => Object.hash(id, name, planningPeriodId, amount);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is FixedCost &&
+          other.id == this.id &&
           other.name == this.name &&
           other.planningPeriodId == this.planningPeriodId &&
           other.amount == this.amount);
 }
 
 class FixedCostsCompanion extends UpdateCompanion<FixedCost> {
+  final Value<int> id;
   final Value<String> name;
   final Value<int> planningPeriodId;
   final Value<int> amount;
-  final Value<int> rowid;
   const FixedCostsCompanion({
+    this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.planningPeriodId = const Value.absent(),
     this.amount = const Value.absent(),
-    this.rowid = const Value.absent(),
   });
   FixedCostsCompanion.insert({
+    this.id = const Value.absent(),
     required String name,
     required int planningPeriodId,
     required int amount,
-    this.rowid = const Value.absent(),
   }) : name = Value(name),
        planningPeriodId = Value(planningPeriodId),
        amount = Value(amount);
   static Insertable<FixedCost> custom({
+    Expression<int>? id,
     Expression<String>? name,
     Expression<int>? planningPeriodId,
     Expression<int>? amount,
-    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (id != null) 'id': id,
       if (name != null) 'name': name,
       if (planningPeriodId != null) 'planning_period_id': planningPeriodId,
       if (amount != null) 'amount': amount,
-      if (rowid != null) 'rowid': rowid,
     });
   }
 
   FixedCostsCompanion copyWith({
+    Value<int>? id,
     Value<String>? name,
     Value<int>? planningPeriodId,
     Value<int>? amount,
-    Value<int>? rowid,
   }) {
     return FixedCostsCompanion(
+      id: id ?? this.id,
       name: name ?? this.name,
       planningPeriodId: planningPeriodId ?? this.planningPeriodId,
       amount: amount ?? this.amount,
-      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
@@ -1215,19 +1300,16 @@ class FixedCostsCompanion extends UpdateCompanion<FixedCost> {
     if (amount.present) {
       map['amount'] = Variable<int>(amount.value);
     }
-    if (rowid.present) {
-      map['rowid'] = Variable<int>(rowid.value);
-    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('FixedCostsCompanion(')
+          ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('planningPeriodId: $planningPeriodId, ')
-          ..write('amount: $amount, ')
-          ..write('rowid: $rowid')
+          ..write('amount: $amount')
           ..write(')'))
         .toString();
   }
@@ -1277,7 +1359,7 @@ class $CategoryBudgetLimitsTable extends CategoryBudgetLimits
     type: DriftSqlType.int,
     requiredDuringInsert: true,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES budget_periods (id)',
+      'REFERENCES budget_periods (id) ON DELETE CASCADE',
     ),
   );
   static const VerificationMeta _amountMeta = const VerificationMeta('amount');
@@ -2551,10 +2633,11 @@ class $AccountBalancesTable extends AccountBalances
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_expense_account" IN (0, 1))',
     ),
+    defaultValue: const Constant(false),
   );
   @override
   List<GeneratedColumn> get $columns => [id, name, total, isExpenseAccount];
@@ -2597,8 +2680,6 @@ class $AccountBalancesTable extends AccountBalances
           _isExpenseAccountMeta,
         ),
       );
-    } else if (isInserting) {
-      context.missing(_isExpenseAccountMeta);
     }
     return context;
   }
@@ -2747,10 +2828,9 @@ class AccountBalancesCompanion extends UpdateCompanion<AccountBalance> {
     this.id = const Value.absent(),
     required String name,
     required int total,
-    required bool isExpenseAccount,
+    this.isExpenseAccount = const Value.absent(),
   }) : name = Value(name),
-       total = Value(total),
-       isExpenseAccount = Value(isExpenseAccount);
+       total = Value(total);
   static Insertable<AccountBalance> custom({
     Expression<int>? id,
     Expression<String>? name,
@@ -2809,6 +2889,331 @@ class AccountBalancesCompanion extends UpdateCompanion<AccountBalance> {
   }
 }
 
+class $AppSettingsTable extends AppSettings
+    with TableInfo<$AppSettingsTable, AppSetting> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AppSettingsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+    'id',
+    aliasedName,
+    false,
+    hasAutoIncrement: true,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'PRIMARY KEY AUTOINCREMENT',
+    ),
+  );
+  static const VerificationMeta _includeFixedCostsMeta = const VerificationMeta(
+    'includeFixedCosts',
+  );
+  @override
+  late final GeneratedColumn<bool> includeFixedCosts = GeneratedColumn<bool>(
+    'include_fixed_costs',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("include_fixed_costs" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _warmModeToggledMeta = const VerificationMeta(
+    'warmModeToggled',
+  );
+  @override
+  late final GeneratedColumn<bool> warmModeToggled = GeneratedColumn<bool>(
+    'warm_mode_toggled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("warm_mode_toggled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _showSavingsToggledMeta =
+      const VerificationMeta('showSavingsToggled');
+  @override
+  late final GeneratedColumn<bool> showSavingsToggled = GeneratedColumn<bool>(
+    'show_savings_toggled',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("show_savings_toggled" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    includeFixedCosts,
+    warmModeToggled,
+    showSavingsToggled,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'app_settings';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<AppSetting> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('include_fixed_costs')) {
+      context.handle(
+        _includeFixedCostsMeta,
+        includeFixedCosts.isAcceptableOrUnknown(
+          data['include_fixed_costs']!,
+          _includeFixedCostsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('warm_mode_toggled')) {
+      context.handle(
+        _warmModeToggledMeta,
+        warmModeToggled.isAcceptableOrUnknown(
+          data['warm_mode_toggled']!,
+          _warmModeToggledMeta,
+        ),
+      );
+    }
+    if (data.containsKey('show_savings_toggled')) {
+      context.handle(
+        _showSavingsToggledMeta,
+        showSavingsToggled.isAcceptableOrUnknown(
+          data['show_savings_toggled']!,
+          _showSavingsToggledMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AppSetting map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppSetting(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}id'],
+      )!,
+      includeFixedCosts: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}include_fixed_costs'],
+      )!,
+      warmModeToggled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}warm_mode_toggled'],
+      )!,
+      showSavingsToggled: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}show_savings_toggled'],
+      )!,
+    );
+  }
+
+  @override
+  $AppSettingsTable createAlias(String alias) {
+    return $AppSettingsTable(attachedDatabase, alias);
+  }
+}
+
+class AppSetting extends DataClass implements Insertable<AppSetting> {
+  final int id;
+  final bool includeFixedCosts;
+  final bool warmModeToggled;
+  final bool showSavingsToggled;
+  const AppSetting({
+    required this.id,
+    required this.includeFixedCosts,
+    required this.warmModeToggled,
+    required this.showSavingsToggled,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['include_fixed_costs'] = Variable<bool>(includeFixedCosts);
+    map['warm_mode_toggled'] = Variable<bool>(warmModeToggled);
+    map['show_savings_toggled'] = Variable<bool>(showSavingsToggled);
+    return map;
+  }
+
+  AppSettingsCompanion toCompanion(bool nullToAbsent) {
+    return AppSettingsCompanion(
+      id: Value(id),
+      includeFixedCosts: Value(includeFixedCosts),
+      warmModeToggled: Value(warmModeToggled),
+      showSavingsToggled: Value(showSavingsToggled),
+    );
+  }
+
+  factory AppSetting.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AppSetting(
+      id: serializer.fromJson<int>(json['id']),
+      includeFixedCosts: serializer.fromJson<bool>(json['includeFixedCosts']),
+      warmModeToggled: serializer.fromJson<bool>(json['warmModeToggled']),
+      showSavingsToggled: serializer.fromJson<bool>(json['showSavingsToggled']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'includeFixedCosts': serializer.toJson<bool>(includeFixedCosts),
+      'warmModeToggled': serializer.toJson<bool>(warmModeToggled),
+      'showSavingsToggled': serializer.toJson<bool>(showSavingsToggled),
+    };
+  }
+
+  AppSetting copyWith({
+    int? id,
+    bool? includeFixedCosts,
+    bool? warmModeToggled,
+    bool? showSavingsToggled,
+  }) => AppSetting(
+    id: id ?? this.id,
+    includeFixedCosts: includeFixedCosts ?? this.includeFixedCosts,
+    warmModeToggled: warmModeToggled ?? this.warmModeToggled,
+    showSavingsToggled: showSavingsToggled ?? this.showSavingsToggled,
+  );
+  AppSetting copyWithCompanion(AppSettingsCompanion data) {
+    return AppSetting(
+      id: data.id.present ? data.id.value : this.id,
+      includeFixedCosts: data.includeFixedCosts.present
+          ? data.includeFixedCosts.value
+          : this.includeFixedCosts,
+      warmModeToggled: data.warmModeToggled.present
+          ? data.warmModeToggled.value
+          : this.warmModeToggled,
+      showSavingsToggled: data.showSavingsToggled.present
+          ? data.showSavingsToggled.value
+          : this.showSavingsToggled,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSetting(')
+          ..write('id: $id, ')
+          ..write('includeFixedCosts: $includeFixedCosts, ')
+          ..write('warmModeToggled: $warmModeToggled, ')
+          ..write('showSavingsToggled: $showSavingsToggled')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, includeFixedCosts, warmModeToggled, showSavingsToggled);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AppSetting &&
+          other.id == this.id &&
+          other.includeFixedCosts == this.includeFixedCosts &&
+          other.warmModeToggled == this.warmModeToggled &&
+          other.showSavingsToggled == this.showSavingsToggled);
+}
+
+class AppSettingsCompanion extends UpdateCompanion<AppSetting> {
+  final Value<int> id;
+  final Value<bool> includeFixedCosts;
+  final Value<bool> warmModeToggled;
+  final Value<bool> showSavingsToggled;
+  const AppSettingsCompanion({
+    this.id = const Value.absent(),
+    this.includeFixedCosts = const Value.absent(),
+    this.warmModeToggled = const Value.absent(),
+    this.showSavingsToggled = const Value.absent(),
+  });
+  AppSettingsCompanion.insert({
+    this.id = const Value.absent(),
+    this.includeFixedCosts = const Value.absent(),
+    this.warmModeToggled = const Value.absent(),
+    this.showSavingsToggled = const Value.absent(),
+  });
+  static Insertable<AppSetting> custom({
+    Expression<int>? id,
+    Expression<bool>? includeFixedCosts,
+    Expression<bool>? warmModeToggled,
+    Expression<bool>? showSavingsToggled,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (includeFixedCosts != null) 'include_fixed_costs': includeFixedCosts,
+      if (warmModeToggled != null) 'warm_mode_toggled': warmModeToggled,
+      if (showSavingsToggled != null)
+        'show_savings_toggled': showSavingsToggled,
+    });
+  }
+
+  AppSettingsCompanion copyWith({
+    Value<int>? id,
+    Value<bool>? includeFixedCosts,
+    Value<bool>? warmModeToggled,
+    Value<bool>? showSavingsToggled,
+  }) {
+    return AppSettingsCompanion(
+      id: id ?? this.id,
+      includeFixedCosts: includeFixedCosts ?? this.includeFixedCosts,
+      warmModeToggled: warmModeToggled ?? this.warmModeToggled,
+      showSavingsToggled: showSavingsToggled ?? this.showSavingsToggled,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (includeFixedCosts.present) {
+      map['include_fixed_costs'] = Variable<bool>(includeFixedCosts.value);
+    }
+    if (warmModeToggled.present) {
+      map['warm_mode_toggled'] = Variable<bool>(warmModeToggled.value);
+    }
+    if (showSavingsToggled.present) {
+      map['show_savings_toggled'] = Variable<bool>(showSavingsToggled.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AppSettingsCompanion(')
+          ..write('id: $id, ')
+          ..write('includeFixedCosts: $includeFixedCosts, ')
+          ..write('warmModeToggled: $warmModeToggled, ')
+          ..write('showSavingsToggled: $showSavingsToggled')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$BudgieDatabase extends GeneratedDatabase {
   _$BudgieDatabase(QueryExecutor e) : super(e);
   $BudgieDatabaseManager get managers => $BudgieDatabaseManager(this);
@@ -2826,6 +3231,7 @@ abstract class _$BudgieDatabase extends GeneratedDatabase {
   late final $AccountBalancesTable accountBalances = $AccountBalancesTable(
     this,
   );
+  late final $AppSettingsTable appSettings = $AppSettingsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -2840,9 +3246,24 @@ abstract class _$BudgieDatabase extends GeneratedDatabase {
     planEntries,
     planEntryColors,
     accountBalances,
+    appSettings,
   ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules([
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'budget_periods',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('fixed_costs', kind: UpdateKind.delete)],
+    ),
+    WritePropagation(
+      on: TableUpdateQuery.onTableName(
+        'budget_periods',
+        limitUpdateKind: UpdateKind.delete,
+      ),
+      result: [TableUpdate('category_budget_limits', kind: UpdateKind.delete)],
+    ),
     WritePropagation(
       on: TableUpdateQuery.onTableName(
         'plans',
@@ -2865,6 +3286,7 @@ typedef $$CategoriesTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       required int color,
+      required int position,
       required bool isExpense,
       Value<bool> isArchived,
     });
@@ -2873,6 +3295,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder =
       Value<int> id,
       Value<String> name,
       Value<int> color,
+      Value<int> position,
       Value<bool> isExpense,
       Value<bool> isArchived,
     });
@@ -2946,6 +3369,11 @@ class $$CategoriesTableFilterComposer
 
   ColumnFilters<int> get color => $composableBuilder(
     column: $table.color,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get position => $composableBuilder(
+    column: $table.position,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3034,6 +3462,11 @@ class $$CategoriesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get position => $composableBuilder(
+    column: $table.position,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isExpense => $composableBuilder(
     column: $table.isExpense,
     builder: (column) => ColumnOrderings(column),
@@ -3062,6 +3495,9 @@ class $$CategoriesTableAnnotationComposer
 
   GeneratedColumn<int> get color =>
       $composableBuilder(column: $table.color, builder: (column) => column);
+
+  GeneratedColumn<int> get position =>
+      $composableBuilder(column: $table.position, builder: (column) => column);
 
   GeneratedColumn<bool> get isExpense =>
       $composableBuilder(column: $table.isExpense, builder: (column) => column);
@@ -3157,12 +3593,14 @@ class $$CategoriesTableTableManager
                 Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<int> color = const Value.absent(),
+                Value<int> position = const Value.absent(),
                 Value<bool> isExpense = const Value.absent(),
                 Value<bool> isArchived = const Value.absent(),
               }) => CategoriesCompanion(
                 id: id,
                 name: name,
                 color: color,
+                position: position,
                 isExpense: isExpense,
                 isArchived: isArchived,
               ),
@@ -3171,12 +3609,14 @@ class $$CategoriesTableTableManager
                 Value<int> id = const Value.absent(),
                 required String name,
                 required int color,
+                required int position,
                 required bool isExpense,
                 Value<bool> isArchived = const Value.absent(),
               }) => CategoriesCompanion.insert(
                 id: id,
                 name: name,
                 color: color,
+                position: position,
                 isExpense: isExpense,
                 isArchived: isArchived,
               ),
@@ -3953,17 +4393,17 @@ typedef $$BudgetPeriodsTableProcessedTableManager =
     >;
 typedef $$FixedCostsTableCreateCompanionBuilder =
     FixedCostsCompanion Function({
+      Value<int> id,
       required String name,
       required int planningPeriodId,
       required int amount,
-      Value<int> rowid,
     });
 typedef $$FixedCostsTableUpdateCompanionBuilder =
     FixedCostsCompanion Function({
+      Value<int> id,
       Value<String> name,
       Value<int> planningPeriodId,
       Value<int> amount,
-      Value<int> rowid,
     });
 
 final class $$FixedCostsTableReferences
@@ -3998,6 +4438,11 @@ class $$FixedCostsTableFilterComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnFilters<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnFilters(column),
@@ -4041,6 +4486,11 @@ class $$FixedCostsTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get name => $composableBuilder(
     column: $table.name,
     builder: (column) => ColumnOrderings(column),
@@ -4084,6 +4534,9 @@ class $$FixedCostsTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
@@ -4142,27 +4595,27 @@ class $$FixedCostsTableTableManager
               $$FixedCostsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback:
               ({
+                Value<int> id = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<int> planningPeriodId = const Value.absent(),
                 Value<int> amount = const Value.absent(),
-                Value<int> rowid = const Value.absent(),
               }) => FixedCostsCompanion(
+                id: id,
                 name: name,
                 planningPeriodId: planningPeriodId,
                 amount: amount,
-                rowid: rowid,
               ),
           createCompanionCallback:
               ({
+                Value<int> id = const Value.absent(),
                 required String name,
                 required int planningPeriodId,
                 required int amount,
-                Value<int> rowid = const Value.absent(),
               }) => FixedCostsCompanion.insert(
+                id: id,
                 name: name,
                 planningPeriodId: planningPeriodId,
                 amount: amount,
-                rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
               .map(
@@ -5622,7 +6075,7 @@ typedef $$AccountBalancesTableCreateCompanionBuilder =
       Value<int> id,
       required String name,
       required int total,
-      required bool isExpenseAccount,
+      Value<bool> isExpenseAccount,
     });
 typedef $$AccountBalancesTableUpdateCompanionBuilder =
     AccountBalancesCompanion Function({
@@ -5768,7 +6221,7 @@ class $$AccountBalancesTableTableManager
                 Value<int> id = const Value.absent(),
                 required String name,
                 required int total,
-                required bool isExpenseAccount,
+                Value<bool> isExpenseAccount = const Value.absent(),
               }) => AccountBalancesCompanion.insert(
                 id: id,
                 name: name,
@@ -5809,6 +6262,196 @@ typedef $$AccountBalancesTableProcessedTableManager =
       AccountBalance,
       PrefetchHooks Function()
     >;
+typedef $$AppSettingsTableCreateCompanionBuilder =
+    AppSettingsCompanion Function({
+      Value<int> id,
+      Value<bool> includeFixedCosts,
+      Value<bool> warmModeToggled,
+      Value<bool> showSavingsToggled,
+    });
+typedef $$AppSettingsTableUpdateCompanionBuilder =
+    AppSettingsCompanion Function({
+      Value<int> id,
+      Value<bool> includeFixedCosts,
+      Value<bool> warmModeToggled,
+      Value<bool> showSavingsToggled,
+    });
+
+class $$AppSettingsTableFilterComposer
+    extends Composer<_$BudgieDatabase, $AppSettingsTable> {
+  $$AppSettingsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get includeFixedCosts => $composableBuilder(
+    column: $table.includeFixedCosts,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get warmModeToggled => $composableBuilder(
+    column: $table.warmModeToggled,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get showSavingsToggled => $composableBuilder(
+    column: $table.showSavingsToggled,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$AppSettingsTableOrderingComposer
+    extends Composer<_$BudgieDatabase, $AppSettingsTable> {
+  $$AppSettingsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get includeFixedCosts => $composableBuilder(
+    column: $table.includeFixedCosts,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get warmModeToggled => $composableBuilder(
+    column: $table.warmModeToggled,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get showSavingsToggled => $composableBuilder(
+    column: $table.showSavingsToggled,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$AppSettingsTableAnnotationComposer
+    extends Composer<_$BudgieDatabase, $AppSettingsTable> {
+  $$AppSettingsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<bool> get includeFixedCosts => $composableBuilder(
+    column: $table.includeFixedCosts,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get warmModeToggled => $composableBuilder(
+    column: $table.warmModeToggled,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get showSavingsToggled => $composableBuilder(
+    column: $table.showSavingsToggled,
+    builder: (column) => column,
+  );
+}
+
+class $$AppSettingsTableTableManager
+    extends
+        RootTableManager<
+          _$BudgieDatabase,
+          $AppSettingsTable,
+          AppSetting,
+          $$AppSettingsTableFilterComposer,
+          $$AppSettingsTableOrderingComposer,
+          $$AppSettingsTableAnnotationComposer,
+          $$AppSettingsTableCreateCompanionBuilder,
+          $$AppSettingsTableUpdateCompanionBuilder,
+          (
+            AppSetting,
+            BaseReferences<_$BudgieDatabase, $AppSettingsTable, AppSetting>,
+          ),
+          AppSetting,
+          PrefetchHooks Function()
+        > {
+  $$AppSettingsTableTableManager(_$BudgieDatabase db, $AppSettingsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AppSettingsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AppSettingsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AppSettingsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<bool> includeFixedCosts = const Value.absent(),
+                Value<bool> warmModeToggled = const Value.absent(),
+                Value<bool> showSavingsToggled = const Value.absent(),
+              }) => AppSettingsCompanion(
+                id: id,
+                includeFixedCosts: includeFixedCosts,
+                warmModeToggled: warmModeToggled,
+                showSavingsToggled: showSavingsToggled,
+              ),
+          createCompanionCallback:
+              ({
+                Value<int> id = const Value.absent(),
+                Value<bool> includeFixedCosts = const Value.absent(),
+                Value<bool> warmModeToggled = const Value.absent(),
+                Value<bool> showSavingsToggled = const Value.absent(),
+              }) => AppSettingsCompanion.insert(
+                id: id,
+                includeFixedCosts: includeFixedCosts,
+                warmModeToggled: warmModeToggled,
+                showSavingsToggled: showSavingsToggled,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable<$AppSettingsTable, AppSetting>(table),
+                  BaseReferences<
+                    _$BudgieDatabase,
+                    $AppSettingsTable,
+                    AppSetting
+                  >(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$AppSettingsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$BudgieDatabase,
+      $AppSettingsTable,
+      AppSetting,
+      $$AppSettingsTableFilterComposer,
+      $$AppSettingsTableOrderingComposer,
+      $$AppSettingsTableAnnotationComposer,
+      $$AppSettingsTableCreateCompanionBuilder,
+      $$AppSettingsTableUpdateCompanionBuilder,
+      (
+        AppSetting,
+        BaseReferences<_$BudgieDatabase, $AppSettingsTable, AppSetting>,
+      ),
+      AppSetting,
+      PrefetchHooks Function()
+    >;
 
 class $BudgieDatabaseManager {
   final _$BudgieDatabase _db;
@@ -5831,4 +6474,6 @@ class $BudgieDatabaseManager {
       $$PlanEntryColorsTableTableManager(_db, _db.planEntryColors);
   $$AccountBalancesTableTableManager get accountBalances =>
       $$AccountBalancesTableTableManager(_db, _db.accountBalances);
+  $$AppSettingsTableTableManager get appSettings =>
+      $$AppSettingsTableTableManager(_db, _db.appSettings);
 }

@@ -7,14 +7,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:sizer/sizer.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  runApp(const BudgieApp());
+  final repository = BudgieDatabase();
+  await repository.initializeSettings();
+
+  runApp(BudgieApp(repository: repository));
 }
 
 class BudgieApp extends StatelessWidget {
-  const BudgieApp({super.key});
+  final BudgieDatabase repository;
+  const BudgieApp({super.key, required this.repository});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +32,8 @@ class BudgieApp extends StatelessWidget {
         supportedLocales: const [Locale('en', 'GB')],
         title: "Budgie",
         theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Raleway'),
-        home: RepositoryProvider(
-          create: (context) => BudgieDatabase(),
+        home: RepositoryProvider<BudgieDatabase>.value(
+          value: repository,
           child: MultiBlocProvider(
             providers: [
               BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
