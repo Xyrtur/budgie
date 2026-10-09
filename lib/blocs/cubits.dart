@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:budgie/utils/centre.dart';
+import 'package:budgie/utils/repository.dart';
 import 'package:budgie/widgets/budget_planning/category_box.dart';
 import 'package:budgie/widgets/budget_planning/fixed_formfield_row.dart';
 import 'package:flutter/material.dart';
@@ -506,5 +507,16 @@ class EditingSavingsTextsCubit extends Cubit<EditingState> {
 
   void selectText(String name, bool isEditingName) {
     emit(EditingState(name: name, isEditingName: isEditingName));
+  }
+}
+
+class ImportCubit extends Cubit<BudgieDatabase> {
+  final BudgieDatabase db;
+  ImportCubit({required this.db}) : super(db);
+
+  void replaceDatabase() async {
+    final newDb = await db.importData();
+    await newDb.initializeSettings();
+    emit(newDb);
   }
 }

@@ -32,18 +32,26 @@ class BudgieApp extends StatelessWidget {
         supportedLocales: const [Locale('en', 'GB')],
         title: "Budgie",
         theme: ThemeData(brightness: Brightness.dark, fontFamily: 'Raleway'),
-        home: RepositoryProvider<BudgieDatabase>.value(
-          value: repository,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
-              BlocProvider<FABIconCubit>(create: (context) => FABIconCubit()),
-              BlocProvider<SpendingGraphViewToggleCubit>(create: (context) => SpendingGraphViewToggleCubit()),
-              BlocProvider<WarmModeToggleCubit>(create: (context) => WarmModeToggleCubit()),
-              BlocProvider<TempTripRecordsCubit>(create: (context) => TempTripRecordsCubit()),
-            ],
+        home: BlocProvider(
+          create: (_) => ImportCubit(db: repository),
+          child: BlocBuilder<ImportCubit, BudgieDatabase>(
+            builder: (_, db) {
+              return RepositoryProvider<BudgieDatabase>.value(
+                value: db,
+                child: MultiBlocProvider(
+                  key: ObjectKey(db),
+                  providers: [
+                    BlocProvider<NavbarCubit>(create: (context) => NavbarCubit(PageSelected.Overview)),
+                    BlocProvider<FABIconCubit>(create: (context) => FABIconCubit()),
+                    BlocProvider<SpendingGraphViewToggleCubit>(create: (context) => SpendingGraphViewToggleCubit()),
+                    BlocProvider<WarmModeToggleCubit>(create: (context) => WarmModeToggleCubit()),
+                    BlocProvider<TempTripRecordsCubit>(create: (context) => TempTripRecordsCubit()),
+                  ],
 
-            child: const LandingPageView(),
+                  child: const LandingPageView(),
+                ),
+              );
+            },
           ),
         ),
       ),
